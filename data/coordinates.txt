@@ -1,0 +1,6 @@
+1|37.7697|-122.4781|Golden Gate Park
+2|37.7713|-122.4686|de Young Museum
+3|37.7598|-122.4271|Upper Mission
+4|37.7727|-122.4283|Hayes Valley
+5|37.8496|-122.5031|Presidio
+6|37.8840|-122.4564|Tiburon

@@ -6,14 +6,22 @@ TO DO:
 		change secret key 
 		turn off debug
 
-QUESITONS:
+	Currently small sample used and picking center of neighborhood. Future would be good to find a better way to apply
 
+QUESITONS / ERROR:
+	How to search and extroapolate just one word in a string of words
 
 """
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+# import model and assign to db_session variable
+from sun_model import session as db_session, Coordinates
+# import database model
+import sun_model
+# expect to need for pulling api key from environment
+import os
 
-# import data_model // when it is built
+
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
@@ -37,19 +45,42 @@ def search():
 	# capture the query request from the form into a variable
 	question = request.form['query']
 	print question
-	# confirm the infromation captured matches model; otherwise throw error and ask to search again - do through javasript
-	# submit the query to the data model file to match lat & long to the name of location and then pull from app to determine weather information
-	# return the results template
-	return redirect(url_for('fast_result'))
+	# confirm the infromation captured matches db; otherwise throw error and ask to search again 
+	# code below will account for lower and upper case
+	loc_match = db_session.query(Coordinates).filter(Coordinates.n_hood.ilike("%" + question + "%")).all()
+	if loc_match:
+		# return the results template
+		return redirect(url_for('fast_result'))
+	else:
+		print "Sorry, we are not covering that area at this time. Please try again."
+		return redirect(url_for('search'))
+	# query data model file to match name of location to lat & long and then assign to variables
+	# lat_var
+	# long_var
+	# pull API key from env
+	
+	# submit lat, long and api to forecast.io and store json result into variable
+
+	# parse json result and pull icon and tempurature data and assign to variables
+
+	# based on icon result, return a corresponding image
+
+	# print image and tempurature data on page
+
+	
 
 # create view that will show simple sun result from search
 @app.route('/fast_result')
 def fast_result():
 	return render_template('fast_result.html')
 
-
 # create an extend result view with weather details and map view
-# create map view
+
+# create map view - set this up to test
+@app.route('/map_view')
+def map_view():
+	return render_template('map_view.html')
+
 # create login view
 # create profile page view with favorites and ability report on validty of sun
 

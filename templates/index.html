@@ -2,9 +2,10 @@
 {% extends "layout.html" %}
 
 {% block body %}
-	<div class='span5 offset5'>
+	<div class="span5 offset5">
 		<h1> How's it going? </h1>
 		<a href="{{ url_for('search') }}">Search</a>
+		<a href="{{ url_for('map_view') }}">Map</a>
 	</div>
 
 {% endblock %}
