@@ -9,26 +9,31 @@ TO DO:
 	Currently small sample used and picking center of neighborhood. Future would be good to find a better way to apply
 
 QUESITONS / ERROR:
+	check about how the seed file is linked to model file - how it calls it when it runs
 	How to search and extroapolate just one word in a string of words
 
 """
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 # import model and assign to db_session variable
-from sun_model import session as db_session, Coordinates
+from sun_model import session as db_session, Location
 # import database model
 import sun_model
+# use requests to pull information from api requests - alternative is urllib - this is more human
+import requests
 # expect to need for pulling api key from environment
 import os
-
 
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
 app.secret_key = 'key'
 
-# app.config.from_object(__name__) - allows for setting all caps var as global var
+app.config.from_object(__name__) # allows for setting all caps var as global var
 # eg: SECRET_KEY = "bbbb"
+
+# pull api key for forecast.io
+FIO_KEY = os.environ.get('FIO_KEY')
 
 @app.route('/')
 def index():
@@ -39,27 +44,37 @@ def index():
 def display_search():
 	return render_template('search.html')
 
+# capture forecast from forecast.io
+def forecast(lat,lon):
+    url="https://api.forecast.io/forecast/%s/%f,%f"
+	# pull API key from env
+    final_url=url%(FIO_KEY, lat,lon)
+    print final_url
+    response = requests.get(final_url)
+    return response.json()
+
 # create actual search function to enter the name of the location
 @app.route('/search', methods=['POST'])
 def search():
 	# capture the query request from the form into a variable
 	question = request.form['query']
-	print question
 	# confirm the infromation captured matches db; otherwise throw error and ask to search again 
+	# query data model file to match name of location to lat & long and then assign to variables
 	# code below will account for lower and upper case
-	loc_match = db_session.query(Coordinates).filter(Coordinates.n_hood.ilike("%" + question + "%")).all()
+	loc_match = db_session.query(Location).filter(Location.n_hood.ilike("%" + question + "%")).one()
 	if loc_match:
+		lat = loc_match.lati
+		lon = loc_match.longi
+		# submit lat, long and api key and store json/dicationary result into variable
+		forecast_result = forecast(lat, lon)
+		#print forecast_result
 		# return the results template
-		return redirect(url_for('fast_result'))
+		#return redirect(url_for('fast_result'), result=forecast_result)
+		return render_template('fast_result.html', result=forecast_result)
 	else:
 		print "Sorry, we are not covering that area at this time. Please try again."
 		return redirect(url_for('search'))
-	# query data model file to match name of location to lat & long and then assign to variables
-	# lat_var
-	# long_var
-	# pull API key from env
-	
-	# submit lat, long and api to forecast.io and store json result into variable
+
 
 	# parse json result and pull icon and tempurature data and assign to variables
 
@@ -70,9 +85,9 @@ def search():
 	
 
 # create view that will show simple sun result from search
-@app.route('/fast_result')
-def fast_result():
-	return render_template('fast_result.html')
+# @app.route('/fast_result')
+# def fast_result():
+# 	return render_template('fast_result.html')
 
 # create an extend result view with weather details and map view
 
