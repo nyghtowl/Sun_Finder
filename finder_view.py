@@ -37,7 +37,7 @@ FIO_KEY = os.environ.get('FIO_KEY')
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	return redirect(url_for('search'))
 
 # Display search // potentially this is the index page and just redirect
 @app.route('/search')
@@ -47,36 +47,48 @@ def display_search():
 # capture forecast from forecast.io
 def forecast(lat,lon):
     url="https://api.forecast.io/forecast/%s/%f,%f"
-	# pull API key from env
+	# pull API key from env with FIO_KEY
     final_url=url%(FIO_KEY, lat,lon)
     print final_url
     response = requests.get(final_url)
     return response.json()
 
-# convert icon
-def icon_convert(icon):
-	print type(icon)
-	return str(icon)
+# convert icon result to an image
+def weather_pic(icon):
+	pic_location = "/static/img/"
+	# holds weather images for reference
+	weather_pics = {"clear-day":"sun_samp2.jpeg", "rain":"rain.png" , "snow":"snow.png", "sleet":"sleet2.png", "fog":"foggy2.png" , "cloudy":"cloudy.png", "partly-cloudy-day":"partly_cloudy.png"}
+	
+	#print weather_pics["clear-day"]
+	# FIX how to handle wind icon result - determine percent cloud cover? and 
+	if icon in weather_pics:
+		#print weather_pics[icon]
+		final_pic_loc = pic_location + weather_pics[icon]
+		print final_pic_loc
+	
+#	print type(icon)
+	return final_pic_loc
 
 # create actual search function to enter the name of the location
 @app.route('/search', methods=['POST'])
 def search():
 	# capture the query request from the form into a variable
 	question = request.form['query']
-	# confirm the infromation captured matches db; otherwise throw error and ask to search again 
+
 	# query data model file to match name of location to lat & long and then assign to variables
-	# code below will account for lower and upper case
 	loc_match = db_session.query(Location).filter(Location.n_hood.ilike("%" + question + "%")).one()
+	
+	# confirm the infromation captured matches db; otherwise throw error and ask to search again 
 	if loc_match:
 		lat = loc_match.lati
 		lon = loc_match.longi
 		# submit lat, long and api key and store json/dicationary result into variable
 		forecast_result = forecast(lat, lon)
-		#print forecast_result['hourly']['icon']
+		print forecast_result['hourly']['icon']
 		# return the results template
-		icon_result = icon_convert(forecast_result['hourly']['icon']) 
+		icon_result = weather_pic(forecast_result['hourly']['icon']) 
+		
 		#return redirect(url_for('fast_result'), result=forecast_result)
-		print icon_result
 		return render_template('fast_result.html', result=icon_result)
 	else:
 		print "Sorry, we are not covering that area at this time. Please try again."
