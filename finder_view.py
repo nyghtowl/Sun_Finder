@@ -53,6 +53,11 @@ def forecast(lat,lon):
     response = requests.get(final_url)
     return response.json()
 
+# convert icon
+def icon_convert(icon):
+	print type(icon)
+	return str(icon)
+
 # create actual search function to enter the name of the location
 @app.route('/search', methods=['POST'])
 def search():
@@ -67,10 +72,12 @@ def search():
 		lon = loc_match.longi
 		# submit lat, long and api key and store json/dicationary result into variable
 		forecast_result = forecast(lat, lon)
-		#print forecast_result
+		#print forecast_result['hourly']['icon']
 		# return the results template
+		icon_result = icon_convert(forecast_result['hourly']['icon']) 
 		#return redirect(url_for('fast_result'), result=forecast_result)
-		return render_template('fast_result.html', result=forecast_result)
+		print icon_result
+		return render_template('fast_result.html', result=icon_result)
 	else:
 		print "Sorry, we are not covering that area at this time. Please try again."
 		return redirect(url_for('search'))

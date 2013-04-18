@@ -21,9 +21,9 @@ session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=F
 Base = declarative_base()
 Base.query = session.query_property()
 
-# create class and table for coordinates
-class Coordinates(Base):
-	__tablename__="coord"
+# create class and table for locations
+class Location(Base):
+	__tablename__="location"
 
 	id = Column(Integer, primary_key=True)
 	lati = Column(Float) # don't set a limit on size of float - apply to when output
@@ -33,9 +33,11 @@ class Coordinates(Base):
 # setting this up to generate the db when main is run directly from the command line
 def main():
 	Base.metadata.create_all(engine)
+	
 
 # passes back session for seeding the db
 def connect():
+	# passes back session for seeding the db
 	return session()
 
 if __name__ == "__main__":
