@@ -16,6 +16,15 @@
 		<div id="wrap"> 
 			<div class="container-fluid">
 				<div class="row-fluid">
+					<div class="span5">  
+						<h3> Sun Finder </h3>
+	            		<form action="{{ url_for('search') }}" method= 'POST'>
+	                		<input type='text' name='query'>
+	                		<input type='submit', value="Sun Search Again">
+	            		</form>
+            		</div>
+				</div>
+				<div class="row-fluid">
 					{% block body %} {% endblock %}
 				</div>
 			</div>
