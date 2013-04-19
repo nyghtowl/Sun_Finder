@@ -5,8 +5,9 @@
 {% block body %}
 <!-- need if then change title based on the result-->
 	<div class="span5 offset5">
-		{% if result %}
-			<img src="{{ result }}" class="img-circle"><br>
+		{% if pic %}
+			<img src="{{ pic }}" class="img-circle"><br>
+			<h4> {{ tempr }} </h4>
 		{% else %}
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}

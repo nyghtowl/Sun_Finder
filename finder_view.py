@@ -57,7 +57,7 @@ def get_forecast(location):
     return response.json()
 
 # convert icon result to an image
-def w_pic(icon):
+def w_pic(icon, cloud):
 	pic_location = "/static/img/"
 	# holds weather images for reference
 	weather_pics = {
@@ -71,15 +71,19 @@ def w_pic(icon):
 	}
 	
 	# FIX how to handle wind icon result - determine percent cloud cover? and 
-	
+	print cloud
+
 	if icon in weather_pics:
-		#print weather_pics[icon]
-		final_pic_loc = pic_location + weather_pics[icon]
-		print final_pic_loc
-	
+		if (icon == 'partly-cloudy-day') & (cloud < .20):
+			return pic_location + weather_pics['clear-day']	
+		else:
+			#print weather_pics[icon]
+			final_pic_loc = pic_location + weather_pics[icon]
+			print final_pic_loc
+			return final_pic_loc
 	#FIX - what happends if not result
 
-	return final_pic_loc
+		
 
 # pulls forecast information from work on incorporating as_of
 def validate_day(forecast_info):
@@ -91,10 +95,11 @@ def validate_day(forecast_info):
 	sunrise_ts = int(forecast_info['daily']['data'][0]['sunriseTime'])
 	sunset_ts = int(forecast_info['daily']['data'][0]['sunsetTime'])
 
-	
+	per_cloud = forecast_info['currently']['cloudCover']
+
 	if sunrise_ts < ts & ts < sunset_ts:
 		# based on icon result, return a corresponding image
-		return {'pic': w_pic(forecast_info['hourly']['icon'])}
+		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'] }
 	else:
 		# FIX print a result if not daytime in that timezone
 		print "it's not daytime"
@@ -115,9 +120,11 @@ def search():
 	# confirm the infromation captured matches db; otherwise throw error and ask to search again 
 	if loc_match:
 		# if there is a match the pass to get forecast, validate its day and then get elements to pop results
-		forecast_result = validate_day(get_forecast(loc_match))['pic']
+		forecast_result = validate_day(get_forecast(loc_match))
+		pic = forecast_result['pic']
+		tempr = forecast_result['tempr']
 		#return redirect(url_for('fast_result'), result=forecast_result)
-		return render_template('fast_result.html', result=forecast_result)
+		return render_template('fast_result.html', pic=pic, tempr=tempr)
 	else:
 		# FIX using flash or a result on the html page...
 		print "Sorry, we are not covering that area at this time. Please try again."
