@@ -1,0 +1,20 @@
+<!-- More Details extension for Sun Finder-->
+
+{% extends "layout.html" %}
+
+{% block body %}
+	<div class="span5 offset5">
+		{% if details %}
+			<h3>Current Temperature: {{ details.tempr }}</h3><br>
+			<h3>Cloud Cover: {{ details.cloud }} </h3>
+			<h3>Alerts: {{ details.alerts }} </h3>
+			<h3>Rain Probability: {{ details.alerts }} </h3>
+			<!-- FIX put a listing by hour of pics and temps for that location-->
+			<!-- FIX put a listing by day of pics and temps for that location-->
+		{% else %}
+			<h5> Pending Input. </h5>
+		{% endif %}
+	</div>
+
+
+{% endblock %}

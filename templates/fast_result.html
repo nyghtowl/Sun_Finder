@@ -5,13 +5,16 @@
 {% block body %}
 <!-- need if then change title based on the result-->
 	<div class="span5 offset5">
-		{% if pic %}
-			<img src="{{ pic }}" class="img-circle"><br>
-			<h4> {{ tempr }} </h4>
+		{% if result %}
+			<h4>Current {{ result.loc_name }} Weather</h4><br>
+			<img src="{{ result.pic }}" class="img-circle"><br>
+			<h4> {{ result.tempr }} </h4>
 		{% else %}
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}
-
+	</div>
+	<div class="span4 offset1">
+		<a href="{{ url_for('more_details', forecast=results) }}">More Details</a>
 	</div>
 
 

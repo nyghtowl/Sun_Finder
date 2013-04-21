@@ -9,7 +9,8 @@ TO DO:
 	Currently small sample used and picking center of neighborhood. Future would be good to find a better way to apply
 
 QUESITONS / ERROR:
-	How to search and extroapolate just one word in a string of words
+	Where to keep my js files in flask? 
+	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 """
 
@@ -35,6 +36,8 @@ app.config.from_object(__name__) # allows for setting all caps var as global var
 
 # pull api key for forecast.io
 FIO_KEY = os.environ.get('FIO_KEY')
+G_KEY = os.environ.get('G_KEY')
+WUI_KEY = os.environ.get('WUI_KEY')
 
 @app.route('/')
 def index():
@@ -71,9 +74,9 @@ def w_pic(icon, cloud):
 	}
 	
 	# FIX how to handle wind icon result - determine percent cloud cover? and 
-	print cloud
 
 	if icon in weather_pics:
+		# forces clear day result if the cloud cover is < 20%
 		if (icon == 'partly-cloudy-day') & (cloud < .20):
 			return pic_location + weather_pics['clear-day']	
 		else:
@@ -99,10 +102,11 @@ def validate_day(forecast_info):
 
 	if sunrise_ts < ts & ts < sunset_ts:
 		# based on icon result, return a corresponding image
-		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'] }
+		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
 	else:
 		# FIX print a result if not daytime in that timezone
 		print "it's not daytime"
+		return {'pic': None, 'tempr': None, 'loc_name': None}
 
 
 # create search function 
@@ -121,10 +125,9 @@ def search():
 	if loc_match:
 		# if there is a match the pass to get forecast, validate its day and then get elements to pop results
 		forecast_result = validate_day(get_forecast(loc_match))
-		pic = forecast_result['pic']
-		tempr = forecast_result['tempr']
+		forecast_result['loc_name'] = question.title()
 		#return redirect(url_for('fast_result'), result=forecast_result)
-		return render_template('fast_result.html', pic=pic, tempr=tempr)
+		return render_template('fast_result.html', result = forecast_result)
 	else:
 		# FIX using flash or a result on the html page...
 		print "Sorry, we are not covering that area at this time. Please try again."
@@ -133,11 +136,13 @@ def search():
 
 	# FIX add image and tempurature to a dictionary that is passed to page
 
-	
-# create view that will show simple sun result from search
-# @app.route('/fast_result')
-# def fast_result():
-# 	return render_template('fast_result.html')
+# FIX - not working yet because need to figure out how to pass forecast	
+# create extended view that of weather results
+@app.route('/more_details/')
+def more_details(forecast=None):
+	#loc_details = forecast['forecast']
+	print forecast
+ 	#return render_template('more_details.html' details=loc_details)
 
 # create an extend result view with weather details and map view
 
