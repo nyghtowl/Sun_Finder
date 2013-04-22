@@ -4,10 +4,10 @@
 
 {% block body %}
 	<div class="span5 offset5">
-		<h1> Sun Finder </h1>
+		<h1> SF Sun Finder </h1>
 		<!-- FIX apply boxes to Format -->
 		<form action="{{ url_for('search') }}" method="POST">
-			<input type="text" name="query"><br>
+			<input type="text" name="query" placeholder="Neighborhood Name Here"><br>
 			<input type="submit", value="Sun Search">
 		</form>
 	</div>

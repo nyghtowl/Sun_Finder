@@ -8,8 +8,12 @@ TO DO:
 
 	Currently small sample used and picking center of neighborhood. Future would be good to find a better way to apply
 
+	Need to add neighborhood to query - still not perfect but will help center
+	Set radius and cetnral coordinates to cover bay area
+	Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
+
 QUESITONS / ERROR:
-	Where to keep my js files in flask? 
+
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 """
@@ -26,6 +30,8 @@ import os
 # leverage for reporting time result
 import datetime
 import time
+# utilize for regular expressions
+import re
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
@@ -34,7 +40,7 @@ app.secret_key = 'key'
 app.config.from_object(__name__) # allows for setting all caps var as global var
 # eg: SECRET_KEY = "bbbb"
 
-# pull api key for forecast.io
+# pull api keys from environment
 FIO_KEY = os.environ.get('FIO_KEY')
 G_KEY = os.environ.get('G_KEY')
 WUI_KEY = os.environ.get('WUI_KEY')
@@ -48,10 +54,45 @@ def index():
 def display_search():
 	return render_template('search.html')
 
+
+def get_coord(txt_query):
+	# use regex to swap space with plus and add neighborhood to help focus results
+	txt_plus = re.sub('[ ]', '+', txt_query) + '+neighborhood'
+
+	# url to pass to Google Places api
+	url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&location=%f,%f&radius=%f&sensor=%s&key=%s"
+	
+	# holding central location in SF and 
+	central_lat = 37.7697
+	central_lng = -122.4781
+	central_rad = 10
+
+	# request results from Google Places
+	final_url = url % (txt_plus, central_lat, central_lng, central_rad, 'false', G_KEY)
+	print final_url
+	response = requests.get(final_url)
+
+	# revise response to json, and seperate out the lat and long
+	place_result = response.json()
+	g_lat = place_result['results'][0]['geometry']['location']['lat']
+	g_lng = place_result['results'][0]['geometry']['location']['lng']
+	print g_lat, g_lng
+
+	# return dictionary of coordinates
+	return {'lat':g_lat, 'lng':g_lng}
+
 # submit lat, long and api key and store json/dicationary result into variable
-def get_forecast(location):
-    lat = location.lati
-    lon = location.longi
+#def get_forecast_org(location):
+	# lat = location.lati
+ #    lon = location.longi
+ #    url="https://api.forecast.io/forecast/%s/%f,%f"
+	# final_url=url%(FIO_KEY, lat,lon)
+ #    print final_url
+ #    response = requests.get(final_url)
+ #    return response.json()
+
+def get_forecast(lat, lon):
+	# url to pass to Forecast.io
     url="https://api.forecast.io/forecast/%s/%f,%f"
 	# pull API key from env with FIO_KEY
     final_url=url%(FIO_KEY, lat,lon)
@@ -62,6 +103,7 @@ def get_forecast(location):
 # convert icon result to an image
 def w_pic(icon, cloud):
 	pic_location = "/static/img/"
+	
 	# holds weather images for reference
 	weather_pics = {
 		"clear-day":"sun_samp2.jpeg", 
@@ -87,7 +129,6 @@ def w_pic(icon, cloud):
 	#FIX - what happends if not result
 
 		
-
 # pulls forecast information from work on incorporating as_of
 def validate_day(forecast_info):
 	
@@ -98,13 +139,17 @@ def validate_day(forecast_info):
 	sunrise_ts = int(forecast_info['daily']['data'][0]['sunriseTime'])
 	sunset_ts = int(forecast_info['daily']['data'][0]['sunsetTime'])
 
+	# pull cloud cover value to help determine what image to return
 	per_cloud = forecast_info['currently']['cloudCover']
+	print per_cloud
 
+	# condition to only show sun in the daytime based on sunrise and sunset
 	if sunrise_ts < ts & ts < sunset_ts:
-		# based on icon result, return a corresponding image
 		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
 	else:
+
 		# FIX print a result if not daytime in that timezone
+		
 		print "it's not daytime"
 		return {'pic': None, 'tempr': None, 'loc_name': None}
 
@@ -113,10 +158,26 @@ def validate_day(forecast_info):
 @app.route('/search', methods=['POST'])
 def search():
 	# capture the query request from the form into a variable
-	question = request.form['query']
+	txt_query = request.form['query']
 
 	# FIX - way to pull the time from the form or default to the current time - need to add date time
-	# as_of = request.form.get('time', datetime.now())
+		# as_of = request.form.get('time', datetime.now())
+
+	# pull coordinates from Google Places
+	coord_result = get_coord(txt_query)
+	
+	#FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
+
+	if coord_result:
+		forecast_result = validate_day(get_forecast(coord_result['lat'],coord_result['lng']))
+		
+		# FIX the name that is used to come from query results
+
+		forecast_result['loc_name'] = txt_query.title()
+		return render_template('fast_result.html', result = forecast_result)
+	
+	'''
+	First Solution: Utilizing sample local db - may still use
 
 	# query data model file to match name of location to lat & long and then assign to variables
 	loc_match = db_session.query(Location).filter(Location.n_hood.ilike("%" + question + "%")).one()
@@ -132,7 +193,7 @@ def search():
 		# FIX using flash or a result on the html page...
 		print "Sorry, we are not covering that area at this time. Please try again."
 		return redirect(url_for('search'))
-
+	'''
 
 	# FIX add image and tempurature to a dictionary that is passed to page
 

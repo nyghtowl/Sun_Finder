@@ -2,7 +2,7 @@
 <!-- Layout page for Sun Finder-->
 <html lang="en">
 	<head>
-		<title>Sun Finder</title>
+		<title>SF Sun Finder</title>
 		<!-- supposed to work if compiled Boostrap from the Customize page?-->
 		<meta name = "viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
 		<!-- responsive layout -->
@@ -17,9 +17,9 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span5">  
-						<h3> Sun Finder </h3>
+						<h3> SF Sun Finder </h3>
 	            		<form action="{{ url_for('search') }}" method= 'POST'>
-	                		<input type='text' name='query'>
+	                		<input type='text' name='query' id='search_box'>
 	                		<input type='submit', value="Sun Search Again">
 	            		</form>
             		</div>
@@ -41,6 +41,12 @@
 			</div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+			<script>
+				var search_hint = document.getElementById('search_box');
+				search_hint.value = 'Neighborhood Name Here';
+				search_hint.onfocus = function() { if (this.value == "Neighborhood Name Here") {this.value = '';}}
+				search_hint.onblur = function() { if (this.value == "") {this.value = "Neighborhood Name Here";}}
+			</script>
 		<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='js/jquery.js') }}">\x3C/script>')</script>
 	</body>
 </html>
