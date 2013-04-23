@@ -8,13 +8,13 @@
 		{% if result.pic %}
 			<h4>Current {{ result.loc_name }} Weather</h4><br>
 			<img src="{{ result.pic }}" class="img-circle"><br>
-			<h4> {{ result.tempr_wui }} </h4>
+			<h4> {{ result.tempr_wui_string }} </h4>
 		{% else %}
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}
 	</div>
 	<div class="span4 offset1">
-		<a href="{{ url_for('more_details', forecast=results) }}">More Details</a>
+		<a href="{{ url_for('more_details') }}">More Details</a>
 	</div>
 
 

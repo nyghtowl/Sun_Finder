@@ -16,9 +16,9 @@ QUESITONS / ERROR:
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 TOP TO DO:
-	Swap out WUI for Forecast.io
-	Learn jquery
+	Continue reviewing javascript and jquery
 	Build out more details
+	Build out autocomplete w/ Liz direction
 
 
 """
@@ -76,7 +76,6 @@ def get_coord(txt_query):
 
 	# request results from Google Places
 	final_url = url % (txt_plus, central_lat, central_lng, central_rad, 'false', G_KEY)
-	print final_url
 	response = requests.get(final_url)
 
 	# revise response to json, and seperate out the lat and long
@@ -106,17 +105,23 @@ def get_forecast(lat, lon):
 
     return {
     	'icon': fio_response['hourly']['icon'],
-    	'tempr_wui': wui_response['current_observation']['temp_f'],
-    	'tempr_fio':fio_response['currently']['temperature'], 
+    	'tempr_wui_F': wui_response['current_observation']['temp_f'],
+    	'tempr_wui_C': wui_response['current_observation']['temp_c'],
+    	'tempr_wui_str': wui_response['current_observation']['temperature_string'],
+    	'tempr_fio_F':fio_response['currently']['temperature'], 
     	'cloud_cover':fio_response['currently']['cloudCover'],
     	'loc_name': '', # FIX pull name from ?
     	'time':time.time(),
     	'sunrise':int(fio_response['daily']['data'][0]['sunriseTime']),
     	'sunset':int(fio_response['daily']['data'][0]['sunsetTime']),
-    	'wind': 
-    	'feels_like'
+    	'wind_gust_mph': wui_response['current_observation']['wind_gust_mph'],
+    	'feels_like_str': wui_response['current_observation']['feelslike_string'],
+    	'feels_like_F': wui_response['current_observation']['feelslike_f'],
+    	'feels_like_C': wui_response['current_observation']['feelslike_c'],
+    	'mult_day': wui_response['forecast']['simpleforecast']['forecastday']
     	}
     
+# FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
 # convert icon result to an image
 def w_pic(icon, cloud):
@@ -166,7 +171,6 @@ def validate_day(forecast_dict):
 		print "it's not daytime"
 		forecast_dict['pic'] = None
 
-
 # create search function 
 @app.route('/search', methods=['POST'])
 def search():
@@ -190,7 +194,6 @@ def search():
 		# FIX the name that is used to come from query results
 
 		forecast_result['loc_name'] = txt_query.title()
-		print forecast_result
 		return render_template('fast_result.html', result = forecast_result)
 	
 	#FIX flash a message to try search again if coord_result is not valid
@@ -217,12 +220,12 @@ def search():
 	# FIX add image and tempurature to a dictionary that is passed to page
 
 # FIX - not working yet because need to figure out how to pass forecast	
+
 # create extended view that of weather results
-@app.route('/more_details/')
-def more_details(forecast=None):
-	#loc_details = forecast['forecast']
-	print forecast
- 	#return render_template('more_details.html' details=loc_details)
+@app.route('/more_details')
+def more_details():
+	print forecast_result
+ 	return render_template('more_details.html', details = forecast_result)
 
 # create an extend result view with weather details and map view
 
