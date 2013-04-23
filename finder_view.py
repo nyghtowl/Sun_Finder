@@ -91,19 +91,32 @@ def get_coord(txt_query):
 
 def get_forecast(lat, lon):
 	# url to pass to Forecast.io
-    url="https://api.forecast.io/forecast/%s/%f,%f"
+    fio_url="https://api.forecast.io/forecast/%s/%f,%f"
 	# pull API key from env with FIO_KEY
-    final_url=url%(FIO_KEY, lat,lon)
-    fio_response = requests.get(final_url).json()
+    fio_final_url=fio_url%(FIO_KEY, lat,lon)
+    print fio_final_url
+    fio_response = requests.get(fio_final_url).json()
 
 	# url to pass to WUI
-    url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
+    wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
 	# pull API key from env with FIO_KEY
-    final_url=url%(WUI_KEY, lat,lon)
-    print final_url
-    wui_response = requests.get(final_url).json()
+    wui_final_url=wui_url%(WUI_KEY, lat,lon)
+    print wui_final_url
+    wui_response = requests.get(wui_final_url).json()
 
-    return fio_response
+    return {
+    	'icon': fio_response['hourly']['icon'],
+    	'tempr_wui': wui_response['current_observation']['temp_f'],
+    	'tempr_fio':fio_response['currently']['temperature'], 
+    	'cloud_cover':fio_response['currently']['cloudCover'],
+    	'loc_name': '', # FIX pull name from ?
+    	'time':time.time(),
+    	'sunrise':int(fio_response['daily']['data'][0]['sunriseTime']),
+    	'sunset':int(fio_response['daily']['data'][0]['sunsetTime']),
+    	'wind': 
+    	'feels_like'
+    	}
+    
 
 # convert icon result to an image
 def w_pic(icon, cloud):
@@ -120,7 +133,7 @@ def w_pic(icon, cloud):
 		"partly-cloudy-day":"partly_cloudy.png"
 	}
 	
-	# FIX how to handle wind icon result - determine percent cloud cover? and 
+	# FIX how to handle wind icon result and night 
 
 	if icon in weather_pics:
 		# forces clear day result if the cloud cover is < 20%
@@ -129,57 +142,30 @@ def w_pic(icon, cloud):
 		else:
 			#print weather_pics[icon]
 			final_pic_loc = pic_location + weather_pics[icon]
-			print final_pic_loc
 			return final_pic_loc
+
 	#FIX - what happends if not result
 		
 # pulls forecast information from work on incorporating as_of
-def validate_day(forecast_info):
+def validate_day(forecast_dict):
 	
-	print forecast_info['hourly']['icon']
+	print forecast_dict['icon']
 	
 	# get actual time and compare on whether it is day
-	ts = int(time.time())
-	sunrise_ts = int(forecast_info['daily']['data'][0]['sunriseTime'])
-	sunset_ts = int(forecast_info['daily']['data'][0]['sunsetTime'])
-
-	# pull cloud cover value to help determine what image to return
-	per_cloud = forecast_info['currently']['cloudCover']
-	print per_cloud
+	ts = forecast_dict['time']
+	sunrise_ts = forecast_dict['sunrise']
+	sunset_ts = forecast_dict['sunset']
 
 	# condition to only show sun in the daytime based on sunrise and sunset
 	if sunrise_ts < ts < sunset_ts:
-		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
+		forecast_dict['pic'] = w_pic(forecast_dict['icon'], forecast_dict['cloud_cover'])
 	else:
 
 		# FIX print a result if not daytime in that timezone
 		
 		print "it's not daytime"
-		return {'pic': None, 'tempr': None, 'loc_name': None}
+		forecast_dict['pic'] = None
 
-# pulls forecast information from work on incorporating as_of
-# def validate_day_test(forecast_info):
-	
-# 	print forecast_info['current_observation']['icon']
-	
-# 	# get actual time and compare on whether it is day
-# 	ts = int(time.time())
-# 	sunrise_ts = int(forecast_info['daily']['data'][0]['sunriseTime'])
-# 	sunset_ts = int(forecast_info['daily']['data'][0]['sunsetTime'])
-
-# 	# pull cloud cover value to help determine what image to return
-# 	per_cloud = forecast_info['currently']['cloudCover']
-# 	print per_cloud
-
-# 	# condition to only show sun in the daytime based on sunrise and sunset
-# 	if sunrise_ts < ts < sunset_ts:
-# 		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
-# 	else:
-
-# 		# FIX print a result if not daytime in that timezone
-		
-# 		print "it's not daytime"
-# 		return {'pic': None, 'tempr': None, 'loc_name': None}
 
 # create search function 
 @app.route('/search', methods=['POST'])
@@ -195,15 +181,20 @@ def search():
 	
 	#FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
 
+	# validate there are coordinates and then get the forecast
 	if coord_result:
-		forecast_result = validate_day(get_forecast(coord_result['lat'],coord_result['lng']))
+		forecast_result = get_forecast(coord_result['lat'],coord_result['lng'])
+		add_pic = validate_day(forecast_result)
 		#x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
 
 		# FIX the name that is used to come from query results
 
 		forecast_result['loc_name'] = txt_query.title()
+		print forecast_result
 		return render_template('fast_result.html', result = forecast_result)
 	
+	#FIX flash a message to try search again if coord_result is not valid
+
 	'''
 	First Solution: Utilizing sample local db - may still use
 
