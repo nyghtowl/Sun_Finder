@@ -19,7 +19,7 @@
 					<div class="span5">  
 						<h3> SF Sun Finder </h3>
 	            		<form action="{{ url_for('search') }}" method= 'POST'>
-	                		<input type='text' name='query' id='search_box'>
+	                		<input type='text' name='query' id='search_box' placeholder="Neighborhood Name Here">
 	                		<input type='submit' value="Sun Search Again">
 	            		</form>
             		</div>
@@ -33,21 +33,18 @@
 		<div id="footer">
 			<div class="container-fluid">
 				<div class="row row-fluid">
+					<div class="span6 offset5">
+						Powered by 
+						<a href="http://www.wunderground.com">Weather Underground</a> &
+						<a href="http://forecast.io/">Forecast.io</a>
+					</div>
 					<div class="span6 offset6">
-						<a href="http://forecast.io/">Powered by Forecast.io</a><br>
 						© 2013 Sun Finder Org
 					</div>
 				</div>
 			</div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-		<script>
-				var search_hint = document.getElementById('search_box');
-				search_hint.value = 'Neighborhood Name Here';
-				search_hint.css({'color':'red'});
-				search_hint.onfocus = function() { if (this.value == "Neighborhood Name Here") {this.value = '';}}
-				search_hint.onblur = function() { if (this.value == "") {this.value = "Neighborhood Name Here";}}
-			</script>
 		<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='js/jquery.js') }}">\x3C/script>')</script>
 	</body>
 </html>

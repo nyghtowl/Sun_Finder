@@ -103,6 +103,7 @@ def get_forecast(lat, lon):
     print wui_final_url
     wui_response = requests.get(wui_final_url).json()
 
+    # generated a dictionary of forecast data points pulling from both weather sources
     return {
     	'icon': fio_response['hourly']['icon'],
     	'tempr_wui_F': wui_response['current_observation']['temp_f'],
@@ -124,7 +125,7 @@ def get_forecast(lat, lon):
 # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
 # convert icon result to an image
-def w_pic(icon, cloud):
+def add_pic(icon, cloud):
 	pic_location = "/static/img/"
 	
 	# holds weather images for reference
@@ -163,7 +164,7 @@ def validate_day(forecast_dict):
 
 	# condition to only show sun in the daytime based on sunrise and sunset
 	if sunrise_ts < ts < sunset_ts:
-		forecast_dict['pic'] = w_pic(forecast_dict['icon'], forecast_dict['cloud_cover'])
+		forecast_dict['pic'] = add_pic(forecast_dict['icon'], forecast_dict['cloud_cover'])
 	else:
 
 		# FIX print a result if not daytime in that timezone
@@ -176,6 +177,7 @@ def validate_day(forecast_dict):
 def search():
 	# capture the query request from the form into a variable
 	txt_query = request.form['query']
+	#session.pop('forecast', None)
 
 	# FIX - way to pull the time from the form or default to the current time - need to add date time
 		# as_of = request.form.get('time', datetime.now())
@@ -188,12 +190,16 @@ def search():
 	# validate there are coordinates and then get the forecast
 	if coord_result:
 		forecast_result = get_forecast(coord_result['lat'],coord_result['lng'])
-		add_pic = validate_day(forecast_result)
+		validate_day(forecast_result)
 		#x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
 
 		# FIX the name that is used to come from query results
 
 		forecast_result['loc_name'] = txt_query.title()
+		session['forecast'] = forecast_result
+		session['test'] = 'hi'
+		#print session["forecast"]
+
 		return render_template('fast_result.html', result = forecast_result)
 	
 	#FIX flash a message to try search again if coord_result is not valid
@@ -219,13 +225,17 @@ def search():
 
 	# FIX add image and tempurature to a dictionary that is passed to page
 
-# FIX - not working yet because need to figure out how to pass forecast	
+# FIX - session not working
 
-# create extended view that of weather results
-@app.route('/more_details')
+# create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it)
+@app.route('/more_details/')
 def more_details():
-	print forecast_result
- 	return render_template('more_details.html', details = forecast_result)
+	forecast_details = session.get('forecast')
+	#forecast_details = session['forecast']
+	test2 = session.get('test')
+	print test2
+	#print forecast_details
+ 	return render_template('more_details.html', details=forecast_details)
 
 # create an extend result view with weather details and map view
 
