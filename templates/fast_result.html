@@ -5,10 +5,10 @@
 {% block body %}
 <!-- need if then change title based on the result-->
 	<div class="span5 offset5">
-		{% if result %}
+		{% if result.pic %}
 			<h4>Current {{ result.loc_name }} Weather</h4><br>
 			<img src="{{ result.pic }}" class="img-circle"><br>
-			<h4> {{ result.tempr }} </h4>
+			<h4> {{ result.tempr_wui }} </h4>
 		{% else %}
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}

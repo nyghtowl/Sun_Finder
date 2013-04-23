@@ -13,8 +13,13 @@ TO DO:
 	Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
 QUESITONS / ERROR:
-
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
+
+TOP TO DO:
+	Swap out WUI for Forecast.io
+	Learn jquery
+	Build out more details
+
 
 """
 
@@ -63,9 +68,11 @@ def get_coord(txt_query):
 	url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&location=%f,%f&radius=%f&sensor=%s&key=%s"
 	
 	# holding central location in SF and 
-	central_lat = 37.7697
-	central_lng = -122.4781
-	central_rad = 10
+	central_lat = 37.7655
+	central_lng = -122.4429
+	central_rad = 5000
+
+	#change when ready to cover all bay area #central_rad = 8000
 
 	# request results from Google Places
 	final_url = url % (txt_plus, central_lat, central_lng, central_rad, 'false', G_KEY)
@@ -81,24 +88,22 @@ def get_coord(txt_query):
 	# return dictionary of coordinates
 	return {'lat':g_lat, 'lng':g_lng}
 
-# submit lat, long and api key and store json/dicationary result into variable
-#def get_forecast_org(location):
-	# lat = location.lati
- #    lon = location.longi
- #    url="https://api.forecast.io/forecast/%s/%f,%f"
-	# final_url=url%(FIO_KEY, lat,lon)
- #    print final_url
- #    response = requests.get(final_url)
- #    return response.json()
 
 def get_forecast(lat, lon):
 	# url to pass to Forecast.io
     url="https://api.forecast.io/forecast/%s/%f,%f"
 	# pull API key from env with FIO_KEY
     final_url=url%(FIO_KEY, lat,lon)
+    fio_response = requests.get(final_url).json()
+
+	# url to pass to WUI
+    url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
+	# pull API key from env with FIO_KEY
+    final_url=url%(WUI_KEY, lat,lon)
     print final_url
-    response = requests.get(final_url)
-    return response.json()
+    wui_response = requests.get(final_url).json()
+
+    return fio_response
 
 # convert icon result to an image
 def w_pic(icon, cloud):
@@ -127,7 +132,6 @@ def w_pic(icon, cloud):
 			print final_pic_loc
 			return final_pic_loc
 	#FIX - what happends if not result
-
 		
 # pulls forecast information from work on incorporating as_of
 def validate_day(forecast_info):
@@ -144,7 +148,7 @@ def validate_day(forecast_info):
 	print per_cloud
 
 	# condition to only show sun in the daytime based on sunrise and sunset
-	if sunrise_ts < ts & ts < sunset_ts:
+	if sunrise_ts < ts < sunset_ts:
 		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
 	else:
 
@@ -153,6 +157,29 @@ def validate_day(forecast_info):
 		print "it's not daytime"
 		return {'pic': None, 'tempr': None, 'loc_name': None}
 
+# pulls forecast information from work on incorporating as_of
+# def validate_day_test(forecast_info):
+	
+# 	print forecast_info['current_observation']['icon']
+	
+# 	# get actual time and compare on whether it is day
+# 	ts = int(time.time())
+# 	sunrise_ts = int(forecast_info['daily']['data'][0]['sunriseTime'])
+# 	sunset_ts = int(forecast_info['daily']['data'][0]['sunsetTime'])
+
+# 	# pull cloud cover value to help determine what image to return
+# 	per_cloud = forecast_info['currently']['cloudCover']
+# 	print per_cloud
+
+# 	# condition to only show sun in the daytime based on sunrise and sunset
+# 	if sunrise_ts < ts < sunset_ts:
+# 		return {'pic': w_pic(forecast_info['hourly']['icon'], per_cloud), 'tempr': forecast_info['currently']['temperature'], 'loc_name': None, 'forecast':forecast_info}
+# 	else:
+
+# 		# FIX print a result if not daytime in that timezone
+		
+# 		print "it's not daytime"
+# 		return {'pic': None, 'tempr': None, 'loc_name': None}
 
 # create search function 
 @app.route('/search', methods=['POST'])
@@ -170,7 +197,8 @@ def search():
 
 	if coord_result:
 		forecast_result = validate_day(get_forecast(coord_result['lat'],coord_result['lng']))
-		
+		#x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
+
 		# FIX the name that is used to come from query results
 
 		forecast_result['loc_name'] = txt_query.title()
