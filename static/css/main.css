@@ -17,16 +17,17 @@
   padding: 7px 9px;
 }
 
-#accordion2{
-  width: auto;
-}
-
 #more_details {
   display: none;
   height: 200px;
   width: 100%;
   background-color: grey;
 
+}
+
+.tempr_block {
+  width: 300px;
+  margin: 0 auto;
 }
 
 /* formats placeholder in search bar */

@@ -4,39 +4,45 @@
 
 {% block body %}
 <!-- need if then change title based on the result-->
-	<div class="span5 offset5">
+	<div>
 		{% if result.pic %}
-			<h4>Current {{ result.loc_name }} Weather</h4><br>
-			<img src="{{ result.pic }}" class="img-circle"><br>
-			<h4> {{ result.tempr_wui_str }} </h4><br>
-			<h4> {{ result.tempr_fio_F }} </h4>
+			<h4 class="text-center">Current {{ result.loc_name }} Weather</h4>
+
+			<!-- FIX Add verbiage on whether sun is found or not--> 
+			
+			<p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+			<dl class="dl-horizontal tempr_block">
+				<dt>WUI Temperature:</dt>
+				<dt>Forecast.io Temp:</dt>
+ 				<dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
+				<dd>{{ result.tempr_fio_F|round(1, 'ceil') }} °F</dd>
+			</dl>
 		{% else %}
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}
 	</div>
-<!-- 	<div class="accordion" id="parent">
-		<div class="span4 offset1">
-			<a class="accordion-toggle" data-toggle="collapse" href="#more_details" data-parent="#parent">More Details</a>
+<!-- 
 			{{ url_for('more_details') }}
-		</div>
-		<div id="more_details" class="accordion-body collapse in">
-			<div class="accordion-inner">
-				
-			</div>
-		</div>
-	</div> -->
-	<div class="accordion span6 offset1" id="accordion2">
-	  <div class="accordion-group">
+	 -->
+	  <div class="accordion span6 offset1" id="parent">
 	    <div class="accordion-heading">
-	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
 	        More Details
 	      </a>
 	    </div>
-	    <div id="collapseOne" class="accordion-body collapse">
+	    <div id="moreDetails" class="accordion-body collapse">
 	      <div class="accordion-inner">
 			{% if result %}
-				<h5>Current Temperature: {{ result.tempr_wui_F }}</h5><br>
-				<h5>Cloud Cover: {{ result.cloud_cover }} </h5>
+				<p>
+				<ul class="unstyled">
+					<li>Temp Fahrenheit: {{ result.tempr_wui_F|round(1, 'ceil') }} °F</li>
+					<li>Temp Celcuis: {{ result.tempr_wui_C|round(1, 'ceil') }} °C</li>
+					<li>Cloud Cover: {{ (result.cloud_cover * 100)|round|int }}% </li>
+					<li>Wind Gust: {{ result.wind_gust_mph|round|int }}mph</li>
+					<li>Feels Like Fahrenheit: {{ result.feels_like_F }} °F</li>
+					<li>Feels Like Celcius: {{ result.feels_like_C }} °C</li>
+				</ul>
+				</p>
 			{% endif %}
 	      </div>
 	    </div>
