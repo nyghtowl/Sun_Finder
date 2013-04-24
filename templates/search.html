@@ -6,9 +6,14 @@
 	<div class="span5 offset5">
 		<h1> SF Sun Finder </h1>
 		<!-- FIX apply boxes to Format -->
-		<form action="{{ url_for('search') }}" method="POST">
-			<input type="text" name="query" placeholder="Neighborhood Name Here"><br>
-			<input type="submit", value="Sun Search">
+		<form action="{{ url_for('search') }}" method="POST" class="form-search">
+
+			<p><input type="text" name="query" placeholder="enter neighborhood here" class="span8 .input-xlarge"><br>
+			
+			<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
+
+			<p>Date:<input type="text" name="date" class="span3 datepicker .input-medium">
+			<input type="submit", value="Sun Search" class="btn btn-warning">
 		</form>
 	</div>
 

@@ -103,6 +103,12 @@ def get_forecast(lat, lon):
     print wui_final_url
     wui_response = requests.get(wui_final_url).json()
 
+    fio_rise = fio_response['daily']['data'][0]['sunriseTime']
+    fio_set = fio_response['daily']['data'][0]['sunsetTime']
+
+    sunrise = datetime.datetime.utcfromtimestamp(fio_rise)
+    sunset = datetime.datetime.utcfromtimestamp(fio_set)
+
     # generated a dictionary of forecast data points pulling from both weather sources
     return {
     	'icon': fio_response['hourly']['icon'],
@@ -113,8 +119,8 @@ def get_forecast(lat, lon):
     	'cloud_cover':fio_response['currently']['cloudCover'],
     	'loc_name': '', # FIX pull name from ?
     	'time':time.time(),
-    	'sunrise':int(fio_response['daily']['data'][0]['sunriseTime']),
-    	'sunset':int(fio_response['daily']['data'][0]['sunsetTime']),
+    	'sunrise':fio_rise,
+    	'sunset':fio_set,
     	'wind_gust_mph': wui_response['current_observation']['wind_gust_mph'],
     	'feels_like_str': wui_response['current_observation']['feelslike_string'],
     	'feels_like_F': wui_response['current_observation']['feelslike_f'],
@@ -153,14 +159,19 @@ def add_pic(icon, cloud):
 	#FIX - what happends if not result
 		
 # pulls forecast information from work on incorporating as_of
-def validate_day(forecast_dict):
+def validate_day(forecast_dict, as_of=None):
 	
+	# FIX as_of and how to pull out results that are not current date
+
 	print forecast_dict['icon']
-	
-	# get actual time and compare on whether it is day
-	ts = forecast_dict['time']
+	print as_of
+	ts = time.time()
+
+	# get actual time and compare on whether it is date
 	sunrise_ts = forecast_dict['sunrise']
 	sunset_ts = forecast_dict['sunset']
+	print sunrise_ts
+	print sunset_ts
 
 	# condition to only show sun in the daytime based on sunrise and sunset
 	if sunrise_ts < ts < sunset_ts:
@@ -175,13 +186,26 @@ def validate_day(forecast_dict):
 # create search function 
 @app.route('/search', methods=['POST'])
 def search():
-	# capture the query request from the form into a variable
-	txt_query = request.form['query']
 	#session.pop('forecast', None)
 
-	# FIX - way to pull the time from the form or default to the current time - need to add date time
-		# as_of = request.form.get('time', datetime.now())
+	# capture the form results
+	txt_query = request.form['query']
+	
+	# FIX - search by specif time
 
+	date_query = request.form['date']
+
+	# determine date captured to utilize
+	if not(date_query):
+		as_of = datetime.datetime.now()
+	else:
+		as_of = datetime.datetime.strptime(date_query, "%Y-%m-%d")
+	
+	print as_of
+
+	# FIX - datetime.datetime.utcfromtimestamp(timestamp) - to conver timestamps from fio
+	# FIX - datetime.datetime.strptime(..., "%m/%d/%Y") ?
+	
 	# pull coordinates from Google Places
 	coord_result = get_coord(txt_query)
 	
@@ -190,7 +214,7 @@ def search():
 	# validate there are coordinates and then get the forecast
 	if coord_result:
 		forecast_result = get_forecast(coord_result['lat'],coord_result['lng'])
-		validate_day(forecast_result)
+		validate_day(forecast_result, as_of)
 		#x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
 
 		# FIX the name that is used to come from query results
@@ -233,7 +257,7 @@ def more_details():
 	forecast_details = session.get('forecast')
 	#forecast_details = session['forecast']
 	test2 = session.get('test')
-	print test2
+	print forecast_details
 	#print forecast_details
  	return render_template('more_details.html', details=forecast_details)
 

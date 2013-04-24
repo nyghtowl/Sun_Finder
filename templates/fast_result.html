@@ -14,9 +14,31 @@
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}
 	</div>
-	<div class="span4 offset1">
-		<a href="{{ url_for('more_details') }}">More Details</a>
-	</div>
-
-
+<!-- 	<div class="accordion" id="parent">
+		<div class="span4 offset1">
+			<a class="accordion-toggle" data-toggle="collapse" href="#more_details" data-parent="#parent">More Details</a>
+			{{ url_for('more_details') }}
+		</div>
+		<div id="more_details" class="accordion-body collapse in">
+			<div class="accordion-inner">
+				
+			</div>
+		</div>
+	</div> -->
+	<div class="accordion span6 offset1" id="accordion2">
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+	        More Details
+	      </a>
+	    </div>
+	    <div id="collapseOne" class="accordion-body collapse">
+	      <div class="accordion-inner">
+			{% if result %}
+				<h5>Current Temperature: {{ result.tempr_wui_F }}</h5><br>
+				<h5>Cloud Cover: {{ result.cloud_cover }} </h5>
+			{% endif %}
+	      </div>
+	    </div>
+	  </div>
 {% endblock %}

@@ -10,17 +10,18 @@
 		<!-- defines all the styles for html elements -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen" type="text/css">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" media="screen" type="text/css">
-
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 	</head>
 	<body>
 		<div id="wrap"> 
 			<div class="container-fluid">
 				<div class="row-fluid">
-					<div class="span5">  
+					<div class="span8 form-inline form-search">  
 						<h3> SF Sun Finder </h3>
 	            		<form action="{{ url_for('search') }}" method= 'POST'>
-	                		<input type='text' name='query' id='search_box' placeholder="Neighborhood Name Here">
-	                		<input type='submit' value="Sun Search Again">
+		                		<input type='text' name='query' class='input-medium' placeholder="enter neighborhood">
+		                		<input type='hidden' name='date' value=''>
+	                		<input type='submit' value="Sun Search Again" class="btn btn-mini btn-warning">
 	            		</form>
             		</div>
 				</div>
@@ -44,7 +45,12 @@
 				</div>
 			</div>
 		</div>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-		<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='js/jquery.js') }}">\x3C/script>')</script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+		<script src="static/js/bootstrap.min.js"></script>
+		<script>
+			$("#more_details").collapse();
+		</script>
+
 	</body>
 </html>
