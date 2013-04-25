@@ -16,9 +16,12 @@ QUESITONS / ERROR:
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 TOP TO DO:
-	Continue reviewing javascript and jquery
-	Build out more details
+	Fix session
+	Finish linking up date
+	How to load/reference Javascript from js doc
 	Build out autocomplete w/ Liz direction
+	Put text and links on map
+	Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
 
 
 """

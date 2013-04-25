@@ -1,6 +1,5 @@
-#float_right{
-	float: right;
-}
+/* Main CSS File for Sun Finder */
+
 
 /* put the class name that bootstrap uses below as shown and then put the new style you want to use to overwrite it - put the main as the last css file in the list in layout for it to over-ride the other stides*/
 .img-circle{
@@ -25,6 +24,14 @@
 
 }
 
+/* defines css for map */
+#map_canvas {
+  width: 50%;
+  height: 400px;
+  background-color: #CCC;
+}
+
+/* helps center content for dl setup of temperatures on main results page*/
 .tempr_block {
   width: 300px;
   margin: 0 auto;

@@ -24,27 +24,33 @@
 <!-- 
 			{{ url_for('more_details') }}
 	 -->
-	  <div class="accordion span6 offset1" id="parent">
+	  <div class="accordion span10 offset1" id="parent">
 	    <div class="accordion-heading">
 	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
 	        More Details
 	      </a>
 	    </div>
-	    <div id="moreDetails" class="accordion-body collapse">
-	      <div class="accordion-inner">
-			{% if result %}
-				<p>
-				<ul class="unstyled">
-					<li>Temp Fahrenheit: {{ result.tempr_wui_F|round(1, 'ceil') }} °F</li>
-					<li>Temp Celcuis: {{ result.tempr_wui_C|round(1, 'ceil') }} °C</li>
-					<li>Cloud Cover: {{ (result.cloud_cover * 100)|round|int }}% </li>
-					<li>Wind Gust: {{ result.wind_gust_mph|round|int }}mph</li>
-					<li>Feels Like Fahrenheit: {{ result.feels_like_F }} °F</li>
-					<li>Feels Like Celcius: {{ result.feels_like_C }} °C</li>
-				</ul>
-				</p>
-			{% endif %}
-	      </div>
+	    <div id="moreDetails" class="accordion-body collapse row-fluid">
+		    <div class="accordion-inner span4">
+				<h6>Temperature Details</h6>
+				{% if result %}	
+					<p> 
+					<ul class="unstyled">
+						<li>Temp °F: {{ result.tempr_wui_F|round(1, 'ceil') }} °F</li>
+						<li>Feels Like °F: {{ result.feels_like_F }} °F</li>
+						<li>Temp °C: {{ result.tempr_wui_C|round(1, 'ceil') }} °C</li>
+						<li>Feels Like °C: {{ result.feels_like_C }} °C</li>
+						<li>Cloud Cover: {{ (result.cloud_cover * 100)|round|int }}% </li>
+						<li>Wind Gust: {{ result.wind_gust_mph }}mph</li>
+						<li>Humidty: </li>
+						<li>Precipitation: </li>
+					</ul>
+					</p>
+				{% endif %}
+		    </div>
+		    <div class="accordion-inner span6" id="map_canvas">
+		      	<h6>Map View</h6>
+		    </div>
 	    </div>
-	  </div>
+	</div>
 {% endblock %}
