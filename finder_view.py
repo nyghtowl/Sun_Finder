@@ -16,7 +16,6 @@ QUESITONS / ERROR:
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 TOP TO DO:
-	Fix session
 	Finish linking up date
 	How to load/reference Javascript from js doc
 	Build out autocomplete w/ Liz direction
@@ -270,6 +269,19 @@ def more_details():
 @app.route('/map_view')
 def map_view():
 	return render_template('map_view.html')
+
+# Below were used to test session variable and prove its working
+@app.route("/test1")
+def test1():
+	session['forecast'] = 5
+
+	session['squid'] = 5
+	return ""
+
+@app.route("/test2")
+def test2():
+	print session
+	return ""
 
 # create login view
 # create profile page view with favorites and ability report on validty of sun
