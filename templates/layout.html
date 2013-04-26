@@ -48,30 +48,7 @@
 		</div>
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-		<script src="static/js/bootstrap.min.js"></script>
-		<script src="static/js/main.js"></script>
-		<script>
-		function initialize() {
-	        var map_canvas = document.getElementById('map_canvas');
-	        var map_options = {
-	          center: new google.maps.LatLng(37.7655,-122.4429),
-	          zoom: 12,
-	          mapTypeId: google.maps.MapTypeId.ROADMAP
-	        }
-	        var map = new google.maps.Map(map_canvas, map_options)
-	       	map.set('styles', [
-	          {
-	            featureType: 'all',
-	            elementType: 'all',
-	            stylers: [
-	              { weight: 0.6 },
-	              { lightness: -12 }
-	            ]
-	          }
-	        ]);
-
-	      }
-		google.maps.event.addDOMListener(window, 'load', initialize);
-		</script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<script src="/static/js/main.js"></script>
 	</body>
 </html>
