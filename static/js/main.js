@@ -10,7 +10,7 @@ function initialize() {
 	  // center: new google.maps.LatLng(37.7655,-122.4429),
 	  center: new google.maps.LatLng(map_lat,map_long),
 
-	  zoom: 12,
+	  zoom: 13,
 	  mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	var map = new google.maps.Map(map_canvas, map_options)

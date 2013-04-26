@@ -7,13 +7,14 @@ import requests
 # leverage for reporting time result
 import datetime
 import time
+import moonphase
 
 class Weather(object):
     def __init__(self, fio_response, wui_response):
-        self.lat = None
-        self.lng = None
-        self.fio_icon = fio_response['hourly']['icon']
-        self.wui_icon = None
+        self.lat = fio_response['latitude'] #shortest code to get to it out of results
+        self.lng = fio_response['longitude']
+        self.fio_icon = fio_response['hourly']['icon'] #first built off this icon and haven't mapped wui yet
+        self.wui_icon = wui_response['current_observation']['icon'] 
         self.pic = None
         self.tempr_wui_F = wui_response['current_observation']['temp_f']
         self.tempr_wui_C = wui_response['current_observation']['temp_c']
@@ -21,17 +22,21 @@ class Weather(object):
         self.tempr_fio_F = fio_response['currently']['temperature']
         self.cloud_cover = fio_response['currently']['cloudCover']
         #FIX change name
-        self.loc_name = ''
+        self.loc_name = None
         #FIX change how time is listed
         self.time = time.time()
-        self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime'])
-        self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime'])
-        self.wind_gust_mph = wui_response['current_observation']['wind_gust_mph']
+        self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime']) #not in wui
+        self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime']) #not in wui
+        self.wind_mph = wui_response['current_observation']['wind_gust_mph'] 
         self.feels_like_str = wui_response['current_observation']['feelslike_string']
         self.feels_like_F = wui_response['current_observation']['feelslike_f']
         self.feels_like_C = wui_response['current_observation']['feelslike_c']
+        self.humidity = fio_response['currently']['humidity']
+        #self.precipitation = fio_response['currently']['precipProbability'] #not in wui & disappeared from fio
         self.mult_day = wui_response['forecast']['simpleforecast']['forecastday']
-        
+
+    #FIX Pull out by hour and by day
+
     # method that can be called before or without initializing the class
     @staticmethod
     def get_forecast(lat, lon, FIO_KEY, WUI_KEY):
@@ -55,9 +60,7 @@ class Weather(object):
     # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
     # convert icon result to an image
-    def add_pic(self):
-        pic_location = "/static/img/"
-        
+    def add_day_pic(self, pic_loc):        
         # holds weather images for reference
         weather_pics = {
             "clear-day":"sun_samp2.jpeg", 
@@ -67,49 +70,73 @@ class Weather(object):
             "fog":"foggy2.png" , 
             "cloudy":"cloudy.png", 
             "partly-cloudy-day":"partly_cloudy.png"
-        }
-        
-        # FIX how to handle wind icon result and night 
+            }
 
+        # apply image for conditions at time of request        
         if self.fio_icon in weather_pics:
             # forces clear day result if the cloud cover is < 20%
-            if (self.fio_icon == 'partly-cloudy-day') & (self.cloud_cover < .20):
-                self.pic = pic_location + weather_pics['clear-day'] 
+            if (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover < .20):
+                self.pic = pic_loc + weather_pics['clear-day'] 
+            elif (self.fio_icon == 'windy') and (self.cloud_cover < .20):
+                self.pic = pic_loc + weather_pics['clear-day']
+            elif (self.fio_icon == 'partly_cloudy') and (self.cloud_cover > .0):
+                self.pic = pic_loc + weather_pics['cloudy']
             else:
-                #print weather_pics[icon]
-                self.pic = pic_location + weather_pics[icon]
+                self.pic = pic_loc + weather_pics[self.fio_icon]
+        else:
+            print 'Error finding photo for the time of day'            
+        
+        #FIX - look at the amount of cloud cover and whether to set a > percentage to use full cloud
+    
+    # convert icon result to an image
+    def add_night_pic(self, pic_loc):
+        night_pics = {
+            "New Moon":"newmoon.jpg", 
+            "Waxing Crescent":"moon_waxingcrescent.jpg", 
+            "First Quarter":"firstquarter.jpg", 
+            "Waxing Gibbous":"moon_waxinggibbous.jpg", 
+            "Full Moon":"full_moon1.jpg", 
+            "Waning Gibbous":"moon_waninggibbous.jpg", 
+            "Last Quarter":"moon_lastquarter.jpg", 
+            "Waning Crescent":"moon_waningcrescent.jpg"
+            }
 
-        #FIX - what happends if not result
-                
+        moon = moonphase.main(self.time)
+        if moon in night_pics:
+            self.pic = pic_loc + weather_pics['moon']
+        else:
+            print 'Error finding photo for the time of day'
+
     # pulls forecast information from work on incorporating as_of
     def validate_day(self, as_of=None):
         
         # FIX as_of and how to pull out results that are not current date
-
+        sunrise_ts =  self.fio_sunrise
+        sunset_ts = self.fio_sunset
+        pic_loc = "/static/img/"
+        
+        #testing
         print self.fio_icon
+        print self.wui_icon
         print as_of
+        print moonphase.main(as_of)
 
         # sunrise_ts = datetime.datetime.utcfromtimestamp(self.fio_sunrise)
         # sunset_ts = datetime.datetime.utcfromtimestamp(self.fio_sunset)
-        sunrise_ts =  self.fio_sunrise
-        sunset_ts = self.fio_sunset
+        print self.time
         print sunrise_ts
         print sunset_ts
 
-        # condition to only show sun in the daytime based on sunrise and sunset
+        # picture assigned based on time of day
         if sunrise_ts < self.time < sunset_ts:
-            self.add_pic()
+            self.add_day_pic(pic_loc)
         else:
+            print "it's not daytime" #test
 
-            # FIX print a result if not daytime in that timezone
+            self.add_night_pic(pic_loc)
             
-            print "it's not daytime"
 
-    # FIX - rework this format...
-    # def day_format(self):
+    # FIX - define to generate neighborhood name
+    def location_name(self):
+        pass
 
-    #   fio_rise = fio_response['daily']['data'][0]['sunriseTime']
-    #   fio_set = fio_response['daily']['data'][0]['sunsetTime']
-
-    #   sunrise = datetime.datetime.utcfromtimestamp(fio_rise)
-    #   sunset = datetime.datetime.utcfromtimestamp(fio_set)

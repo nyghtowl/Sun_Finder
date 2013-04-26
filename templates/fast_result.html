@@ -24,14 +24,14 @@
 <!-- 
 			{{ url_for('more_details') }}
 	 -->
-	  <div class="accordion span10 offset1" id="parent">
+	  <div class="accordion span12" id="parent">
 	    <div class="accordion-heading">
 	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
 	        More Details
 	      </a>
 	    </div>
 	    <div id="moreDetails" class="accordion-body collapse row-fluid">
-		    <div class="accordion-inner span4">
+		    <div class="accordion-inner span5">
 				<h6>Temperature Details</h6>
 				{% if result %}	
 					<p> 
@@ -41,14 +41,13 @@
 						<li>Temp °C: {{ result.tempr_wui_C|round(1, 'ceil') }} °C</li>
 						<li>Feels Like °C: {{ result.feels_like_C }} °C</li>
 						<li>Cloud Cover: {{ (result.cloud_cover * 100)|round|int }}% </li>
-						<li>Wind Gust: {{ result.wind_gust_mph }}mph</li>
-						<li>Humidty: </li>
-						<li>Precipitation: </li>
+						<li>Wind: {{ result.wind_gust_mph }}mph</li>
+						<li>Humidty: {{ (result.humidity * 100) }}%</li>
 					</ul>
 					</p>
 				{% endif %}
 		    </div>
-		    <div class="accordion-inner span6" id="map_canvas">
+		    <div class="accordion-inner span7" id="map_canvas">
 		      	<h6>Map View</h6>
 		    </div>
 	    </div>
@@ -56,7 +55,9 @@
 
 	<script>
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
-		var map_lat = 37.7655;
-		var map_long = -122.4429;
+		//var map_lat = 37.7655;
+		//var map_long = -122.4429;
+		var map_lat = {{ result.lat }}
+		var map_long = {{ result.lng }}
 	</script>
 {% endblock %}

@@ -17,7 +17,6 @@ QUESITONS / ERROR:
 
 TOP TO DO:
 	Finish linking up date
-	How to load/reference Javascript from js doc
 	Build out autocomplete w/ Liz direction
 	Put text and links on map
 	Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
@@ -44,10 +43,10 @@ import weather_forecast
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
+#app.secret_key = os.environ.get('flask_key')
 app.secret_key = 'key'
 
 app.config.from_object(__name__) # allows for setting all caps var as global var
-# eg: SECRET_KEY = "bbbb"
 
 # pull api keys from environment
 G_KEY = os.environ.get('G_KEY')
