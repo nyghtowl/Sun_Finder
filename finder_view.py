@@ -16,15 +16,20 @@ QUESITONS / ERROR:
 	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
 
 TOP TO DO:
-	Finish linking up date
-	Build out autocomplete w/ Liz direction
+	Create WT form and Login...
+	Finish linking up just date
 	Put text and links on map
 	Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
+	
+	Build out autocomplete w/ Liz direction
+	ajax - send off request and use ajax to pull in bits to load
+
+	setup ability to choose time
 
 	polygon file - aquire for neihborhood - google maps has a way to apply polygon shape and make clickable
 	flask login
 
-	ajax - send off request and use ajax to pull in bits to load
+
 
 """
 
@@ -78,12 +83,11 @@ def search():
 	if not(date_query):
 		as_of = datetime.datetime.now()
 	else:
-		as_of = datetime.datetime.strptime(date_query, "%Y-%m-%d")
-	
-	print as_of
-
-	# FIX - datetime.datetime.utcfromtimestamp(timestamp) - to conver timestamps from fio
-	# FIX - datetime.datetime.strptime(..., "%m/%d/%Y") ?
+		#grabs date that is entered and combines with automatically generated time
+		#FIX - all entering time
+		as_of_time = datetime.datetime.now().time()
+		as_of_date = datetime.datetime.strptime(date_query, "%Y-%m-%d")
+		as_of = datetime.datetime.combine(as_of_date,as_of_time)
 	
 	# pull coordinates from Google Places
 	forecast_result = sun_functions.get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)

@@ -23,8 +23,8 @@ class Weather(object):
         self.cloud_cover = fio_response['currently']['cloudCover']
         #FIX change name
         self.loc_name = None
-        #FIX change how time is listed
-        self.time = time.time()
+        #FIX change revise time based on what is submitted
+        self.time = datetime.datetime.now() # time.time() creates time stampe - switched to datetime
         self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime']) #not in wui
         self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime']) #not in wui
         self.wind_mph = wui_response['current_observation']['wind_gust_mph'] 
@@ -77,7 +77,7 @@ class Weather(object):
             # forces clear day result if the cloud cover is < 20%
             if (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover < .20):
                 self.pic = pic_loc + weather_pics['clear-day'] 
-            elif (self.fio_icon == 'windy') and (self.cloud_cover < .20):
+            elif (self.fio_icon == 'wind') and (self.cloud_cover < .20):
                 self.pic = pic_loc + weather_pics['clear-day']
             elif (self.fio_icon == 'partly_cloudy') and (self.cloud_cover > .0):
                 self.pic = pic_loc + weather_pics['cloudy']
@@ -107,28 +107,41 @@ class Weather(object):
         else:
             print 'Error finding photo for the time of day'
 
-    # pulls forecast information from work on incorporating as_of
+    # confirms time of day and pulls corresponding image
     def validate_day(self, as_of=None):
+        pic_loc = "/static/img/"        
         
         # FIX as_of and how to pull out results that are not current date
-        sunrise_ts =  self.fio_sunrise
-        sunset_ts = self.fio_sunset
-        pic_loc = "/static/img/"
+        # timestamp version
+        # sunrise_ts =  self.fio_sunrise
+        # sunset_ts = self.fio_sunset
+        # request_ts = time.mktime(as_of.timetuple())
+
+        # # picture assigned based on time of day
+        # if sunrise_ts < self.time < sunset_ts:
+        #     self.add_day_pic(pic_loc)
+        # else:
+        #     print "it's not daytime" #test
+
+        #     self.add_night_pic(pic_loc)
+
+        self.time = as_of
+        sunrise = datetime.datetime.fromtimestamp(self.fio_sunrise)
+        sunset = datetime.datetime.fromtimestamp(self.fio_sunset)
+
         
         #testing
+        
         print self.fio_icon
         print self.wui_icon
-        print as_of
         print moonphase.main(as_of)
 
-        # sunrise_ts = datetime.datetime.utcfromtimestamp(self.fio_sunrise)
-        # sunset_ts = datetime.datetime.utcfromtimestamp(self.fio_sunset)
         print self.time
-        print sunrise_ts
-        print sunset_ts
+        print sunrise
+        print sunset
 
         # picture assigned based on time of day
-        if sunrise_ts < self.time < sunset_ts:
+        if sunrise < self.time < sunset:
             self.add_day_pic(pic_loc)
         else:
             print "it's not daytime" #test

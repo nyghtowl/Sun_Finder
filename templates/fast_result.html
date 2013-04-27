@@ -6,6 +6,9 @@
 <!-- need if then change title based on the result-->
 	<div>
 		{% if result.pic %}
+
+            <!-- fix Current to come up if it is the current time, otherwise don't show -->
+
 			<h4 class="text-center">Current {{ result.loc_name }} Weather</h4>
 
 			<!-- FIX Add verbiage on whether sun is found or not--> 
@@ -21,9 +24,6 @@
 			<h5> Time sleep. Look for the sun tomorrow. </h5>
 		{% endif %}
 	</div>
-<!-- 
-			{{ url_for('more_details') }}
-	 -->
 	  <div class="accordion span12" id="parent">
 	    <div class="accordion-heading">
 	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
@@ -41,7 +41,7 @@
 						<li>Temp °C: {{ result.tempr_wui_C|round(1, 'ceil') }} °C</li>
 						<li>Feels Like °C: {{ result.feels_like_C }} °C</li>
 						<li>Cloud Cover: {{ (result.cloud_cover * 100)|round|int }}% </li>
-						<li>Wind: {{ result.wind_gust_mph }}mph</li>
+						<li>Wind: {{ result.wind_mph }}mph</li>
 						<li>Humidty: {{ (result.humidity * 100) }}%</li>
 					</ul>
 					</p>
@@ -55,8 +55,6 @@
 
 	<script>
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
-		//var map_lat = 37.7655;
-		//var map_long = -122.4429;
 		var map_lat = {{ result.lat }}
 		var map_long = {{ result.lng }}
 	</script>
