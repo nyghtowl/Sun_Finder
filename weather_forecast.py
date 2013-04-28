@@ -11,6 +11,8 @@ import moonphase
 
 class Weather(object):
     def __init__(self, fio_response, wui_response):
+        #import pdb; pdb.set_trace()
+        # jdunck - I would take as_of here, then run through the list of ['daily']['data'] until I found sunriseTime in the range.
         self.lat = fio_response['latitude'] #shortest code to get to it out of results
         self.lng = fio_response['longitude']
         self.fio_icon = fio_response['hourly']['icon'] #first built off this icon and haven't mapped wui yet
@@ -79,7 +81,7 @@ class Weather(object):
                 self.pic = pic_loc + weather_pics['clear-day'] 
             elif (self.fio_icon == 'wind') and (self.cloud_cover < .20):
                 self.pic = pic_loc + weather_pics['clear-day']
-            elif (self.fio_icon == 'partly_cloudy') and (self.cloud_cover > .0):
+            elif (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover > .80):
                 self.pic = pic_loc + weather_pics['cloudy']
             else:
                 self.pic = pic_loc + weather_pics[self.fio_icon]
@@ -91,19 +93,21 @@ class Weather(object):
     # convert icon result to an image
     def add_night_pic(self, pic_loc):
         night_pics = {
-            "New Moon":"newmoon.jpg", 
-            "Waxing Crescent":"moon_waxingcrescent.jpg", 
-            "First Quarter":"firstquarter.jpg", 
-            "Waxing Gibbous":"moon_waxinggibbous.jpg", 
+            "First Quarter":"firstquarter.png", 
             "Full Moon":"full_moon1.jpg", 
-            "Waning Gibbous":"moon_waninggibbous.jpg", 
-            "Last Quarter":"moon_lastquarter.jpg", 
-            "Waning Crescent":"moon_waningcrescent.jpg"
+            "Last Quarter":"moon_lastquarter.png", 
+            "New Moon":"newmoon.png", 
+            "Waning Crescent":"moon_waningcrescent.png",
+            "Waning Gibbous":"moon_waninggibbous.png", 
+            "Waxing Crescent":"moon_waxingcrescent.png", 
+            "Waxing Gibbous":"moon_waxinggibbous.png"
             }
 
         moon = moonphase.main(self.time)
+        print "add_night, %s" % moon
+
         if moon in night_pics:
-            self.pic = pic_loc + weather_pics['moon']
+            self.pic = pic_loc + night_pics[moon]
         else:
             print 'Error finding photo for the time of day'
 
@@ -131,14 +135,14 @@ class Weather(object):
 
         
         #testing
-        
-        print self.fio_icon
-        print self.wui_icon
-        print moonphase.main(as_of)
+        print "validate_day"
+        #print self.fio_icon
+        #print self.wui_icon
+        print 1, moonphase.main(as_of)
 
-        print self.time
-        print sunrise
-        print sunset
+        print 2, self.time
+        print 3, sunrise
+        print 4, sunset
 
         # picture assigned based on time of day
         if sunrise < self.time < sunset:

@@ -13,17 +13,29 @@ function initialize() {
 	  zoom: 13,
 	  mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
-	var map = new google.maps.Map(map_canvas, map_options)
-		map.set('styles', [
-		  {
-		    featureType: 'all',
-		    elementType: 'all',
-		    stylers: [
-		      { weight: 0.6 },
-		      { lightness: -12 }
-		    ]
-		  }
-		]);
+	map = new google.maps.Map(map_canvas, map_options)
+	map.set('styles', [
+	  {
+	    featureType: 'all',
+	    elementType: 'all',
+	    stylers: [
+	      { weight: 0.6 },
+	      { lightness: -12 }
+	    ]
+	  },
+	  {
+	    featureType: 'all',
+	    elementType: 'labels',
+	    stylers: [
+	      { visibility: 'off' }
+	    ]
+	  }
+	]);
+	// google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
+	var weatherLayer = new google.maps.weather.WeatherLayer({
+    	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
+  	});
+  	//weatherLayer.setMap(map);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

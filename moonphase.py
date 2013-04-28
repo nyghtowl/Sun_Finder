@@ -37,7 +37,8 @@ def main(as_of=None):
    phasename = phase(pos)
 
    roundedpos = round(float(pos), 3)
-   print "%s" % (phasename)
+   #print "%s" % (phasename)
+   return phasename
 
 if __name__=="__main__": 
    main()
