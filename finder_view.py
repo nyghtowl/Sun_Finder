@@ -12,8 +12,8 @@ TO DO:
 	Set radius and cetnral coordinates to cover bay area
 	Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
-QUESITONS / ERROR:
-	Need to review with someone url_for application for css and js http://flask.pocoo.org/docs/patterns/jquery/
+QUESTIONS / ERROR:
+
 
 TOP TO DO:
 	Create WT form and Login...
@@ -23,6 +23,7 @@ TOP TO DO:
 	
 	Build out autocomplete w/ Liz direction
 	ajax - send off request and use ajax to pull in bits to load
+
 
 	setup ability to choose time
 
@@ -36,6 +37,9 @@ TOP TO DO:
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 # import model and assign to db_session variable
 from sun_model import session as db_session, Location
+#login import
+from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import LoginManager, current_user
 # import database model
 import sun_model
 # expect to need for pulling api key from environment
@@ -58,9 +62,39 @@ G_KEY = os.environ.get('G_KEY')
 FIO_KEY = os.environ.get('FIO_KEY')
 WUI_KEY = os.environ.get('WUI_KEY')
 
+#login information
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Redirect non-loggedin users to login screen
+login_manager.login_view = "login"
+
+# user load callback
+@login_manager.user_loader
+def load_user(user_id):
+  return User.get(user_id)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('search'))
+
+# main index page
 @app.route('/')
 def index():
 	return redirect(url_for('search'))
+
+# Login user
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        # login and validate the user...
+        login_user(user)
+        flash("Logged in successfully.")
+        return redirect(request.args.get("next") or url_for("index"))
+    return render_template("login.html", form=form)
 
 # Display search // potentially this is the index page and just redirect
 @app.route('/search')
@@ -70,7 +104,7 @@ def display_search():
 # create search function 
 @app.route('/search', methods=['POST'])
 def search():
-	#session.pop('forecast', None)
+	session.pop('forecast', None)
 
 	# capture the form results
 	txt_query = request.form['query']
@@ -85,7 +119,7 @@ def search():
 	else:
 		#grabs date that is entered and combines with automatically generated time
 		#FIX - all entering time
-		as_of_time = datetime.datetime.now().time()
+		#as_of_time = datetime.datetime.now().time()
 		as_of_date = datetime.datetime.strptime(date_query, "%Y-%m-%d")
 		as_of = datetime.datetime.combine(as_of_date,as_of_time)
 	

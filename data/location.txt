@@ -1,7 +1,25 @@
-1|37.7697|-122.4781|Golden Gate Park
-2|37.7713|-122.4686|de Young Museum
-3|37.7598|-122.4271|Upper Mission
-4|37.7727|-122.4283|Hayes Valley
-5|37.8496|-122.5031|Presidio
-6|37.8840|-122.4564|Tiburon
-7|37.7894|-122.4077|Hackbright Academy
+1|37.7697|-122.4781|150|Golden Gate Park
+2|37.8496|-122.5031|75|Presidio
+3|37.8840|-122.4564|100|Tiburon
+11|37.7805|-122.4725|100|Richmond District
+21|37.7535|-122.4952|100|Sunset District
+42|37.7422|-122.4655|50|West Portal
+52|37.7698|-122.4472|75|Haight Ashbury
+53|37.7514|-122.4316|30|Noe Valley
+54|37.7516|-122.4477|75|Twin Peaks
+59|37.7627|-122.4352|75|Castro
+62|37.7727|-122.4283|30|Hayes Valley
+71|37.8030|-122.4375|50|Marina District
+72|37.7849|-122.4522|75|Pacific Heights
+82|37.7951|-122.4046|40|Financial District
+83|37.7947|-122.4072|30|China Town
+84|37.8058|-122.4122|40|North Beach
+85|37.8018|-122.4198|30|Russian Hill
+86|37.7793|-122.4175|30|Civic Center
+87|37.7833|-122.4167|20|Tenderloin 
+89|37.7894|-122.4077|5|Hackbright Academy
+91|37.7415|-122.4144|30|Bernal Heights
+93|37.7600|-122.4148|75|Mission District
+95|37.7572|-122.3999|75|Potrero
+96|37.7787|-122.3974|30|SOMA
+101|37.7268|-122.3887|40|Bayview

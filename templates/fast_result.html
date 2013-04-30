@@ -5,29 +5,29 @@
 {% block body %}
 <!-- need if then change title based on the result-->
 	<div>
-		{% if result.pic %}
+        <!-- fix Current to come up if it is the current time, otherwise don't show -->
 
-            <!-- fix Current to come up if it is the current time, otherwise don't show -->
+		<h4 class="text-center"> {{ result.loc_name }} Sun Forecast</h4>
 
-			<h4 class="text-center">Current {{ result.loc_name }} Weather</h4>
-
-			<!-- FIX Add verbiage on whether sun is found or not--> 
-			
-			<p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
-			<dl class="dl-horizontal tempr_block">
-				<dt>WUI Temperature:</dt>
-				<dt>Forecast.io Temp:</dt>
- 				<dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
-				<dd>{{ result.tempr_fio_F|round(1, 'ceil') }} °F</dd>
-			</dl>
-		{% else %}
-			<h5> Time sleep. Look for the sun tomorrow. </h5>
+		<!-- FIX Add verbiage on whether sun is found or not--> 
+		
+		<p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+		{% if result.sun_result %}
+			<p class="text-center"> {{ result.sun_result}}</p>
+		{% elif result.moonphase %}
+			<p class="text-center">There's a {{ result.moonphase}} moon.<br> Look for sun tomorrow.</p>
 		{% endif %}
+		<dl class="dl-horizontal tempr_block">
+			<dt>WUI Temperature:</dt>
+			<dt>Forecast.io Temp:</dt>
+				<dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
+			<dd>{{ result.tempr_fio_F|round(1, 'ceil') }} °F</dd>
+		</dl>
 	</div>
 	  <div class="accordion span12" id="parent">
 	    <div class="accordion-heading">
 	      <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
-	        More Details
+	        More Weather Details
 	      </a>
 	    </div>
 	    <div id="moreDetails" class="accordion-body collapse row-fluid">

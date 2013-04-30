@@ -26,8 +26,9 @@ class Location(Base):
 	__tablename__="location"
 
 	id = Column(Integer, primary_key=True)
-	lati = Column(Float) # don't set a limit on size of float - apply to when output
-	longi = Column(Float)
+	lat = Column(Float) # don't set a limit on size of float - apply to when output
+	lng = Column(Float)
+	rad = Column(Integer)
 	n_hood = Column(String(128))
 
 # setting this up to generate the db when main is run directly from the command line

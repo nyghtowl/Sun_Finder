@@ -36,6 +36,8 @@ class Weather(object):
         self.humidity = fio_response['currently']['humidity']
         #self.precipitation = fio_response['currently']['precipProbability'] #not in wui & disappeared from fio
         self.mult_day = wui_response['forecast']['simpleforecast']['forecastday']
+        self.sun_result = None
+        self.moonphase = None
 
     #FIX Pull out by hour and by day
 
@@ -74,22 +76,26 @@ class Weather(object):
             "partly-cloudy-day":"partly_cloudy.png"
             }
 
+        # FIX - apply switch statement 
+
         # apply image for conditions at time of request        
         if self.fio_icon in weather_pics:
+            # setup to return text for sun result
+            self.sun_name = self.fio_icon
             # forces clear day result if the cloud cover is < 20%
             if (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover < .20):
                 self.pic = pic_loc + weather_pics['clear-day'] 
-            elif (self.fio_icon == 'wind') and (self.cloud_cover < .20):
-                self.pic = pic_loc + weather_pics['clear-day']
             elif (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover > .80):
                 self.pic = pic_loc + weather_pics['cloudy']
             else:
                 self.pic = pic_loc + weather_pics[self.fio_icon]
+        elif (self.fio_icon == 'wind') and (self.cloud_cover < .20):
+            self.pic = pic_loc + weather_pics['clear-day']
+        elif (self.fio_icon == 'wind') and (self.cloud_cover > .20):
+            self.pic = pic_loc + weather_pics['partly-cloudy-day']
         else:
             print 'Error finding photo for the time of day'            
-        
-        #FIX - look at the amount of cloud cover and whether to set a > percentage to use full cloud
-    
+          
     # convert icon result to an image
     def add_night_pic(self, pic_loc):
         night_pics = {
@@ -108,6 +114,7 @@ class Weather(object):
 
         if moon in night_pics:
             self.pic = pic_loc + night_pics[moon]
+            self.moonphase = moon
         else:
             print 'Error finding photo for the time of day'
 
@@ -136,13 +143,13 @@ class Weather(object):
         
         #testing
         print "validate_day"
-        #print self.fio_icon
-        #print self.wui_icon
-        print 1, moonphase.main(as_of)
+        print 1, self.fio_icon
+        print 2, self.wui_icon
+        print 3, moonphase.main(as_of)
 
-        print 2, self.time
-        print 3, sunrise
-        print 4, sunset
+        print 4, self.time
+        print 5, sunrise
+        print 6, sunset
 
         # picture assigned based on time of day
         if sunrise < self.time < sunset:
