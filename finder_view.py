@@ -13,7 +13,10 @@ TO DO:
 	Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
 QUESTIONS / ERROR:
-
+	Best practices to keep requirements doc up to date
+	Go over Flask Login doc
+	Help finding Apache page that shows loading
+	Why order Post then Get on some and then Get and Post on others
 
 TOP TO DO:
 	Create WT form and Login...
@@ -30,18 +33,22 @@ TOP TO DO:
 	polygon file - aquire for neihborhood - google maps has a way to apply polygon shape and make clickable
 	flask login
 
+	look into lscache - to store content on the local computer - would be good for storing weather
+
+	utilize makefile or grunt to prepare the code and combine to push out
+	look at github/pamalafox/everday/blob/master/application/urls.py - for additional ideas on user data to structure for users
 
 
 """
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 # import model and assign to db_session variable
-from sun_model import session as db_session, Location
+from sun_model import session as db_session, Location, User
 #login import
 from flask.ext.login import login_user, logout_user, login_required
 from flask.ext.login import LoginManager, current_user
-# import database model
-import sun_model
+#import form objects 
+from forms import LoginForm, CreateLogin
 # expect to need for pulling api key from environment
 import os
 # leverage for reporting time result
@@ -68,17 +75,12 @@ login_manager.init_app(app)
 
 # Redirect non-loggedin users to login screen
 login_manager.login_view = "login"
+login_manager.login_message = u"Login to customize your weather view."
 
 # user load callback
 @login_manager.user_loader
 def load_user(user_id):
-  return User.get(user_id)
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('search'))
+  return User.query.get(int(user_id))
 
 # main index page
 @app.route('/')
@@ -86,15 +88,65 @@ def index():
 	return redirect(url_for('search'))
 
 # Login user
-@app.route("/login", methods=["GET", "POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    # login and validate the user...
     if form.validate_on_submit():
-        # login and validate the user...
-        login_user(user)
-        flash("Logged in successfully.")
-        return redirect(request.args.get("next") or url_for("index"))
-    return render_template("login.html", form=form)
+    	user = db_session.query(User).filter(User.email==form.email.data).first()
+    	user_password = user.password
+
+        if user is not None:
+        	login_user(user)
+        	flash('Logged in successfully.')
+        	return redirect(url_for('search'))
+        else:
+        	flash('Incorrect Password')
+        	return redirect('login')
+    return render_template('login.html', title="Login", form=form)
+
+#logout
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You are now logged out')
+    return redirect(url_for('search'))
+
+#create user form view
+@app.route('/create_login', methods = ['POST', 'GET'])
+def create_login():
+  form = CreateLogin()
+  if form.validate_on_submit():
+    user = db_session.query(User).filter(User.email == form.email.data).first()
+    if user != None:
+      user_email = user.email
+      if user_email == form.email.data:
+        flash ('email already exists')
+        return redirect(url_for('form'))
+    if user == None:
+      fname = form.fname.data
+      lname = form.lname.data
+      mobile = form.mobile.data
+      email = form.email.data
+      password = form.password.data
+      zipcode = form.zcode.data
+      accept_tos = form.accept_tos.data
+      timestamp = form.timestamp.data
+      new_user = User(id = None,
+                            email=email,
+                            password=password,
+                            fname=fname,
+                            lname=lname,
+                            mobile=mobile,
+                            zipcode=zipcode,
+                            accept_tos=accept_tos,
+                            timestamp=timestamp)
+      db_session.add(new_user)
+      db_session.commit()
+      flash('Account creation successful. Please login to your account.')
+      return redirect('/')
+  return render_template("create_login.html", title="Create Account Form", form=form)
 
 # Display search // potentially this is the index page and just redirect
 @app.route('/search')
@@ -172,27 +224,24 @@ def more_details():
 	#print forecast_details
  	return render_template('more_details.html', details=forecast_details)
 
-# create an extend result view with weather details and map view
-
 # create map view - set this up to test
 @app.route('/map_view')
 def map_view():
 	return render_template('map_view.html')
 
 # Below were used to test session variable and prove its working
-@app.route("/test1")
-def test1():
-	session['forecast'] = 5
+# @app.route("/test1")
+# def test1():
+# 	session['forecast'] = 5
 
-	session['squid'] = 5
-	return ""
+# 	session['squid'] = 5
+# 	return ""
 
-@app.route("/test2")
-def test2():
-	print session
-	return ""
+# @app.route("/test2")
+# def test2():
+# 	print session
+# 	return ""
 
-# create login view
 # create profile page view with favorites and ability report on validty of sun
 
 # runs app

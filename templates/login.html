@@ -1,19 +1,32 @@
 <!-- Login page for Sun Finder-->
 
-{% extends "login.html" %}
+{% extends "layout.html" %}
 
 {% block body %}
     <div>
-        <h1 class="text-center"> SF Sun Finder </h1>
-        <!-- FIX apply boxes to Format -->
-        <form action="{{ url_for('search') }}" method="POST" class="form-search">
+        <h1 class="text-center"> Sun Finder Login </h1>
 
-            <p class="text-center"><input type="text" name="query" placeholder="enter neighborhood here" class="span4 .input-xlarge"><br>
-            
-            <!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
+        <form action="{{ url_for('login') }}" method="POST" name="login">
+            <!-- utilize hidden tag to render any hidden fields-->
+            {{form.hidden_tag()}}
+            <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->
+            <p> 
+                Email: {{form.email(size=30)}}<br>
+                {% for error in form.errors.email %}
+                <span style = "color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
 
-            <p class="text-center">Date:<input type="text" name="date" class="span2 datepicker .input-medium">
-            <input type="submit", value="Sun Search" class="btn btn-warning">
+            <p>
+                Password: {{form.password(size=30)}}<br>
+                {% for error in form.errors.password %}
+                <span style = "color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
+
+            <p> 
+                <input type="submit", value="Login" class="btn">
+            </p>
         </form>
     </div>
 
