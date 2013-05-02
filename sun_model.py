@@ -37,7 +37,7 @@ class User(Base):
     mobile = Column(String(15), nullable=True)
     zipcode = Column(Integer, nullable=True)
     # accept terms of service
-    accept_tos = Column(Boolean, unique=False, default=False)
+    accept_tos = Column(Boolean, unique=False, default=True)
     # track when the user created the account
     timestamp = Column(String(64), nullable=False)
    

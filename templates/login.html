@@ -4,29 +4,28 @@
 
 {% block body %}
     <div>
-        <h1 class="text-center"> Sun Finder Login </h1>
+        <h1 class="form-signin-heading text-center"> Sun Finder Login </h1>
 
-        <form action="{{ url_for('login') }}" method="POST" name="login">
+        <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal"    >
             <!-- utilize hidden tag to render any hidden fields-->
             {{form.hidden_tag()}}
-            <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->
-            <p> 
-                Email: {{form.email(size=30)}}<br>
-                {% for error in form.errors.email %}
-                <span style = "color: red;">[{{error}}]</span>
-                {% endfor %}
-            </p>
 
-            <p>
-                Password: {{form.password(size=30)}}<br>
-                {% for error in form.errors.password %}
-                <span style = "color: red;">[{{error}}]</span>
-                {% endfor %}
-            </p>
 
-            <p> 
-                <input type="submit", value="Login" class="btn">
-            </p>
+            {% for field in form %}
+                {% if field.short_name != "csrf_token" %}
+                    <div class="control-group">
+                        <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->           
+                        <label class="control-label">{{field.label}}</label>
+                            <div class="controls">
+                                {{ field(size=30, placeholder=field.short_name) }}
+                                {% for error in form.errors.field %}
+                                    <span style = "color: red;">[{{error}}]</span>
+                                {% endfor %}
+
+                            </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </form>
     </div>
 

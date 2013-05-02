@@ -11,6 +11,7 @@
 
 <p>
   First Name: <br>
+  {{form.fname.label}}
   {{form.fname(size = 30)}}<br>
   {% for error in form.errors.fname %}
   <span style = "color: red;">[{{error}}]</span>
@@ -19,6 +20,7 @@
 
 <p>
   Last Name: <br>
+  {{form.lname.label}}
   {{form.lname(size = 30)}}<br>
   {% for error in form.errors.lname %}
   <span style = "color: red;">[{{error}}]</span>

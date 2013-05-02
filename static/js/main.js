@@ -86,10 +86,31 @@ function initialize() {
 	var weatherLayer = new google.maps.weather.WeatherLayer({
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
-  	//weatherLayer.setMap(map);
+  	weatherLayer.setMap(map);
     readData();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
+//ajax loader
+function ajaxCall(){
+    $("#LoadingImage").show();
 
+      $.ajax({ 
+      type: "GET", 
+      url: surl, 
+      dataType: "jsonp", 
+      cache : false, 
+      jsonp : "onJSONPLoad", 
+      jsonpCallback: "newarticlescallback", 
+      crossDomain: "true", 
+      success: function(response) { 
+        $.("#LoadingImage").hide();
+        alert("Success"); 
+      }, 
+      error: function (xhr, status) {  
+        $.("#LoadingImage").hide();
+        alert('Unknown error ' + status); 
+      }    
+   });  
+} 

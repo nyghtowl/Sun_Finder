@@ -13,15 +13,14 @@ TO DO:
     Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
 QUESTIONS / ERROR:
-    Best practices to keep requirements doc up to date
-    Go over Flask Login doc
     Help finding Apache page that shows loading
-    Why order Post then Get on some and then Get and Post on others
+
 
 TOP TO DO:
     Create WT form and Login...
     Finish linking up just date
     Put text and links on map
+    Setup autopopulate
     Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
     
     Build out autocomplete w/ Liz direction
@@ -74,10 +73,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # Redirect non-loggedin users to login screen
-login_manager.login_view = "login"
+login_manager.login_view = "login" # result if user not logged in
 login_manager.login_message = u"Login to customize your weather view."
 
-# user load callback
+# user load callback - populates current user
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
@@ -107,7 +106,7 @@ def login():
 
 #logout
 @app.route('/logout')
-@login_required
+@login_required # confirms if user_id in session - sends to login view if not
 def logout():
     logout_user()
     flash('You are now logged out')
@@ -131,7 +130,7 @@ def create_login():
             email = form.email.data
             password = form.password.data
             zipcode = form.zipcode.data
-            accept_tos = form.accept_tos.data
+            accept_tos = True #don't need to save this - can be assumed since required on form
             timestamp = time.time()
           
             #save from data in User object to commit to db

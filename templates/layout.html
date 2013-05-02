@@ -1,4 +1,4 @@
-<!DOCTYPE htlm>
+<!DOCTYPE html>
 <!-- Layout page for Sun Finder-->
 <html lang="en">
 	<head>
@@ -8,17 +8,18 @@
 		<!-- responsive layout -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}" media="screen" type="text/css">
 		<!-- defines all the styles for html elements -->
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen" type="text/css">
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" media="screen" type="text/css">
+		<!-- included for datepicker format and additional jquery element style -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 	</head>
 	<body>
 		<div id="wrap"> 
 			<div class="container-fluid">
 				<div class="row-fluid">
-					<div class="span8 form-inline form-search">  
+					<div class="span8">  
 						<h3> SF Sun Finder </h3>
-	            		<form action="{{ url_for('search') }}" method= 'POST'>
+	            		<form action="{{ url_for('search') }}" method= 'POST' class="form-inline form-search">
 		                		<input type='text' name='query' class='input-medium' placeholder="enter neighborhood">
 		                		<input type='hidden' name='date' value=''>
 	                		<input type='submit' value="Sun Search Again" class="btn btn-mini btn-warning">
