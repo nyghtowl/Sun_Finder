@@ -13,7 +13,9 @@ TO DO:
     Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
 QUESTIONS / ERROR:
-    Help finding Apache page that shows loading
+    Help finding Ajax page that shows loading
+    Clean up trying to setup login on the results page
+    Revise logn if code to make into switch
 
 
 TOP TO DO:
@@ -55,6 +57,7 @@ import datetime
 import time
 import sun_functions
 import weather_forecast
+import json 
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
@@ -90,12 +93,16 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    # login and validate the user...
+
+    session['form'] = form
+    
+    # login and validate the user exists in the database
     if form.validate_on_submit():
         user = db_session.query(User).filter(User.email==form.email.data).first()
-        user_password = user.password
 
+        # if user exists then apply login user functionatlity to generate current_user session
         if user is not None:
+            user_password = user.password
             login_user(user)
             flash('Logged in successfully.')
             return redirect(url_for('search'))
@@ -122,42 +129,39 @@ def create_login():
             user_email = user.email
             if user_email == form.email.data:
                 flash ('email already exists')
-                return redirect(url_for('form'))
+                return redirect(url_for('login'))
         if user == None:
-            fname = form.fname.data
-            lname = form.lname.data
-            mobile = form.mobile.data
-            email = form.email.data
-            password = form.password.data
-            zipcode = form.zipcode.data
-            accept_tos = True #don't need to save this - can be assumed since required on form
-            timestamp = time.time()
           
             #save from data in User object to commit to db
             new_user = User(id = None,
-                        email=email,
-                        password=password,
-                        fname=fname,
-                        lname=lname,
-                        mobile=mobile,
-                        zipcode=zipcode,
-                        accept_tos=accept_tos,
-                        timestamp=timestamp)
+                        email=form.email.data,
+                        password=form.password.data,
+                        fname=form.fname.data,
+                        lname=form.lname.data,
+                        mobile=form.mobile.data,
+                        zipcode=form.zipcode.data,
+                        #don't need to save this - can be assumed since required on form
+                        accept_tos=True,
+                        timestamp=time.time())
             db_session.add(new_user)
             db_session.commit()
             flash('Account creation successful. Please login to your account.')
             return redirect('/')
-    return render_template("create_login.html", title="Create Account Form", form=form)
+    return render_template('create_login.html', title='Create Account Form', form=form)
 
 # Display search // potentially this is the index page and just redirect
 @app.route('/search')
 def display_search():
     return render_template('search.html')
 
-# create search function 
-@app.route('/search', methods=['POST'])
-def search():
+@app.route("/ajax_search", methods=["POST"])
+def ajax_search():
+    return render_template('search_results_partial.html', result = search_results())
+ 
+
+def search_results():
     session.pop('forecast', None)
+    # form = session.get('form')
 
     # capture the form results
     txt_query = request.form['query']
@@ -182,16 +186,20 @@ def search():
     #FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
 
     # validate there are coordinates and then get the forecast
-    if forecast_result:
-        forecast_result.validate_day(as_of)
-        #x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
+    forecast_result.validate_day(as_of)
+    #x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
 
-        #forecast_result['loc_name'] = txt_query.title()
-        session['forecast'] = forecast_result
-        #print session["forecast"]
+    #forecast_result['loc_name'] = txt_query.title()
+    session['forecast'] = forecast_result
+    #print session["forecast"]
+    return forecast_result
+    # return render_template('fast_result.html', result = forecast_result)
 
-        return render_template('fast_result.html', result = forecast_result)
-    
+
+# create search function 
+@app.route('/search', methods=['POST'])
+def search():
+    return render_template('fast_result.html', result = search_results())
     #FIX flash a message to try search again if coord_result is not valid
 
     '''
@@ -244,6 +252,13 @@ def map_view():
 #   return ""
 
 # create profile page view with favorites and ability report on validty of sun
+
+
+
+# FIX - Json view - what Liz added to help with adding Ajax - need to rework
+# @app.route('/some_json_route')
+# def some_json():
+#     return json.dumps({"thing" : "stuff"})
 
 # runs app
 if __name__ == "__main__":

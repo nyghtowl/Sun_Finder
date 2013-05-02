@@ -9,16 +9,19 @@
         <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal"    >
             <!-- utilize hidden tag to render any hidden fields-->
             {{form.hidden_tag()}}
-
-
+            
+            <!-- for loop to generate the form utilizing wtform object -->
             {% for field in form %}
+                <!-- made sure to not print csrf token -->
                 {% if field.short_name != "csrf_token" %}
                     <div class="control-group">
                         <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->           
                         <label class="control-label">{{field.label}}</label>
                             <div class="controls">
+                                <!-- placeholder will add text inline -->
                                 {{ field(size=30, placeholder=field.short_name) }}
-                                {% for error in form.errors.field %}
+                                <!-- form is replaced by field-->
+                                {% for error in field.errors %}
                                     <span style = "color: red;">[{{error}}]</span>
                                 {% endfor %}
 
@@ -26,6 +29,12 @@
                     </div>
                 {% endif %}
             {% endfor %}
+
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit", value="Login" class="btn">Login</button>
+                </div>
+            </div>
         </form>
     </div>
 

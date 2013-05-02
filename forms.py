@@ -25,12 +25,12 @@ class CreateLogin(Form):
     mobile = TextField('Mobile', validators = 
                     # sets optional entry and strips whitespace
                     [Optional(strip_whitespace=True), 
-                    Length(max=15,
-                    message="Mobile exceeds length")])
+                    v.Length(max=15,
+                    message='Mobile exceeds length')])
     zipcode = IntegerField('Zipcode', validators = 
-                    [Optional(strip_whitespace=True), 
-                    Length(max=9, 
-                    message="Zipcode exceeds length")])
+                    [Optional(strip_whitespace=True)]) 
+                    #v.NumberRange(max=9, 
+                    #message='Zipcode exceeds length')])
     email = TextField('Email',validators = [Required(),
                     v.Email(),
                     v.EqualTo('confirm_email',

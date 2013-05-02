@@ -3,88 +3,37 @@
 
 {% block body %}
 <div>
-    <h1 class="text-center">Sign Up Below</h1>
 
+    <form action="{{ url_for('create_login') }}" method="POST" name="create_login" class="form-horizontal">
+        <h1 class="text-center">Sign Up Below</h1>
+        <!-- utilize hidden tag to render any hidden fields-->
+        {{form.hidden_tag()}}
 
-<form method = "POST" action = "{{ url_for('create_login') }}" name = "create_login">
-  {{form.hidden_tag()}}
+        <!-- for loop to generate the form utilizing wtform object -->
+        {% for field in form %}
+            <!-- made sure to not print csrf token -->
+            {% if field.short_name != "csrf_token" %}
+                <div class="control-group">
+                    <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->           
+                    <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            <!-- placeholder will add text inline -->
+                            {{ field(size=30) }}
+                            {% for error in field.errors %}
+                                <span style = "color: red;">[{{error}}]</span>
+                            {% endfor %}
 
-<p>
-  First Name: <br>
-  {{form.fname.label}}
-  {{form.fname(size = 30)}}<br>
-  {% for error in form.errors.fname %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
+                        </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit", value="Create Account" class="btn">Create Account</button>
+                    </div>
+                </div>
+    </form>
 
-<p>
-  Last Name: <br>
-  {{form.lname.label}}
-  {{form.lname(size = 30)}}<br>
-  {% for error in form.errors.lname %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Mobile: <br>
-  {{form.mobile(size = 30)}}<br>
-  {% for error in form.errors.mobile %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Zip Code: <br>
-  {{form.zipcode(size = 30)}}<br>
-  {% for error in form.errors.zipcode %}
-  <span style = "color: read;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Email: <br>
-  {{form.email(size = 30)}}<br>
-  {% for error in form.errors.email %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Confirm Email: <br>
-  {{form.confirm_email(size = 30)}}<br>
-  {% for error in form.errors.confirm_email %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Password: <br>
-  {{form.password(size = 30)}}<br>
-  {% for error in form.errors.password %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Confirm Password: <br>
-  {{form.confirm_password(size = 30)}}<br>
-  {% for error in form.errors.confirm_password %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p>
-  Accept Terms of Service: <br>
-  {{form.accept_tos(size = 30)}}<br>
-  {% for error in form.errors.accept_tos %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}<br>
-</p>
-
-<p><input type = "submit" value = "Create Account"></input></p>
-</form>
 </div>
 
 {% endblock %}

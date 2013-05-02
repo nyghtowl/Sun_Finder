@@ -63,40 +63,44 @@ class Weather(object):
         
     # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
-    # convert icon result to an image
+    # convert icon result to an image if day
     def add_day_pic(self, pic_loc):        
         # holds weather images for reference
         weather_pics = {
-            "clear-day":"sun_samp2.jpeg", 
-            "rain":"rain.png" , 
-            "snow":"snow.png", 
-            "sleet":"sleet2.png", 
-            "fog":"foggy2.png" , 
-            "cloudy":"cloudy.png", 
-            "partly-cloudy-day":"partly_cloudy.png"
+            "clear-day":("sun", "sun_samp2.jpeg"), 
+            "rain":("rain", "rain.png"), 
+            "snow":("snow", "snow.png"), 
+            "sleet":("sleet", "sleet2.png"), 
+            "fog":("fog", "foggy2.png"), 
+            "cloudy":("cloudy", "cloudy.png"), 
+            "partly-cloudy-day":("partly cloudy", "partly_cloudy.png")
             }
 
-        # FIX - apply switch statement 
+        # FIX - apply switch statement - check out data dispatch
 
         # apply image for conditions at time of request        
         if self.fio_icon in weather_pics:
             # setup to return text for sun result
-            self.sun_name = self.fio_icon
+            self.sun_result = weather_pics[self.fio_icon][0]
             # forces clear day result if the cloud cover is < 20%
-            if (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover < .20):
-                self.pic = pic_loc + weather_pics['clear-day'] 
-            elif (self.fio_icon == 'partly-cloudy-day') and (self.cloud_cover > .80):
-                self.pic = pic_loc + weather_pics['cloudy']
+            if (self.fio_icon == 'partly-cloudy-day'):
+                if self.cloud_cover < .20:
+                    self.pic = pic_loc + weather_pics['clear-day'][1]
+                elif self.cloud_cover > .80:
+                    self.pic = pic_loc + weather_pics['cloudy'][1]
+                else:
+                    self.pic = pic_loc + weather_pics[self.fio_icon][1]
             else:
-                self.pic = pic_loc + weather_pics[self.fio_icon]
-        elif (self.fio_icon == 'wind') and (self.cloud_cover < .20):
-            self.pic = pic_loc + weather_pics['clear-day']
-        elif (self.fio_icon == 'wind') and (self.cloud_cover > .20):
-            self.pic = pic_loc + weather_pics['partly-cloudy-day']
+                self.pic = pic_loc + weather_pics[self.fio_icon][1]
+        elif (self.fio_icon == 'wind'):
+            if (self.cloud_cover < .20):
+                self.pic = pic_loc + weather_pics['clear-day'][1]
+            else:
+                self.pic = pic_loc + weather_pics['partly-cloudy-day'][1]
         else:
             print 'Error finding photo for the time of day'            
           
-    # convert icon result to an image
+    # convert icon result to an moon image if night
     def add_night_pic(self, pic_loc):
         night_pics = {
             "First Quarter":"firstquarter.png", 
@@ -110,7 +114,7 @@ class Weather(object):
             }
 
         moon = moonphase.main(self.time)
-        print "add_night, %s" % moon
+        print 'add_night, %s' % moon
 
         if moon in night_pics:
             self.pic = pic_loc + night_pics[moon]
@@ -120,29 +124,19 @@ class Weather(object):
 
     # confirms time of day and pulls corresponding image
     def validate_day(self, as_of=None):
-        pic_loc = "/static/img/"        
+        pic_loc = '/static/img/'        
         
         # FIX as_of and how to pull out results that are not current date
-        # timestamp version
-        # sunrise_ts =  self.fio_sunrise
-        # sunset_ts = self.fio_sunset
-        # request_ts = time.mktime(as_of.timetuple())
 
-        # # picture assigned based on time of day
-        # if sunrise_ts < self.time < sunset_ts:
-        #     self.add_day_pic(pic_loc)
-        # else:
-        #     print "it's not daytime" #test
-
-        #     self.add_night_pic(pic_loc)
-
+        # set object day to date entered by user or current 
         self.time = as_of
+
+        # pull sunrise and sunset from weather results
         sunrise = datetime.datetime.fromtimestamp(self.fio_sunrise)
         sunset = datetime.datetime.fromtimestamp(self.fio_sunset)
 
-        
         #testing
-        print "validate_day"
+        print 'validate_day'
         print 1, self.fio_icon
         print 2, self.wui_icon
         print 3, moonphase.main(as_of)
@@ -155,7 +149,7 @@ class Weather(object):
         if sunrise < self.time < sunset:
             self.add_day_pic(pic_loc)
         else:
-            print "it's not daytime" #test
+            print 'it\'s not daytime' #test
 
             self.add_night_pic(pic_loc)
             
