@@ -2,11 +2,17 @@
 sun_functions.py -  Sun Finder functions  
 
 """
-# use requests to pull information from api requests - alternative is urllib - this is more human
+# use flask requests to pull from forms
+from flask import request
+# use requests to pull api info - alternative is urllib - this is more human
 import requests
 import weather_forecast
 # utilize for regular expressions
 import re
+# leverage for reporting time result
+from datetime import datetime
+import time
+
 
 def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
     # use regex to swap space with plus and add neighborhood to help focus results
@@ -53,3 +59,39 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
         return weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY)
     else:
         return None
+
+# function to generate search results for the different views
+def search_results(G_KEY, FIO_KEY, WUI_KEY):
+
+    # capture the form results
+    txt_query = request.form['query']
+    
+    # FIX - search by specif time
+
+    date_query = request.form['date']
+
+    # determine date captured to utilize
+    if not(date_query):
+        as_of = datetime.now()
+    else:
+        #grabs date that is entered and combines with automatically generated time
+        #FIX - all entering time
+        #as_of_time = datetime.datetime.now().time()
+        as_of_date = datetime.strptime(date_query, "%Y-%m-%d")
+        as_of = datetime.combine(as_of_date,as_of_time)
+    
+    # pull coordinates from Google Places
+    forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)
+    
+    #FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
+
+    # validate there are coordinates and then get the forecast
+    forecast_result.validate_day(as_of)
+
+    #FIX forecast_result['loc_name'] = txt_query.title()
+
+    # returns forecast result
+    return forecast_result
+    # return render_template('fast_result.html', result = forecast_result)
+
+    #FIX flash a message to try search again if coord_result is not valid

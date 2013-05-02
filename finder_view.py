@@ -17,6 +17,7 @@ QUESTIONS / ERROR:
     Clean up trying to setup login on the results page
     Revise logn if code to make into switch
 
+    jquery.post
 
 TOP TO DO:
     Create WT form and Login...
@@ -42,7 +43,7 @@ TOP TO DO:
 
 """
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, redirect, url_for, session, flash
 # import model and assign to db_session variable
 from sun_model import session as db_session, Location, User
 #login import
@@ -52,9 +53,6 @@ from flask.ext.login import LoginManager, current_user
 from forms import LoginForm, CreateLogin
 # expect to need for pulling api key from environment
 import os
-# leverage for reporting time result
-import datetime
-import time
 import sun_functions
 import weather_forecast
 import json 
@@ -93,8 +91,6 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
-    session['form'] = form
     
     # login and validate the user exists in the database
     if form.validate_on_submit():
@@ -156,51 +152,13 @@ def display_search():
 
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
-    return render_template('search_results_partial.html', result = search_results())
+    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
  
-
-def search_results():
-    session.pop('forecast', None)
-    # form = session.get('form')
-
-    # capture the form results
-    txt_query = request.form['query']
-    
-    # FIX - search by specif time
-
-    date_query = request.form['date']
-
-    # determine date captured to utilize
-    if not(date_query):
-        as_of = datetime.datetime.now()
-    else:
-        #grabs date that is entered and combines with automatically generated time
-        #FIX - all entering time
-        #as_of_time = datetime.datetime.now().time()
-        as_of_date = datetime.datetime.strptime(date_query, "%Y-%m-%d")
-        as_of = datetime.datetime.combine(as_of_date,as_of_time)
-    
-    # pull coordinates from Google Places
-    forecast_result = sun_functions.get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)
-    
-    #FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
-
-    # validate there are coordinates and then get the forecast
-    forecast_result.validate_day(as_of)
-    #x_test = validate_day_test(get_forecast_test(coord_result['lat'],coord_result['lng']))
-
-    #forecast_result['loc_name'] = txt_query.title()
-    session['forecast'] = forecast_result
-    #print session["forecast"]
-    return forecast_result
-    # return render_template('fast_result.html', result = forecast_result)
-
 
 # create search function 
 @app.route('/search', methods=['POST'])
 def search():
-    return render_template('fast_result.html', result = search_results())
-    #FIX flash a message to try search again if coord_result is not valid
+    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
 
     '''
     First Solution: Utilizing sample local db - may still use
@@ -221,35 +179,21 @@ def search():
         return redirect(url_for('search'))
     '''
 
-    # FIX add image and tempurature to a dictionary that is passed to page
 
-# FIX - session not working
-
-# create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it)
-@app.route('/more_details/')
-def more_details():
-    forecast_details = session.get('forecast')
-    print forecast_details
-    #print forecast_details
-    return render_template('more_details.html', details=forecast_details)
+# create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
+# @app.route('/more_details/')
+# def more_details():
+#     forecast_details = session.get('forecast')
+#     print forecast_details
+#     #print forecast_details
+#     return render_template('more_details.html', details=forecast_details)
+#     session.pop('forecast', None)
 
 # create map view - set this up to test
 @app.route('/map_view')
 def map_view():
     return render_template('map_view.html')
 
-# Below were used to test session variable and prove its working
-# @app.route("/test1")
-# def test1():
-#   session['forecast'] = 5
-
-#   session['squid'] = 5
-#   return ""
-
-# @app.route("/test2")
-# def test2():
-#   print session
-#   return ""
 
 # create profile page view with favorites and ability report on validty of sun
 
