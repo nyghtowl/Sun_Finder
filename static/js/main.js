@@ -44,11 +44,11 @@ function initialize() {
 	});
 
 	//sample Marker with Label
-	// var marker1 = new MarkerWithLabel({
+	// var marker1 = new google.maps.MarkerWithLabel({
  //       position: myLatLng,
  //       draggable: true,
  //       raiseOnDrag: true,
- //       map: map_canvas,
+ //       map: map,
  //       labelContent: "$425K",
  //       labelAnchor: new google.maps.Point(22, 0),
  //       labelClass: "labels", // connects to CSS class label
@@ -100,7 +100,7 @@ function initialize() {
 // $(function()){
 // 	google.maps.event.addDomListener(window, 'load', initialize);	
 // }
-google.maps.event.addDomListener(window, 'load', initialize);
+// google.maps.event.addDomListener(window, 'load', initialize);
 //google.maps.event.addDomListener(searchFinder, 'click', initialize);
 
 
@@ -114,6 +114,11 @@ $(function() {
     	source: tags, minLength: 3
 	});
 });
+
+// jquery search event map load - set as if there is coord then initialize
+if(map_lat && map_long){
+	initialize();	
+};
 
 
 			// $(function(){
@@ -154,3 +159,7 @@ $(function() {
 //       }    
 //    });  
 // } 
+
+// $("#search_form1").on("submit", initialize);
+// $("#search_form2").on("submit", initialize);
+

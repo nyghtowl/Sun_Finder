@@ -1,4 +1,4 @@
-<!-- Search Main page for Sun Finder-->
+<!-- Index page for Sun Finder-->
 
 {% extends "layout.html" %}
 
@@ -17,8 +17,10 @@
 			<input type="submit" value="Sun Search" class="btn btn-warning" id="search_btn1">
 		</form>
 	</div>
-	<script>		
-
+	<script>	
+		// sets lat and long to false so the map load will not initialize	
+		var map_lat = false;
+		var map_long = false;
 	</script>
 
 {% endblock %}

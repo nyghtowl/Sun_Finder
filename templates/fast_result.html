@@ -5,7 +5,7 @@
 {% block body %}
 
 	<div>
-		{% include "search_header.html" %}
+		{% include "header.html" %}
 	</div>
 	
 	<!-- populates search result page --> 
@@ -14,8 +14,17 @@
 	</div>
 
 	<script>
-		  // center: new google.maps.LatLng(37.7655,-122.4429),
-		var map_lat = {{ result.lat }};
-		var map_long = {{ result.lng }};
+		//  lat and lng to test with (37.7655,-122.4429),
+		
+		// condition to set map_lat & map_long to false if no result
+		{% if result.lat %}
+			var map_lat = {{ result.lat }};
+			var map_long = {{ result.lng }};
+		{% else %}
+			var map_lat = false;
+			var map_long = false;
+		{% endif %}
+
+
 	</script>
 {% endblock %}
