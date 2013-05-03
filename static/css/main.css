@@ -26,7 +26,7 @@
 
 /* defines css for map */
 #map_canvas {
-  width: 80%;
+  width: 75%;
   height: 400px;
   background-color: #CCC;
 }
@@ -55,7 +55,7 @@
 /* map label */
 
  .labels {
-   color: red;
+   color: blue;
    background-color: white;
    font-family: "Lucida Grande", "Arial", sans-serif;
    font-size: 10px;

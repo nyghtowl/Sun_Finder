@@ -5,7 +5,8 @@
 function initialize() { 
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
-	//var myLatLng = map_lat,map_long
+
+	//pulls lat, lng from fast result html
 	var myLatlng = new google.maps.LatLng(map_lat,map_long);
 	var map_canvas = document.getElementById('map_canvas');
 	var map_options = {
@@ -15,6 +16,7 @@ function initialize() {
 	  mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	
+	//map var
 	var map = new google.maps.Map(map_canvas, map_options)
 	map.set('styles', [
 	  {
@@ -34,13 +36,30 @@ function initialize() {
 	  }
 	]);
 
+	//search result marker var
 	var marker = new google.maps.Marker({
 	    position: myLatlng,
 		map: map,
 		title: 'Hello World!'
 	});
 
-	//put markers on map
+	//sample Marker with Label
+	// var marker1 = new MarkerWithLabel({
+ //       position: myLatLng,
+ //       draggable: true,
+ //       raiseOnDrag: true,
+ //       map: map_canvas,
+ //       labelContent: "$425K",
+ //       labelAnchor: new google.maps.Point(22, 0),
+ //       labelClass: "labels", // connects to CSS class label
+ //       labelStyle: {opacity: 0.75}
+ //    });
+
+ //    var iw1 = new google.maps.InfoWindow({
+ //       content: "Home For Sale"
+ //    });
+
+	//put multiple markers on map
 	function createMarker(position, label) {
 		//FIX need to figure out how to swap out google marker with my own and get label to come up
 	    return new google.maps.Marker({
@@ -54,18 +73,6 @@ function initialize() {
 		    labelVisible: true
 	    });
 	 }
-
-	 // 	return new MarkerWithLabel({
-		//    position: position,
-		//    draggable: false,
-		//    map: map,
-		//    labelContent: "$425K",
-		//    labelAnchor: new google.maps.Point(22, 0),
-		//    labelClass: "labels", // the CSS class for the label
-		//    labelStyle: {opacity: 0.75}
-		//  });
-
-	 // }
 
 	var readData = function() { // create markers
 		pos = [
@@ -90,8 +97,14 @@ function initialize() {
     readData();
 }
 
+// $(function()){
+// 	google.maps.event.addDomListener(window, 'load', initialize);	
+// }
 google.maps.event.addDomListener(window, 'load', initialize);
+//google.maps.event.addDomListener(searchFinder, 'click', initialize);
 
+
+// google.maps.event.addListner(marker1, "click", function (e) { iwl.open(map, this); });
 
 //autocomplete function
 $(function() {
@@ -103,7 +116,9 @@ $(function() {
 });
 
 
-
+			// $(function(){
+			// 	google.maps.event.addDomListener(window, 'load', initialize);
+			// }
 //$('body').on('load', initialize);
 
 //FIX - ajax loader

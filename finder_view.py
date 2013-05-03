@@ -18,7 +18,6 @@ QUESTIONS / ERROR:
     Revise logn if code to make into switch
 
 
-
 TOP TO DO:
 
     Finish linking up just date - put on both pages
@@ -159,24 +158,10 @@ def ajax_search():
 # renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
-    #neighborhood = session.get('n_hood')
     neighborhood = db_session.query(Location).all()
     print session
     return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood), locations=neighborhood)
 
-# Below were used to test session variable and prove its working
-@app.route("/test1")
-def test1():
-    session['forecast'] = 5
-  
-    session['squid'] = 5
-    return ""
-    
- 
-@app.route("/test2")
-def test2():
-    print session
-    return ""
 
 # create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
 # @app.route('/more_details/')

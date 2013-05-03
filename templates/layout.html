@@ -17,20 +17,6 @@
 		<!-- part of setting the body apart from the footer -->
 		<div id="wrap"> 
 			<div class="container-fluid">
-				<!-- search section -->
-				<div class="row-fluid">  
-					<h3> SF Sun Finder </h3>
-            		<form action="{{ url_for('search') }}" method= 'POST' class="form-inline form-search">
-            			<div class="input-append">
-	                		<input type="text" name="query" class="input-small span6 search-query loc" placeholder="enter neighborhood">
-	                		<button type="submit" class="btn btn-warning">Sun Search Again</button>
-	                	</div>
-	                		<input type="hidden" name="date" value="">
-            		</form>
-				</div>
-			    
-
-
 				<div class="row-fluid">
 					{% block body %} {% endblock %}
 				</div>
@@ -62,7 +48,9 @@
 		<script src="static/js/bootstrap.min.js"></script>
 		
 		<!-- for Google Maps to work-->
-		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>		
+		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
+		<script src="static/js/markerwithlabel.js" type="text/javascript"></script>
+
 		<!-- Customized JS -->
 		<script src="static/js/main.js"></script>
 		
@@ -78,6 +66,12 @@
 					"{{ location.n_hood|safe }}", 
 				{% endfor %} ];
 
+			//MarkerWithLabel();
+
+			//var searchFinder = document.getElementById('load_map');
+
+
+		
 		</script>
 	</body>
 </html>

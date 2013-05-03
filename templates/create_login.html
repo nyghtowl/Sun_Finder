@@ -2,6 +2,11 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+    <div>
+        {% include "search_header.html" %}
+    </div>
+
 <div>
 
     <form action="{{ url_for('create_login') }}" method="POST" name="create_login" class="form-horizontal">

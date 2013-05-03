@@ -1,0 +1,12 @@
+<!-- Search & Login header for Sun Finder-->
+
+<div class="row-fluid">  
+    <h3> SF Sun Finder </h3>
+    <form action="{{ url_for('search') }}" method= 'POST' class="form-inline form-search">
+        <div class="input-append">
+            <input type="text" name="query" class="input-small span6 search-query loc" placeholder="enter neighborhood">
+            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button>
+        </div>
+            <input type="hidden" name="date" value="">
+    </form>
+</div>

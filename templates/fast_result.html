@@ -3,7 +3,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<!-- need if then change title based on the result-->
+
+	<div>
+		{% include "search_header.html" %}
+	</div>
+	
+	<!-- populates search result page --> 
 	<div id="search_result_target">
 		{% include "search_result_partial.html" %}
 	</div>

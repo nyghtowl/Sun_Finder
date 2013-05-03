@@ -1,0 +1,78 @@
+<!-- Parital Search page for Sun Finder fills in Fast Results -->
+
+        <div>
+            <!-- fix Current to come up if it is the current time, otherwise don't show -->
+
+            <!-- FIX Add verbiage on whether sun is found or not--> 
+
+            <!-- results for day -->
+            {% if result.sun_result %}                
+                <h4 class="text-center"> 
+                    {% if result.loc_name %}
+                        {{ result.loc_name }}
+                    {% endif %} 
+                    Sun Result</h4>
+                <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+                {% if result.sun_result == "sun" or result.sun_result == "partly cloudy" %}
+                    <p class="text-center"> Sun found! </p>
+                {% else %}
+                    <!-- FIX add date that was searched as part of response -->
+                    <p class="text-center"> The weather is {{ result.sun_result}}.</p>
+                {% endif %}
+            
+            <!-- results for night -->
+            {% elif result.moonphase %}
+                <h4 class="text-center"> 
+                    {% if result.loc_name %}
+                        {{ result.loc_name }} 
+                    {% endif %}
+                    Moon Result</h4>
+                <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+                <p class="text-center">{{ result.moonphase }} Moon<br> Look for sun tomorrow.</p>
+            {% endif %}
+
+            <!-- actual temperature results -->
+            <dl class="dl-horizontal tempr_block">
+                <dt>WUI Temperature:</dt>
+                <dt>Forecast.io Temp:</dt>
+                    <dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
+                <dd>{{ result.tempr_fio_F|round(1, 'ceil') }} °F</dd>
+            </dl>
+       
+<!-- More Details expansion -->
+        </div>
+          <div class="accordion span12" id="parent">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
+                More Weather Details
+              </a>
+            </div>
+            <div id="moreDetails" class="accordion-body collapse row-fluid">
+                <div class="accordion-inner span4">
+                    <h5>Temperature Details</h5>
+                    {% if result %} 
+                        <dl class="dl-horizontal">
+                            <dt>Temp °F:</dt> 
+                            <dt>Feels Like °F:</dt> 
+                            <dt>Temp °C:</dt> 
+                            <dt>Feels Like °C:</dt> 
+                            <dt>Cloud Cover:</dt> 
+                            <dt>Wind:</dt> 
+                            <dt>Humidty:</dt> 
+                            <dd>{{ result.tempr_wui_F|round(1, 'ceil') }} °F</dd>
+                            <dd>{{ result.feels_like_F }} °F</dd>
+                            <dd>{{ result.tempr_wui_C|round(1, 'ceil') }} °C</dd>
+                            <dd>{{ result.feels_like_C }} °C</dd>
+                            <dd>{{ (result.cloud_cover * 100)|round|int }}% </dd>
+                            <dd>{{ result.wind_mph }}mph</dd>
+                            <dd>{{ (result.humidity * 100) }}%</dd>
+                        </dl>
+                    {% endif %}
+                </div>
+                <div class="accordion-inner span8">
+                    <h5>Map View</h5>
+                    <div class="span7" id="map_canvas">
+                    </div>
+                </div>
+            </div>
+        </div>
