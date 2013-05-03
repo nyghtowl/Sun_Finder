@@ -18,6 +18,8 @@ function initialize() {
 	
 	//map var
 	var map = new google.maps.Map(map_canvas, map_options)
+	
+	// set map style
 	map.set('styles', [
 	  {
 	    featureType: 'all',
@@ -43,21 +45,24 @@ function initialize() {
 		title: 'Hello World!'
 	});
 
-	//sample Marker with Label
-	// var marker1 = new google.maps.MarkerWithLabel({
- //       position: myLatLng,
- //       draggable: true,
- //       raiseOnDrag: true,
- //       map: map,
- //       labelContent: "$425K",
- //       labelAnchor: new google.maps.Point(22, 0),
- //       labelClass: "labels", // connects to CSS class label
- //       labelStyle: {opacity: 0.75}
- //    });
 
- //    var iw1 = new google.maps.InfoWindow({
- //       content: "Home For Sale"
- //    });
+	var homeLatLng = new google.maps.LatLng(37.7627, -122.4352);
+
+	//sample Marker with Label
+	var marker1 = new MarkerWithLabel({
+       position: homeLatLng,
+       draggable: true,
+       raiseOnDrag: true,
+       map: map,
+       labelContent: "$425K",
+       labelAnchor: new google.maps.Point(22, 0),
+       labelClass: "labels", // connects to CSS class label
+       labelStyle: {opacity: 0.75}
+    });
+
+    var iw1 = new google.maps.InfoWindow({
+       content: "Home For Sale"
+    });
 
 	//put multiple markers on map
 	function createMarker(position, label) {
@@ -76,13 +81,12 @@ function initialize() {
 
 	var readData = function() { // create markers
 		pos = [
-			new google.maps.LatLng(37.7627, -122.4352),
 	  		new google.maps.LatLng(37.7600, -122.4148),
 	  		new google.maps.LatLng(37.7572, -122.3999),
 	  		new google.maps.LatLng(37.7415, -122.4144)
 	  		];
 
-		label = ["Castro", "Mission", "Potrero", "Bebo"];
+		label = ["Mission", "Potrero", "Bubo"];
 
 		for (var i = 0; i < pos.length; i++) {
 	    	createMarker(pos[i], label[i]);
@@ -93,18 +97,21 @@ function initialize() {
 	var weatherLayer = new google.maps.weather.WeatherLayer({
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
+
+  	//loads weather layer
   	weatherLayer.setMap(map);
-    readData();
+
+  	//adds static markers based on lat, long
+    //readData();
+
+	google.maps.event.addListener(marker1, "click", function (e) { iw1.open(map, this); });	
+
 }
 
 // $(function()){
 // 	google.maps.event.addDomListener(window, 'load', initialize);	
 // }
-// google.maps.event.addDomListener(window, 'load', initialize);
-//google.maps.event.addDomListener(searchFinder, 'click', initialize);
 
-
-// google.maps.event.addListner(marker1, "click", function (e) { iwl.open(map, this); });
 
 //autocomplete function
 $(function() {
@@ -117,7 +124,7 @@ $(function() {
 
 // jquery search event map load - set as if there is coord then initialize
 if(map_lat && map_long){
-	initialize();	
+	initialize();
 };
 
 
