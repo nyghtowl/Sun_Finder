@@ -10,6 +10,7 @@
 		<!-- defines all the styles for html elements -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen" type="text/css">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" media="screen" type="text/css">
+		<!-- for JQuery to work -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 	</head>
 	<body>
@@ -37,16 +38,32 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- for JQuery to work-->
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+		<!-- for Bootstrap to work-->
 		<script src="static/js/bootstrap.min.js"></script>
 		
+		<!-- Customized JS -->
 		<script src="static/js/main.js"></script>
+		
+		<!-- for Google Maps to work-->
 		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
 			<script>
     		   $(function() {
          		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
        			});
+    		   $(function() {
+			        var availableTags = [ 
+			        	{% for location in locations %}
+							"{{ location.n_hood }}", 
+						{% endfor %} ];
+ 
+				$( ".loc" ).autocomplete({
+				    source: availableTags
+				});
+				});
        		</script>
 	</body>
 </html>

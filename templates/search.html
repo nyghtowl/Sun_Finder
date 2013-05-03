@@ -3,18 +3,22 @@
 {% extends "layout_index.html" %}
 
 {% block body %}
-	<div>
+	<div class="ui-widget">
 		<h1 class="text-center"> SF Sun Finder </h1>
 		<!-- FIX apply boxes to Format -->
 		<form action="{{ url_for('search') }}" method="POST" class="form-search">
 
-			<p class="text-center"><input type="text" name="query" placeholder="enter neighborhood here" class="span4 .input-xlarge"><br>
+			<p class="text-center">
+				<input type="text" name="query" placeholder="enter neighborhood here" class="span3 loc"><br>
 			
 			<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
 
-			<p class="text-center">Date:<input type="text" name="date" class="span2 datepicker .input-medium">
+			<p class="text-center">Date:<input type="text" name="date" class="span2 datepicker">
 			<input type="submit" value="Sun Search" class="btn btn-warning" id="search_btn">
 		</form>
 	</div>
+	<script>		
+
+	</script>
 
 {% endblock %}

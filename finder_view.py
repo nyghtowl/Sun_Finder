@@ -13,11 +13,11 @@ TO DO:
     Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
 
 QUESTIONS / ERROR:
-    Help finding Ajax page that shows loading
+    Help finding Ajax page that shows loading - jquery.post
     Clean up trying to setup login on the results page
     Revise logn if code to make into switch
 
-    jquery.post
+
 
 TOP TO DO:
     Create WT form and Login...
@@ -113,7 +113,7 @@ def login():
 def logout():
     logout_user()
     flash('You are now logged out')
-    return redirect(url_for('search'))
+    return redirect(url_for('search', locations=None))
 
 #create user form view
 @app.route('/create_login', methods = ['POST', 'GET'])
@@ -126,9 +126,8 @@ def create_login():
             if user_email == form.email.data:
                 flash ('email already exists')
                 return redirect(url_for('login'))
+        #if user doesn't exist, save from data in User object to commit to db
         if user == None:
-          
-            #save from data in User object to commit to db
             new_user = User(id = None,
                         email=form.email.data,
                         password=form.password.data,
@@ -145,39 +144,23 @@ def create_login():
             return redirect('/')
     return render_template('create_login.html', title='Create Account Form', form=form)
 
-# Display search // potentially this is the index page and just redirect
+# Display main search / index page
 @app.route('/search')
 def display_search():
-    return render_template('search.html')
+    # create object of neighborhoods from db
+    neighborhood = db_session.query(Location).all()
+    return render_template('search.html', locations=neighborhood)
 
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
     return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
- 
 
-# create search function 
+
+# renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
     return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
 
-    '''
-    First Solution: Utilizing sample local db - may still use
-
-    # query data model file to match name of location to lat & long and then assign to variables
-    loc_match = db_session.query(Location).filter(Location.n_hood.ilike("%" + question + "%")).one()
-    
-    # confirm the infromation captured matches db; otherwise throw error and ask to search again 
-    if loc_match:
-        # if there is a match the pass to get forecast, validate its day and then get elements to pop results
-        forecast_result = validate_day(get_forecast(loc_match))
-        forecast_result['loc_name'] = question.title()
-        #return redirect(url_for('fast_result'), result=forecast_result)
-        return render_template('fast_result.html', result = forecast_result)
-    else:
-        # FIX using flash or a result on the html page...
-        print "Sorry, we are not covering that area at this time. Please try again."
-        return redirect(url_for('search'))
-    '''
 
 
 # create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
