@@ -1,7 +1,5 @@
 // Main Javascript file for Sun Finder
 
-//load the visualization API with the map package
-// google.load("visualization", "1", {packages: ["map"]});
 
 // load map of SF with central location based on search
 function initialize() { 
@@ -93,6 +91,19 @@ function initialize() {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+//autocomplete function
+$(function() {
+	var tags = availableTags;
+
+	$( ".loc" ).autocomplete({
+    	source: tags, minLength: 3
+	});
+});
+
+
+
 //$('body').on('load', initialize);
 
 //FIX - ajax loader

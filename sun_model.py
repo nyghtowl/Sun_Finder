@@ -73,6 +73,13 @@ class Location(Base):
     rad = Column(Integer)
     n_hood = Column(String(128))
 
+    # FIX - figure out how to create a function out of comparing query txt to list of neighborhoods and return lat & lng
+    #def query_match(self, txt):
+
+        # if self.n_hood == txt:
+        #     return (self.lat, self.lng)
+
+
 # setting this up to generate the db when main is run directly from the command line
 def main():
     Base.metadata.create_all(engine)

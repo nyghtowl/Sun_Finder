@@ -20,15 +20,13 @@ QUESTIONS / ERROR:
 
 
 TOP TO DO:
-    Create WT form and Login...
-    Finish linking up just date
+
+    Finish linking up just date - put on both pages
     Put text and links on map
-    Setup autopopulate
+
     Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
     
-    Build out autocomplete w/ Liz direction
-    ajax - send off request and use ajax to pull in bits to load
-
+    finish setting up ajax 
 
     setup ability to choose time
 
@@ -149,19 +147,36 @@ def create_login():
 def display_search():
     # create object of neighborhoods from db
     neighborhood = db_session.query(Location).all()
+    session['n_hood'] = 5
+    print session
+    
     return render_template('search.html', locations=neighborhood)
 
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
-    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
-
+    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood=None))
 
 # renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
-    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY))
+    #neighborhood = session.get('n_hood')
+    neighborhood = db_session.query(Location).all()
+    print session
+    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood), locations=neighborhood)
 
-
+# Below were used to test session variable and prove its working
+@app.route("/test1")
+def test1():
+    session['forecast'] = 5
+  
+    session['squid'] = 5
+    return ""
+    
+ 
+@app.route("/test2")
+def test2():
+    print session
+    return ""
 
 # create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
 # @app.route('/more_details/')

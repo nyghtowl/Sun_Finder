@@ -155,6 +155,8 @@ class Weather(object):
             
 
     # FIX - define to generate neighborhood name
-    def location_name(self):
-        pass
+    def add_name(self, loc_name):
+        self.loc_name = loc_name
+        print self.loc_name
+
 

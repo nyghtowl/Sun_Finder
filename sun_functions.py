@@ -62,12 +62,17 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
     else:
         return None
 
+        #FIX flash a message to try search again if coord_result is not valid
+
+
 # function to generate search results for the different views
-def search_results(G_KEY, FIO_KEY, WUI_KEY):
-    
+def search_results(G_KEY, FIO_KEY, WUI_KEY, locations):
+
     # capture search form results
     txt_query = request.form['query']
     date_query = request.form['date']
+    g_lat = None
+    g_lng = None
     
     # FIX - search by specif time
 
@@ -82,38 +87,31 @@ def search_results(G_KEY, FIO_KEY, WUI_KEY):
         as_of_date = datetime.strptime(date_query, "%Y-%m-%d")
         as_of = datetime.combine(as_of_date,as_of_time)
     
-    # pull coordinates from Google Places
-    forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)
-    
-    #FIX - push certain results back to Google Places to improve weigh results for neighborhoods & potentially still use local db on neighborhoods
+    #print 20, locations.query_match(query)
 
-    # validate there are coordinates and then get the forecast
+    # pull coordinates from local database if query matches, else pull from Google Places
+    # go through the location object and create list of neighborhoods
+    # if the query matches one of the neighborhoods return in
+    # if it doesn't then use google places 
+
+
+    for location in locations:
+        if location.n_hood == txt_query:
+            g_lat = location.lat
+            g_lng = location.lng
+            loc_name = location.n_hood
+    if g_lat:
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY)
+        forecast_result.add_name(loc_name)
+    else:
+        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)
+
+    # validate time of date to determine picture to assign
     forecast_result.validate_day(as_of)
-
-    #FIX forecast_result['loc_name'] = txt_query.title()
 
     # returns forecast result
     return forecast_result
+
     # return render_template('fast_result.html', result = forecast_result)
 
     #FIX flash a message to try search again if coord_result is not valid
-
-    '''
-    First Solution: Utilizing sample local db - may still use
-
-    # query data model file to match name of location to lat & long and then assign to variables
-    loc_match = db_session.query(Location).filter(Location.n_hood.ilike("%" + question + "%")).one()
-    
-    # confirm the infromation captured matches db; otherwise throw error and ask to search again 
-    if loc_match:
-        # if there is a match the pass to get forecast, validate its day and then get elements to pop results
-        forecast_result = validate_day(get_forecast(loc_match))
-        forecast_result['loc_name'] = question.title()
-        #return redirect(url_for('fast_result'), result=forecast_result)
-        return render_template('fast_result.html', result = forecast_result)
-    else:
-        # FIX using flash or a result on the html page...
-        print "Sorry, we are not covering that area at this time. Please try again."
-        return redirect(url_for('search'))
-    '''
-    

@@ -45,25 +45,24 @@
 		<!-- for Bootstrap to work-->
 		<script src="static/js/bootstrap.min.js"></script>
 		
+		<!-- for Google Maps to work-->
+		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
+
 		<!-- Customized JS -->
 		<script src="static/js/main.js"></script>
 		
-		<!-- for Google Maps to work-->
-		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
-			<script>
-    		   $(function() {
-         		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-       			});
-    		   $(function() {
-			        var availableTags = [ 
-			        	{% for location in locations %}
-							"{{ location.n_hood }}", 
-						{% endfor %} ];
- 
-				$( ".loc" ).autocomplete({
-				    source: availableTags
-				});
-				});
-       		</script>
+		<script>
+			//datepicker
+		   $(function() {
+     		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+   			});
+
+		   //autocomplete list var
+	        var availableTags = [ 
+	        	{% for location in locations %}
+					"{{ location.n_hood|safe }}", 
+				{% endfor %} ];
+
+   		</script>
 	</body>
 </html>

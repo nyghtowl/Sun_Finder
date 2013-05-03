@@ -10,20 +10,19 @@
 		<!-- defines all the styles for html elements -->
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" media="screen" type="text/css">
-		<!-- included for datepicker format and additional jquery element style -->
+		<!-- included for datepicker format and additional jquery element ui -->
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 	</head>
 	<body>
 		<!-- part of setting the body apart from the footer -->
 		<div id="wrap"> 
 			<div class="container-fluid">
-				
 				<!-- search section -->
 				<div class="row-fluid">  
 					<h3> SF Sun Finder </h3>
             		<form action="{{ url_for('search') }}" method= 'POST' class="form-inline form-search">
             			<div class="input-append">
-	                		<input type="text" name="query" class="input-small span6 search-query" placeholder="enter neighborhood">
+	                		<input type="text" name="query" class="input-small span6 search-query loc" placeholder="enter neighborhood">
 	                		<button type="submit" class="btn btn-warning">Sun Search Again</button>
 	                	</div>
 	                		<input type="hidden" name="date" value="">
@@ -55,10 +54,30 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- for JQuery to work-->
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-		<script src="/static/js/bootstrap.min.js"></script>
-		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
-		<script src="/static/js/main.js"></script>
+		<!-- for Bootstrap to work-->
+		<script src="static/js/bootstrap.min.js"></script>
+		
+		<!-- for Google Maps to work-->
+		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>		
+		<!-- Customized JS -->
+		<script src="static/js/main.js"></script>
+		
+		<script>
+			//datepicker
+			$(function() {
+     			$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+   			});
+
+		   //autocomplete list var
+	        var availableTags = [ 
+	        	{% for location in locations %}
+					"{{ location.n_hood|safe }}", 
+				{% endfor %} ];
+
+		</script>
 	</body>
 </html>
