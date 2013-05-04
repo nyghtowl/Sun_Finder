@@ -12,10 +12,10 @@
     <form action="{{ url_for('create_login') }}" method="POST" name="create_login" class="form-horizontal">
         <h1 class="text-center">Sign Up Below</h1>
         <!-- utilize hidden tag to render any hidden fields-->
-        {{form.hidden_tag()}}
+        {{cl_form.hidden_tag()}}
 
         <!-- for loop to generate the form utilizing wtform object -->
-        {% for field in form %}
+        {% for field in cl_form %}
             <!-- made sure to not print csrf token -->
             {% if field.short_name != "csrf_token" %}
                 <div class="control-group">
@@ -40,5 +40,10 @@
     </form>
 
 </div>
+    <script>    
+        // sets lat and long to false so the map load will not initialize   
+        var map_lat = false;
+        var map_long = false;
+    </script>
 
 {% endblock %}

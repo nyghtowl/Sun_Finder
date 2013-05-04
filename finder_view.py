@@ -84,14 +84,20 @@ def load_user(user_id):
 def index():
     return redirect(url_for('search'))
 
+# @app.route('/login_modal', methods = ['GET', 'POST'])
+# def login_modal():
+#     form = LoginForm()
+#     return render_template('login_modal.html', title="Login Modal", cl_form=form)
+
 # Login user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    
+    l_form = LoginForm()
+    cl_form = CreateLogin()
+
     # login and validate the user exists in the database
-    if form.validate_on_submit():
-        user = db_session.query(User).filter(User.email==form.email.data).first()
+    if l_form.validate_on_submit():
+        user = db_session.query(User).filter(User.email==l_form.email.data).first()
 
         # if user exists then apply login user functionatlity to generate current_user session
         if user is not None:
@@ -102,7 +108,7 @@ def login():
         else:
             flash('Incorrect Password')
             return redirect('login')
-    return render_template('login.html', title="Login", form=form)
+    return render_template('login.html', title="Login", l_form=l_form, cl_form=cl_form)
 
 #logout
 @app.route('/logout')
@@ -112,15 +118,22 @@ def logout():
     flash('You are now logged out')
     return redirect(url_for('search', locations=None))
 
+# @app.route('/create_login', methods = ['POST', 'GET'])
+# def creat_modal():
+#     form = CreateLogin()
+#     return render_template('create_modal.html', title="Create Account Modal", cl_form=form)
+
 #create user form view
 @app.route('/create_login', methods = ['POST', 'GET'])
 def create_login():
-    form = CreateLogin()
-    if form.validate_on_submit():
-        user = db_session.query(User).filter(User.email == form.email.data).first()
+    cl_form = CreateLogin()
+    l_form = LoginForm()
+    neighborhood = db_session.query(Location).all()
+    if cl_form.validate_on_submit():
+        user = db_session.query(User).filter(User.email == cl_form.email.data).first()
         if user != None:
             user_email = user.email
-            if user_email == form.email.data:
+            if user_email == cl_form.email.data:
                 flash ('email already exists')
                 return redirect(url_for('login'))
         #if user doesn't exist, save from data in User object to commit to db
@@ -139,17 +152,19 @@ def create_login():
             db_session.commit()
             flash('Account creation successful. Please login to your account.')
             return redirect('/')
-    return render_template('create_login.html', title='Create Account Form', form=form)
+    return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form, locations=neighborhood)
 
 # Display main search / index page
 @app.route('/search')
 def display_search():
     # create object of neighborhoods from db
     neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()
+
     session['n_hood'] = 5
     print session
     
-    return render_template('search.html', locations=neighborhood)
+    return render_template('search.html', locations=neighborhood, l_form=l_form)
 
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
@@ -159,8 +174,9 @@ def ajax_search():
 @app.route('/search', methods=['POST'])
 def search():
     neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()
     print session
-    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood), locations=neighborhood)
+    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood), locations=neighborhood, l_form=l_form)
 
 
 # create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere

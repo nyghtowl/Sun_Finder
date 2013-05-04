@@ -48,7 +48,16 @@ function initialize() {
 
 	var homeLatLng = new google.maps.LatLng(37.7627, -122.4352);
 
-	//sample Marker with Label
+	// var homeLatLng = {
+	// 		pos = [
+	//   		new google.maps.LatLng(37.7600, -122.4148),
+	//   		new google.maps.LatLng(37.7572, -122.3999),
+	//   		new google.maps.LatLng(37.7415, -122.4144)
+	//   		]};
+
+	// //sample Marker with Label
+	// for (var i = 0)
+		
 	var marker1 = new MarkerWithLabel({
        position: homeLatLng,
        draggable: true,

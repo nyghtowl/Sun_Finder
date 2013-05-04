@@ -11,10 +11,10 @@
 
         <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal"    >
             <!-- utilize hidden tag to render any hidden fields-->
-            {{form.hidden_tag()}}
+            {{l_form.hidden_tag()}}
             
             <!-- for loop to generate the form utilizing wtform object -->
-            {% for field in form %}
+            {% for field in l_form %}
                 <!-- made sure to not print csrf token -->
                 {% if field.short_name != "csrf_token" %}
                     <div class="control-group">
