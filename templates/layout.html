@@ -2,7 +2,7 @@
 <!-- Layout page for Sun Finder-->
 <html lang="en">
 	<head>
-		<title>SF Sun Finder</title>
+		<title>Sun Finder</title>
 		<!-- supposed to work if compiled Boostrap from the Customize page?-->
 		<meta name = "viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
 		<!-- responsive layout -->
@@ -55,17 +55,19 @@
 		<script src="static/js/main.js"></script>
 		
 		<script>
-			//datepicker
-			$(function() {
-     			$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-   			});
-
+		console.log("page immediate");
 		   //autocomplete list var
 	        var availableTags = [ 
 	        	{% for location in locations %}
 					"{{ location.n_hood|safe }}", 
-				{% endfor %} ];
+				{% endfor %} 
+				];
 
+			var positionCoords = [
+				{% for coord in locations %}
+					new google.maps.LatLng({{ coord.lat}}, {{ coord.lng }}),
+				{% endfor %}
+				];
 		
 		</script>
 	</body>

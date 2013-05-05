@@ -14,18 +14,24 @@ TO DO:
 
 QUESTIONS / ERROR:
     Help finding Ajax page that shows loading - jquery.post
-    Clean up trying to setup login on the results page
-    Revise logn if code to make into switch
+
+    map
+
 
 
 TOP TO DO:
+    finish setting up ajax 
 
     Finish linking up just date - put on both pages
     Put text and links on map
 
     Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
+    Put datepicker on results page
+
+    clean up data passing in views form
+
+    run linter
     
-    finish setting up ajax 
 
     setup ability to choose time
 
@@ -36,6 +42,10 @@ TOP TO DO:
 
     utilize makefile or grunt to prepare the code and combine to push out
     look at github/pamalafox/everday/blob/master/application/urls.py - for additional ideas on user data to structure for users
+
+    deployment
+
+    get weather results ahead and cache
 
 
 """

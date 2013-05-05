@@ -73,26 +73,27 @@ class Weather(object):
             "sleet":("sleet", "sleet2.png"), 
             "fog":("fog", "foggy2.png"), 
             "cloudy":("cloudy", "cloudy.png"), 
-            "partly-cloudy-day":("partly cloudy", "partly_cloudy.png")
+            "partly-cloudy-day":("partly cloudy", "partly_cloudy.png"),
+            "mostlycloudy":("partly cloudy", "cloudy.png")
             }
 
         # FIX - apply switch statement - check out data dispatch
 
         # apply image for conditions at time of request        
-        if self.fio_icon in weather_pics:
+        if self.wui_icon in weather_pics:
             # setup to return text for sun result
-            self.sun_result = weather_pics[self.fio_icon][0]
+            self.sun_result = weather_pics[self.wui_icon][0]
             # forces clear day result if the cloud cover is < 20%
-            if (self.fio_icon == 'partly-cloudy-day'):
+            if (self.wui_icon == 'partly-cloudy-day'):
                 if self.cloud_cover < .20:
                     self.pic = pic_loc + weather_pics['clear-day'][1]
                 elif self.cloud_cover > .80:
                     self.pic = pic_loc + weather_pics['cloudy'][1]
                 else:
-                    self.pic = pic_loc + weather_pics[self.fio_icon][1]
+                    self.pic = pic_loc + weather_pics[self.wui_icon][1]
             else:
-                self.pic = pic_loc + weather_pics[self.fio_icon][1]
-        elif (self.fio_icon == 'wind'):
+                self.pic = pic_loc + weather_pics[self.wui_icon][1]
+        elif (self.wui_icon == 'wind'):
             if (self.cloud_cover < .20):
                 self.pic = pic_loc + weather_pics['clear-day'][1]
             else:

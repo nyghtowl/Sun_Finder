@@ -16,11 +16,9 @@
   padding: 7px 9px;
 }
 
-#more_details {
-  display: none;
-  height: 200px;
-  width: 100%;
-  background-color: grey;
+/* gives margin for index page elements */
+.margin60 {
+  margin-top: 60px;
 
 }
 
@@ -55,14 +53,13 @@
 /* map label */
 
  .labels {
-   color: blue;
-   background-color: white;
+   color: solid black;
    font-family: "Lucida Grande", "Arial", sans-serif;
-   font-size: 10px;
+   font-size: 12px;
    font-weight: bold;
    text-align: center;
    width: 60px;     
-   border: 0px solid black;
+   border: 0px;
    white-space: nowrap;
  }
 
@@ -97,7 +94,8 @@
         margin: 0 auto -60px;
       }
 
-      /* Set the fixed height of the footer here */
+
+      /* Set the fixed height and style of the footer here */
       #push,
       #footer {
         height: 60px;
