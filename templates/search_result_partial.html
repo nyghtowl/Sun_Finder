@@ -53,19 +53,27 @@
                     {% if result %} 
                         <dl class="dl-horizontal">
                             <dt>Temp °F:</dt> 
-                            <dt>Feels Like °F:</dt> 
+                            {% if result.feels_like_F %}
+                                <dt>Feels Like °F:</dt> 
+                            {% endif %}
                             <dt>Temp °C:</dt> 
-                            <dt>Feels Like °C:</dt> 
+                            {% if result.feels_like_C %}
+                                <dt>Feels Like °C:</dt> 
+                            {% endif %}
                             <dt>Cloud Cover:</dt> 
                             <dt>Wind:</dt> 
                             <dt>Humidty:</dt> 
                             <dd>{{ result.tempr_wui_F|round(1, 'ceil') }} °F</dd>
-                            <dd>{{ result.feels_like_F }} °F</dd>
+                            {% if result.feels_like_F %}
+                                <dd>{{ result.feels_like_F }} °F</dd>
+                            {% endif %}
                             <dd>{{ result.tempr_wui_C|round(1, 'ceil') }} °C</dd>
-                            <dd>{{ result.feels_like_C }} °C</dd>
+                            {% if result.feels_like_C %}
+                               <dd>{{ result.feels_like_C }} °C</dd>
+                            {% endif %}
                             <dd>{{ (result.cloud_cover * 100)|round|int }}% </dd>
                             <dd>{{ result.wind_mph }}mph</dd>
-                            <dd>{{ (result.humidity * 100) }}%</dd>
+                            <dd>{{ result.humidity }}%</dd>
                         </dl>
                     {% endif %}
                 </div>

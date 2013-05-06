@@ -16,7 +16,7 @@ from datetime import datetime
 import time
 
 
-def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
+def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
     # use regex to swap space with plus and add neighborhood to help focus results
     txt_plus = re.sub('[ ]', '+', txt_query) + '+neighborhood'
 
@@ -58,7 +58,7 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
 
     # return Weather object if coordinates exist
     if g_lat:
-        return weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY)
+        return weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
     else:
         return None
 
@@ -66,26 +66,13 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY):
 
 
 # function to generate search results for the different views
-def search_results(G_KEY, FIO_KEY, WUI_KEY, locations):
-
+def search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, locations):
     # capture search form results
     txt_query = request.form['query']
-    date_query = request.form['date']
     g_lat = None
     g_lng = None
     
     # FIX - search by specif time
-
-
-    # determine date captured to utilize
-    if not(date_query):
-        as_of = datetime.now()
-    else:
-        #grabs date that is entered and combines with automatically generated time
-        #FIX - all entering time
-        #as_of_time = datetime.datetime.now().time()
-        as_of_date = datetime.strptime(date_query, "%Y-%m-%d")
-        as_of = datetime.combine(as_of_date,as_of_time)
     
     #print 20, locations.query_match(query)
 
@@ -94,17 +81,16 @@ def search_results(G_KEY, FIO_KEY, WUI_KEY, locations):
     # if the query matches one of the neighborhoods return in
     # if it doesn't then use google places 
 
-
     for location in locations:
         if location.n_hood == txt_query:
             g_lat = location.lat
             g_lng = location.lng
             loc_name = location.n_hood
     if g_lat:
-        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY)
-        forecast_result.add_name(loc_name)
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
+        forecast_result.add_name(loc_name) # applies neighborhood name if from local db
     else:
-        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY)
+        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of)
 
     # validate time of date to determine picture to assign
     forecast_result.validate_day(as_of)
@@ -115,3 +101,14 @@ def search_results(G_KEY, FIO_KEY, WUI_KEY, locations):
     # return render_template('fast_result.html', result = forecast_result)
 
     #FIX flash a message to try search again if coord_result is not valid
+
+def extract_as_of(date_string):
+    if not(date_string):
+        as_of = datetime.now()
+    else:
+        #grabs date that is entered and combines with automatically generated time
+        as_of_date = datetime.strptime(date_string, "%Y-%m-%d")
+        as_of_time = datetime.now().time() #this applies a auto time to the date picked / not timepicker
+        as_of = datetime.combine(as_of_date,as_of_time)
+
+    return as_of 

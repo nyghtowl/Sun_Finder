@@ -6,24 +6,13 @@ TO DO:
         change secret key 
         turn off debug
 
-    Currently small sample used and picking center of neighborhood. Future would be good to find a better way to apply
 
-    Need to add neighborhood to query - still not perfect but will help center
-    Set radius and cetnral coordinates to cover bay area
-    Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
-
-QUESTIONS / ERROR:
-    Help finding Ajax page that shows loading - jquery.post
-
-    map
-
-
-
-TOP TO DO:
     finish setting up ajax 
 
     Finish linking up just date - put on both pages
+    
     Put text and links on map
+    Change what labels show based on the zoom level of map
 
     Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
     Put datepicker on results page
@@ -32,11 +21,12 @@ TOP TO DO:
 
     run linter
     
-
     setup ability to choose time
 
     polygon file - aquire for neihborhood - google maps has a way to apply polygon shape and make clickable
-    flask login
+
+    Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
+
 
     look into lscache - to store content on the local computer - would be good for storing weather
 
@@ -47,10 +37,13 @@ TOP TO DO:
 
     get weather results ahead and cache
 
+QUESTIONS / ERROR:
+    Help finding Ajax page that shows loading - jquery.post
+
 
 """
 
-from flask import Flask, render_template, redirect, url_for, session, flash
+from flask import Flask, render_template, redirect, url_for, session, flash, request
 # import model and assign to db_session variable
 from sun_model import session as db_session, Location, User
 #login import
@@ -63,6 +56,7 @@ import os
 import sun_functions
 import weather_forecast
 import json 
+from datetime import datetime, timedelta
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
@@ -178,16 +172,32 @@ def display_search():
 
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
-    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood=None))
+    as_of = sun_functions.extract_as_of(request.form['date'])
+    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, neighborhood=None))
+
+def is_supported_date(as_of):
+    if as_of.date() < datetime.now().date():
+        return False
+    if as_of.date() > (datetime.now() + timedelta(days=4)).date():
+        return False
+    return True
 
 # renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
     neighborhood = db_session.query(Location).all()
-    l_form = LoginForm()
-    print session
-    return render_template('fast_result.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood), locations=neighborhood, l_form=l_form)
+    # determine date captured to utilize
+    as_of = sun_functions.extract_as_of(request.form['date'])
 
+    if not is_supported_date(as_of):
+        # fall back to current for bad date
+        # TODO: flash an error instead?
+        print "FAILED date unsupported %s" % as_of
+        as_of = datetime.now()
+
+    l_form = LoginForm()
+    search_result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, neighborhood)
+    return render_template('fast_result.html', result=search_result, locations=neighborhood, l_form=l_form)
 
 # create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
 # @app.route('/more_details/')

@@ -5,7 +5,7 @@
 function initialize() { 
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
-console.log("initialize");
+console.log("initialize"); // test
 	//pulls lat, lng from fast result html
 	var myLatlng = new google.maps.LatLng(map_lat,map_long);
 	var map_canvas = document.getElementById('map_canvas');
@@ -72,20 +72,6 @@ console.log("initialize");
     //    content: "Home For Sale"
     // });
 
-	//put multiple markers on map
-	// function createMarker(position, label) {
-	// // 	//FIX need to figure out how to swap out google marker with my own and get label to come up
-	//     return new google.maps.Marker({
-	// 	    position: position,
-	// 	    draggable: false,
-	// 	    map: map,
-	// 	    title: label,
-	// 	    labelText: label,
-	// 	    labelClass: "labels", // the CSS class for the label
-	// 	    labelStyle: {top: "0px", left: "-21px", opacity: 0.75},
-	// 	    labelVisible: true
-	//     });
-	//  }
 
 	// apply MarkerWith Label to putting multiple markers on the map
 	function createMarker(position, label) {
@@ -121,30 +107,13 @@ console.log("initialize");
   	//adds static markers based on lat, long
     readData(positionCoords, availableTags);
 
-	// var positions = [
-	//   		new google.maps.LatLng(37.7600, -122.4148),
-	//   		new google.maps.LatLng(37.7572, -122.3999),
-	//   		new google.maps.LatLng(37.7415, -122.4144)
-	// ];
-	// var labels = ["Mission", "Potrero", "Bubo"];
-	// readData(positions, labels);
-
-
-	// google.maps.event.addListener(marker1, "click", function (e) { iw1.open(map, this); });	
-
 }
 
-console.log("main immediate");
+console.log("main immediate"); //test
+
 // previous approach call the map load function
 // 	google.maps.event.addDomListener(window, 'load', initialize);	
 
-//starting a jquery example that pulls the variables from html
-// $(function(){
-
-// 	var pos = positionCoords;
-//  	var label = availableTags;
-
-// });
 
 // jquery search event map load - set as if there is coord then initialize
 $(function() { 
@@ -158,7 +127,7 @@ $(function() {
 
 // jquery autocomplete function
 $(function() {
-console.log("anon autocomplete");
+console.log("anon autocomplete"); //test
 	var tags = availableTags;
 
 	$( ".loc" ).autocomplete({

@@ -11,8 +11,8 @@
     <div class="span5 offset1">
         <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
             <input type="text" name="query" class="input-medium search-query loc" placeholder="enter neighborhood">
+            <input type="text" name="date" class="datepicker span1">
             <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button>
-            <input type="hidden" name="date" value="">
         </form>
     </div>
 
