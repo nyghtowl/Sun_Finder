@@ -2,8 +2,7 @@
 sun_functions.py -  Sun Finder functions  
 
 """
-# use flask requests to pull from forms
-from flask import request
+
 # import model and assign to db_session variable
 from sun_model import session as db_session, Location, User
 # use requests to pull api info - alternative is urllib - this is more human
@@ -12,7 +11,7 @@ import weather_forecast
 # utilize for regular expressions
 import re
 # leverage for reporting time result
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 
 
@@ -65,43 +64,15 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
         #FIX flash a message to try search again if coord_result is not valid
 
 
-# function to generate search results for the different views
-def search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, locations):
-    # capture search form results
-    txt_query = request.form['query']
-    g_lat = None
-    g_lng = None
-    
-    # FIX - search by specif time
-    
-    #print 20, locations.query_match(query)
+# validate the date chosen for search has data results
+def validate_date(as_of):
+    if as_of.date() < datetime.now().date():
+        return False
+    if as_of.date() > (datetime.now() + timedelta(days=4)).date():
+        return False
+    return True
 
-    # pull coordinates from local database if query matches, else pull from Google Places
-    # go through the location object and create list of neighborhoods
-    # if the query matches one of the neighborhoods return in
-    # if it doesn't then use google places 
-
-    for location in locations:
-        if location.n_hood == txt_query:
-            g_lat = location.lat
-            g_lng = location.lng
-            loc_name = location.n_hood
-    if g_lat:
-        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
-        forecast_result.add_name(loc_name) # applies neighborhood name if from local db
-    else:
-        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of)
-
-    # validate time of date to determine picture to assign
-    forecast_result.validate_day(as_of)
-
-    # returns forecast result
-    return forecast_result
-
-    # return render_template('fast_result.html', result = forecast_result)
-
-    #FIX flash a message to try search again if coord_result is not valid
-
+# generate valid as_of date to create weather object
 def extract_as_of(date_string):
     if not(date_string):
         as_of = datetime.now()
@@ -111,4 +82,44 @@ def extract_as_of(date_string):
         as_of_time = datetime.now().time() #this applies a auto time to the date picked / not timepicker
         as_of = datetime.combine(as_of_date,as_of_time)
 
+    if not validate_date(as_of):
+        # fall back to current for bad date
+        # TODO: flash an error instead?
+        print "FAILED date unsupported %s" % as_of
+        as_of = datetime.now()
+
     return as_of 
+
+# function to generate search results for the different views
+def search_results(G_KEY, FIO_KEY, WUI_KEY, locations, date, txt_query):
+
+    g_lat = None
+    g_lng = None
+
+    # determine date captured to utilize
+    as_of = extract_as_of(date)
+    
+    # FIX - search by specif time
+
+    # utilize local db for coordinates if query relates
+    for location in locations:
+        if location.n_hood == txt_query:
+            g_lat = location.lat
+            g_lng = location.lng
+            loc_name = location.n_hood
+    if g_lat:
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
+        forecast_result.add_name(loc_name) # applies neighborhood name if from local db
+    # if no query match to local db use Google Places
+    else:
+        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of)
+
+    # validate time of date to determine picture to assign
+    forecast_result.apply_pic()
+
+    # returns forecast result
+    return forecast_result
+
+
+    #FIX flash a message to try search again if coord_result is not valid
+

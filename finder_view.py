@@ -56,7 +56,6 @@ import os
 import sun_functions
 import weather_forecast
 import json 
-from datetime import datetime, timedelta
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
@@ -88,11 +87,6 @@ def load_user(user_id):
 def index():
     return redirect(url_for('search'))
 
-# @app.route('/login_modal', methods = ['GET', 'POST'])
-# def login_modal():
-#     form = LoginForm()
-#     return render_template('login_modal.html', title="Login Modal", cl_form=form)
-
 # Login user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -121,11 +115,6 @@ def logout():
     logout_user()
     flash('You are now logged out')
     return redirect(url_for('search', locations=None))
-
-# @app.route('/create_login', methods = ['POST', 'GET'])
-# def creat_modal():
-#     form = CreateLogin()
-#     return render_template('create_modal.html', title="Create Account Modal", cl_form=form)
 
 #create user form view
 @app.route('/create_login', methods = ['POST', 'GET'])
@@ -166,47 +155,35 @@ def display_search():
     l_form = LoginForm()
 
     session['n_hood'] = 5
-    print session
+    print 7, session
     
     return render_template('search.html', locations=neighborhood, l_form=l_form)
 
+# FIX - view template to run Ajax spinner
 @app.route("/ajax_search", methods=["POST"])
 def ajax_search():
-    as_of = sun_functions.extract_as_of(request.form['date'])
+    as_of = session.get('date')
     return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, neighborhood=None))
 
-def is_supported_date(as_of):
-    if as_of.date() < datetime.now().date():
-        return False
-    if as_of.date() > (datetime.now() + timedelta(days=4)).date():
-        return False
-    return True
 
 # renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
+    # generate local neighborhood object
     neighborhood = db_session.query(Location).all()
-    # determine date captured to utilize
-    as_of = sun_functions.extract_as_of(request.form['date'])
 
-    if not is_supported_date(as_of):
-        # fall back to current for bad date
-        # TODO: flash an error instead?
-        print "FAILED date unsupported %s" % as_of
-        as_of = datetime.now()
+    # capture search form query text
+    txt_query = request.form['query']
+    # catpure form date filter
+    date = request.form['date']
 
-    l_form = LoginForm()
-    search_result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, neighborhood)
-    return render_template('fast_result.html', result=search_result, locations=neighborhood, l_form=l_form)
+    session['date'] = date
 
-# create extended view that of weather results (Note need trailing slash to avoid 404 error if web page access trys to add it) - example of session to leverage elsewhere
-# @app.route('/more_details/')
-# def more_details():
-#     forecast_details = session.get('forecast')
-#     print forecast_details
-#     #print forecast_details
-#     return render_template('more_details.html', details=forecast_details)
-#     session.pop('forecast', None)
+    l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
+    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+
+    return render_template('fast_result.html', result=weather, locations=neighborhood, l_form=l_form)
+
 
 # create map view - set this up to test
 @app.route('/map_view')
@@ -215,7 +192,6 @@ def map_view():
 
 
 # create profile page view with favorites and ability report on validty of sun
-
 
 
 # FIX - Json view - what Liz added to help with adding Ajax - need to rework

@@ -8,42 +8,85 @@ import requests
 import datetime
 import time
 import moonphase
+from pprint import pprint
 
 class Weather(object):
-    def __init__(self, fio_response, wui_response):
-        #import pdb; pdb.set_trace()
-        # jdunck - I would take as_of here, then run through the list of ['daily']['data'] until I found sunriseTime in the range.
+    def __init__(self, fio_response, wui_response, as_of):
+        # testing
+        # print "X" * 80
+        # pprint(fio_response)
+        # print "Y" * 80
+        # pprint(wui_response)
+
         self.lat = fio_response['latitude'] #shortest code to get to it out of results
         self.lng = fio_response['longitude']
-        self.fio_icon = fio_response['hourly']['icon'] #first built off this icon and haven't mapped wui yet
-        self.wui_icon = wui_response['current_observation']['icon'] 
         self.pic = None
+        self.loc_name = None
+        self.date = as_of
+        #FIX change revise time based on what is submitted
+        self.time = None  
+        self.sun_result = None
+        self.moonphase = None
+        #self.fio_icon = fio_response['hourly']['icon'] #first built off this icon and haven't mapped wui yet
+
+        # determines if date is current or future to determine what data points to pull
+        if as_of.date() == datetime.date.today():
+            self.apply_current(fio_response, wui_response)
+        else:
+            (fio_fragment, wui_fragment) = self.find_for(fio_response, wui_response, as_of)
+            self.apply_for(fio_fragment, wui_fragment)
+
+    #sets up the data points for current date
+    def apply_current(self, fio_response, wui_response):
+        self.wui_icon = wui_response['current_observation']['icon'] 
         self.tempr_wui_F = wui_response['current_observation']['temp_f']
         self.tempr_wui_C = wui_response['current_observation']['temp_c']
-        self.tempr_wui_str = wui_response['current_observation']['temperature_string']
+        #self.tempr_wui_str = wui_response['current_observation']['temperature_string']
         self.tempr_fio_F = fio_response['currently']['temperature']
         self.cloud_cover = fio_response['currently']['cloudCover']
-        #FIX change name
-        self.loc_name = None
-        #FIX change revise time based on what is submitted
-        self.time = datetime.datetime.now() # time.time() creates time stampe - switched to datetime
         self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime']) #not in wui
         self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime']) #not in wui
         self.wind_mph = wui_response['current_observation']['wind_gust_mph'] 
-        self.feels_like_str = wui_response['current_observation']['feelslike_string']
+        #self.feels_like_str = wui_response['current_observation']['feelslike_string']
         self.feels_like_F = wui_response['current_observation']['feelslike_f']
         self.feels_like_C = wui_response['current_observation']['feelslike_c']
-        self.humidity = fio_response['currently']['humidity']
+        self.humidity = wui_response['forecast']['simpleforecast']['forecastday'][0]['avehumidity']
         #self.precipitation = fio_response['currently']['precipProbability'] #not in wui & disappeared from fio
-        self.mult_day = wui_response['forecast']['simpleforecast']['forecastday']
-        self.sun_result = None
-        self.moonphase = None
 
-    #FIX Pull out by hour and by day
+    #looping through data to pull out the relevant dictionaries of data and passing to apply_for 
+    def find_for(self, fio_response, wui_response, as_of):
+        fio_fragment = wui_fragment = None
+
+        for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
+            # import pdb;pdb.set_trace() - way to debug
+            if datetime.datetime.fromtimestamp(float(fragment['date']['epoch'])).date() == as_of.date():
+                wui_fragment = fragment
+                break
+        for fragment in fio_response['daily']['data']:
+            if datetime.datetime.fromtimestamp(float(fragment['time'])).date() == as_of.date():
+                fio_fragment = fragment
+                break
+        return (fio_fragment, wui_fragment)
+
+    # apply data attributes for future dates
+    def apply_for(self, fio_fragment, wui_fragment):
+        self.wui_icon = wui_fragment['icon'] 
+        self.tempr_wui_F = float(wui_fragment['high']['fahrenheit'])
+        self.tempr_wui_C = float(wui_fragment['high']['celsius'])
+        self.tempr_fio_F = fio_fragment['temperatureMax']
+        self.cloud_cover = fio_fragment['cloudCover']
+        self.fio_sunrise = int(fio_fragment['sunriseTime']) #not in wui
+        self.fio_sunset = int(fio_fragment['sunsetTime']) #not in wui
+        self.wind_mph = wui_fragment['avewind']['mph'] 
+        self.humidity = wui_fragment['avehumidity']
+        self.feels_like_F = None
+        self.feels_like_C = None
+
+    #FIX Pull out by hour
 
     # method that can be called before or without initializing the class
     @staticmethod
-    def get_forecast(lat, lon, FIO_KEY, WUI_KEY):
+    def get_forecast(lat, lon, FIO_KEY, WUI_KEY, as_of):
         # url to pass to Forecast.io
         fio_url="https://api.forecast.io/forecast/%s/%f,%f"
         # pull API key from env with FIO_KEY
@@ -59,7 +102,7 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(fio_response, wui_response)
+        return Weather(fio_response, wui_response, as_of)
         
     # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
@@ -74,10 +117,11 @@ class Weather(object):
             "fog":("fog", "foggy2.png"), 
             "cloudy":("cloudy", "cloudy.png"), 
             "partly-cloudy-day":("partly cloudy", "partly_cloudy.png"),
-            "mostlycloudy":("partly cloudy", "cloudy.png")
+            "mostlycloudy":("partly cloudy", "cloudy.png"),
+            "partlycloudy":("partly cloudy", "partly_cloudy.png")
             }
 
-        # FIX - apply switch statement - check out data dispatch
+        #FIX - confirm the terms for wui_icon
 
         # apply image for conditions at time of request        
         if self.wui_icon in weather_pics:
@@ -114,7 +158,7 @@ class Weather(object):
             "Waxing Gibbous":"moon_waxinggibbous.png"
             }
 
-        moon = moonphase.main(self.time)
+        moon = moonphase.main(self.date)
         print 'add_night, %s' % moon
 
         if moon in night_pics:
@@ -124,30 +168,24 @@ class Weather(object):
             print 'Error finding photo for the time of day'
 
     # confirms time of day and pulls corresponding image
-    def validate_day(self, as_of=None):
+    def apply_pic(self):
         pic_loc = '/static/img/'        
-        
-        # FIX as_of and how to pull out results that are not current date
-
-        # set object day to date entered by user or current 
-        self.time = as_of
 
         # pull sunrise and sunset from weather results
         sunrise = datetime.datetime.fromtimestamp(self.fio_sunrise)
         sunset = datetime.datetime.fromtimestamp(self.fio_sunset)
 
         #testing
-        print 'validate_day'
-        print 1, self.fio_icon
+        print 'apply_pic'
         print 2, self.wui_icon
-        print 3, moonphase.main(as_of)
+        print 3, moonphase.main(self.date)
 
-        print 4, self.time
+        print 4, self.date
         print 5, sunrise
         print 6, sunset
 
         # picture assigned based on time of day
-        if sunrise < self.time < sunset:
+        if sunrise < self.date < sunset:
             self.add_day_pic(pic_loc)
         else:
             print 'it\'s not daytime' #test
@@ -160,4 +198,4 @@ class Weather(object):
         self.loc_name = loc_name
         print self.loc_name
 
-
+        
