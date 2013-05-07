@@ -7,10 +7,10 @@ TO DO:
         turn off debug
 
 
-    finish setting up ajax 
+    Date - add a couple additional data points for date
 
-    Finish linking up just date - put on both pages
-    
+    add flash
+
     Put text and links on map
     Change what labels show based on the zoom level of map
 
@@ -36,6 +36,8 @@ TO DO:
     deployment
 
     get weather results ahead and cache
+
+    Places API responses may include Listings provider attributions in HTML format that must be displayed to the user as provided. Put below search results 
 
 QUESTIONS / ERROR:
     Help finding Ajax page that shows loading - jquery.post
@@ -85,7 +87,13 @@ def load_user(user_id):
 # main index page
 @app.route('/')
 def index():
-    return redirect(url_for('search'))
+    # return redirect(url_for('search'))
+
+    neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()
+    
+    return render_template('index.html', locations=neighborhood, l_form=l_form)
+
 
 # Login user
 @app.route('/login', methods=['GET', 'POST'])
@@ -147,43 +155,63 @@ def create_login():
             return redirect('/')
     return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form, locations=neighborhood)
 
-# Display main search / index page
-@app.route('/search')
-def display_search():
-    # create object of neighborhoods from db
-    neighborhood = db_session.query(Location).all()
-    l_form = LoginForm()
-
-    session['n_hood'] = 5
-    print 7, session
-    
-    return render_template('search.html', locations=neighborhood, l_form=l_form)
 
 # FIX - view template to run Ajax spinner
-@app.route("/ajax_search", methods=["POST"])
+@app.route("/ajax_search", methods = ['POST', 'GET'])
 def ajax_search():
-    as_of = session.get('date')
-    return render_template('search_results_partial.html', result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, as_of, neighborhood=None))
+    # generate local neighborhood object
+    neighborhood = db_session.query(Location).all()
 
+    # # capture search form query text
+    txt_query = request.form['query']
+    # # catpure form date filter
+    date = request.form['date']
+
+#    date=request.args['date'] - calls through browser
+#    txt_query=request.args['query']
+
+    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+
+    return render_template('search_result_partial.html', result=weather)
+    print "hello"
 
 # renders result page after a search 
 @app.route('/search', methods=['POST'])
 def search():
     # generate local neighborhood object
     neighborhood = db_session.query(Location).all()
+    l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
 
-    # capture search form query text
     txt_query = request.form['query']
-    # catpure form date filter
+    # # catpure form date filter
     date = request.form['date']
 
-    session['date'] = date
+    
+    return render_template('fast_result.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
 
-    l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
-    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
 
-    return render_template('fast_result.html', result=weather, locations=neighborhood, l_form=l_form)
+# about page
+@app.route('/about')
+def about():  
+    neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()  
+    return render_template('about.html', locations=neighborhood, l_form=l_form)
 
+# terms of service page
+@app.route('/tos')
+def tos(): 
+    neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()  
+    return render_template('tos.html', locations=neighborhood, l_form=l_form)
+
+
+# privacy policy page
+@app.route('/privacy')
+def privacy():    
+    neighborhood = db_session.query(Location).all()
+    l_form = LoginForm()  
+    return render_template('privacy.html', locations=neighborhood, l_form=l_form)
+    
 
 # create map view - set this up to test
 @app.route('/map_view')

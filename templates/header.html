@@ -2,7 +2,7 @@
 
 <div class="row-fluid">
     <div class="offset1">  
-        <h3> SF Sun Finder </h3>
+        <h3> Sun Finder </h3>
     </div>
 </div>
 
@@ -11,8 +11,9 @@
     <div class="span5 offset1">
         <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
             <input type="text" name="query" class="input-medium search-query loc" placeholder="enter neighborhood">
-            <input type="text" name="date" class="datepicker span1">
-            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button>
+            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button><br>
+            <i class="icon-calendar"></i> <input type="text" name="date" class="search-query input-small datepicker" placeholder="select date"> <i class=" icon-map-marker"></i>
+
         </form>
     </div>
 

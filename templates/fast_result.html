@@ -7,24 +7,42 @@
 	<div>
 		{% include "header.html" %}
 	</div>
-	
+
 	<!-- populates search result page --> 
+	
+    <div>
+        
+    </div>
+
 	<div id="search_result_target">
-		{% include "search_result_partial.html" %}
+	<div id="spinner">
+		<p id=”progress”><img id=”progress_image” src="static/img/spiffygif_56x56.gif" class="ajax_pad" alt=""> Uploading in progress…</p>
+	</div>
 	</div>
 
-	<script>
-		//  lat and lng to test with (37.7655,-122.4429),
-		
-		// condition to set map_lat & map_long to false if no result
-		{% if result.lat %}
-			var map_lat = {{ result.lat }};
-			var map_long = {{ result.lng }};
-		{% else %}
-			var map_lat = false;
-			var map_long = false;
-		{% endif %}
+<script type="text/javascript">
+//  lat and lng to test with (37.7655,-122.4429),
+    
+    // condition to set map_lat & map_long to false if no result
 
+	var map_lat = false;
+	var map_long = false;
+ 
+	function do_search()
+	{
+		// $.post('ajax_search', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+		$.post('ajax_search', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+	 		$('#search_result_target').html(data);
+//			alert('ajax_search returned');
 
-	</script>
+		}); 
+	}
+
+	function dom_ready()
+	{
+		do_search();
+	}
+
+</script>
+
 {% endblock %}

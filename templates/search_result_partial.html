@@ -11,7 +11,8 @@
                     {% if result.loc_name %}
                         {{ result.loc_name }}
                     {% endif %} 
-                    Sun Result</h4>
+                    Sun Result <br><small><i> as of 
+                    {{ result.print_date }}</i></small></h4>  
                 <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
                 {% if result.sun_result == "sun" %}
                     <p class="text-center"> Sun found! </p>
@@ -26,7 +27,8 @@
                     {% if result.loc_name %}
                         {{ result.loc_name }} 
                     {% endif %}
-                    Moon Result</h4>
+                    Moon Result <br><small><i> as of 
+                    {{ result.print_date }}</i></small></h4>
                 <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
                 <p class="text-center">{{ result.moonphase }} Moon<br> Look for sun tomorrow.</p>
             {% endif %}
@@ -84,3 +86,21 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            //  lat and lng to test with (37.7655,-122.4429),
+            
+            // condition to set map_lat & map_long to false if no result
+            {% if result.lat %}
+                map_lat = {{ result.lat }};
+                map_long = {{ result.lng }};
+
+                initialize();
+                
+            {% else %}
+                map_lat = false;
+                map_long = false;
+            {% endif %}
+
+
+        </script>

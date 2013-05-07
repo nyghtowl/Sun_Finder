@@ -1,11 +1,54 @@
-<!-- Index page for Sun Finder -->
+<!-- Index page for Sun Finder-->
+
 {% extends "layout.html" %}
 
 {% block body %}
-	<div class="span5 offset5">
-		<h1> How's it going? </h1>
-		<a href="{{ url_for('search') }}">Search</a>
-		<a href="{{ url_for('map_view') }}">Map</a>
+	<div class="ui-widget">
+	    <!-- Create Account and Login Buttons - trigger modal -->
+	    <div class = "row-fluid">
+		    <div class="span3 offset8 margin60">
+		    	<a href="{{ url_for('create_login') }}">Create Account</a> 
+		    	<a href="#myModal" role="button" class="btn btn-warning" data-toggle="modal">Login</a>   
+		        {% include "login_modal.html" %}
+	        </div>  
+    	</div>
+
+		<div class="row-fluid span5 offset7 margin60">
+			<img src="/static/img/sun_samp2.jpeg" width="30%">
+		</div>
+
+		<div class="row-fluid">
+			<h1 class="text-center"> Sun Finder </h1>
+		</div>
+
+			<!-- FIX apply boxes to Format -->
+			<form action="{{ url_for('search') }}" method="POST" class="form-search">
+			<div class="row-fluid">
+				<div class="text-center">
+					<p class="text-center">
+						<input type="text" name="query" placeholder="enter neighborhood here" class="loc span3" ><br>
+					</p>
+				</div>
+			</div>
+				<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
+			<div class="row-fluid">
+				<div class="text-center">
+					<i class="icon-calendar"></i><input type="text" name="date" class="datepicker input-small" placeholder="select date">
+					<i class=" icon-map-marker"></i>
+					<input type="submit" value="Sun Search" class="btn btn-warning" id="search_btn1">
+				</div>
+			</div>
+
+			</form>
+		</div>
 	</div>
+	<script>	
+		// sets lat and long to false so the map load will not initialize	
+		var map_lat = false;
+		var map_long = false;
+
+		function dom_ready() {}
+		
+	</script>
 
 {% endblock %}
