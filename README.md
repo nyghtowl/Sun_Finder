@@ -6,6 +6,8 @@ Developed in 3 weeks at the end of Hackbright Spring 2013.
 
 For additional information on the development, checkout my blogpost at [nyghtowl.io](http://nyghtowl.io/category/hackbright/sun-finder/).
 
+For screenshots, checkout [nyghtowl.github.io](http://nyghtowl.github.io/).
+
 Technologies Used:
 Python, Flask, Postgres, SQLAlchemy, Weather Underground API, Forecast.io API, Google Places & Maps APIs, Twitter Bootstrap, Javascript, JQuery, WTForms
 
