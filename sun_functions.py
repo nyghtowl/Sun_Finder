@@ -17,7 +17,7 @@ import time
 
 def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
     # use regex to swap space with plus and add neighborhood to help focus results
-    txt_plus = re.sub('[ ]', '+', txt_query) + '+neighborhood'
+    txt_plus = re.sub('[ ]', '+', txt_query)
 
     # params option not working because location pass is lat,lng - is there a fix?
     # api_params = {

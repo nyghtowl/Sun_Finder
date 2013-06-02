@@ -76,13 +76,12 @@
 .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
 /* ajax spinner */
-.ajax_vis{
-  visibility:hidden;
+.ajax_txt_pad{
+    margin-top: 15%;
 }
 
-.ajax_pad{
-  padding-left:5px;
-  padding-top:5px;
+.ajax_img_pad{
+  padding-top:2px;
 }
 
 	

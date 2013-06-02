@@ -9,7 +9,7 @@ TO DO:
 
     Date - add a couple additional data points for date
 
-    add flash
+    add flash messages
 
     Put text and links on map
     Change what labels show based on the zoom level of map
@@ -62,7 +62,7 @@ import json
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
 #app.secret_key = os.environ.get('flask_key')
-app.secret_key = 'key'
+app.secret_key = os.environ.get('key')
 
 app.config.from_object(__name__) # allows for setting all caps var as global var
 

@@ -99,7 +99,7 @@ console.log("initialize"); // test
   	});
 
   	//loads weather layer
-  	// weatherLayer.setMap(map);
+  	weatherLayer.setMap(map);
 
   	//adds static neighborhood markers based on lat, long
     readData(positionCoords, availableTags);

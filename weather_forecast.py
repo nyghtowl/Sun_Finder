@@ -136,7 +136,8 @@ class Weather(object):
     def add_day_pic(self, pic_loc):        
         # holds weather images for reference
         weather_pics = {
-            "clear-day":("sun", "sun_samp2.jpeg"), 
+            "clear-day":("sun", "sun_samp2.jpeg"),
+            "clear":("sun", "sun_samp2.jpeg"),
             "rain":("rain", "rain.png"), 
             "snow":("snow", "snow.png"), 
             "sleet":("sleet", "sleet2.png"), 
@@ -157,15 +158,22 @@ class Weather(object):
             if (self.wui_icon == 'mostlycloudy'):
                 if self.cloud_cover < .20:
                     self.pic = pic_loc + weather_pics['clear-day'][1]
-                elif self.cloud_cover > .70:
-                    self.pic = pic_loc + weather_pics['cloudy'][1]
+                elif self.cloud_cover < .80:
+                    self.pic = pic_loc + weather_pics['partlycloudy'][1]
                 else:
                     self.pic = pic_loc + weather_pics[self.wui_icon][1]
             elif (self.wui_icon == 'cloudy'):
                 if self.cloud_cover < .20:
                     self.pic = pic_loc + weather_pics['clear-day'][1]
-                elif self.cloud_cover < .70:
+                elif self.cloud_cover < .80:
                     self.pic = pic_loc + weather_pics['partlycloudy'][1]
+                else:
+                    self.pic = pic_loc + weather_pics[self.wui_icon][1]
+            elif (self.wui_icon == 'clear'):
+                if self.cloud_cover < .20:
+                    self.pic = pic_loc + weather_pics['clear-day'][1]
+                elif self.cloud_cover > .80:
+                    self.pic = pic_loc + weather_pics['cloudy'][1]
                 else:
                     self.pic = pic_loc + weather_pics[self.wui_icon][1]
             else:
@@ -177,7 +185,8 @@ class Weather(object):
                 self.pic = pic_loc + weather_pics['partly-cloudy-day'][1]
         else:
             print 'Error finding photo for the time of day'            
-          
+        print self.pic
+
     # convert icon result to an moon image if night
     def add_night_pic(self, pic_loc):
         night_pics = {
