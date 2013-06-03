@@ -15,7 +15,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
 # variable represents connecting to db
 #engine = create_engine("sqlite:///sun_finder.db", echo=True)
 # code to setup a postgres database
-engine = create_engine('postgresql://localhost/sun_finder_db', echo=True)
+database_url = os.getenv('HEROKU_POSTGRESQL_GOLD_URL', 'postgresql://localhost/sun_finder_db')
+engine = create_engine(database_url, echo=True)
 
 # opens on ongoing session with db
 session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
