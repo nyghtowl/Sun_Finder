@@ -1,0 +1,83 @@
+6b|37.7727|-122.4283|30|Hayes Valley
+6b|37.7727|-122.4283|30|Hayes Valley
+6c|||Lower Pacific Heights
+6e|37.7764|-122.4347|30|Alamo Square
+6f|37.7752|-122.442927|30|NoPa
+37.7698|-122.4472|30|Ashbury Heights
+37.7698|-122.4472|30|Ashbury Hts
+37.7268|-122.3887|40|Bayview
+37.7268|-122.3887|40|Hunters Point
+37.7268|-122.3887|40|The Point
+37.7415|-122.4144|30|Bernal Heights
+37.7415|-122.4144|30|Bernal Hts
+37.7627|-122.4352|75|Castro
+|||Upper Market
+|||Clarendon Heights
+|||Clarendon Hts
+37.7947|-122.4072|30|China Town
+37.7793|-122.4175|30|Civic Center
+37.7793|-122.4175|50|Van Ness
+37.7648|-122.4497|50|Cole Valley
+|||Corona Heights
+|||Corona Hts
+
+37.7457|-122.4416|30|Diamond Heights
+37.7457|-122.4416|30|Diamond Hts
+37.7561|-122.4300|30|Dolores Heights
+37.7561|-122.4300|30|Dolores Hts
+37.7659|-122.4309|30|Eureka Valley
+
+7a|37.8030|-122.4375|30|Marina District
+7b|37.7849|-122.4522|75|Pacific Heights
+7d||||Cow Hollow
+7c|||Presidio Heights
+8a|||20|Downtown
+8b|37.7951|-122.4046||Financial District
+8c||||Nob Hill
+8d|37.8058|-122.4122|40|North Beach
+8e|37.8018|-122.4198|30|Russian Hill
+8g|37.8024|-122.4059|30|Telegraph Hill
+8h|||Norht Waterfront
+8j|37.7833|-122.4167|20|Tenderloin 
+37.7670|-122.4327|30|Duboce Triangle
+|||Forest Hill
+37.7390|-122.4420|40|Glen Park
+37.7697|-122.4781|150|Golden Gate Park
+37.7698|-122.4472|75|Haight Ashbury
+37.7698|-122.4472|40|Upper Haight
+|||Lower Haight
+1|37.7805|122.4725|100|Richmond District
+1a|37.7805|122.4725|100|Central Richmond
+1b|||Inner Richmond
+1c|||Laurel Heights
+1d|||Lake
+1f|37.7875|-122.4894|30|Seacliff
+|||Inner Sunset
+
+
+37.7590|-122.4124|30|Inner Mission
+37.7600|-122.4148|75|Mission District
+37.7598|-122.4271|30|Mission Dolores
+37.7700|-122.3900|30|Mission Bay
+
+37.7514|-122.4316|30|Noe Valley
+|||Panhandle
+|||Portola District
+37.7572|-122.3999|75|Potrero Hill
+37.8496|-122.5031||Presidio
+
+
+
+37.7787|-122.3974|30|SOMA
+37.7787|-122.3974|30|South of Market
+|||South Beach
+37.7535|-122.4952|100|Sunset District
+|||Sunset Parkside
+37.7516|-122.4477|75|Twin Peaks
+37.7633|-122.4585|75|UCSF
+37.7794|-122.4519|40|USF
+|||Visitacion Valley
+37.7422|-122.4655|50|West Portal
+6d|||Western Addition
+37.7894|-122.4077|5|Hackbright Academy
+37.8840|-122.4564|100|Tiburon

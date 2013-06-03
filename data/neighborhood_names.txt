@@ -1,0 +1,17 @@
+1c|Jordan Park
+1c|Laurel Heights
+1c|Laurel Hts
+6a|Anza Vista
+6b|Hayes Valley
+6c|Lower Pacific Heights
+6c|Lower Pac Hts
+6d|Western Addition
+6e|Alamo Square
+6f|North of Panhandle
+6f|NoPa
+6f|Park North
+7b|Pac Hts
+7c|Presidio Hts
+8a|Downtown
+8c|Nob Hill
+8c|Lower Nob Hill

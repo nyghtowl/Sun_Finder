@@ -1,0 +1,56 @@
+Divisidero|Turk|Buchanan|Hayes|Alamo Square
+|||Ashbury Heights
+|||Ashbury Hts
+|||Bayview
+|||Bernal Heights
+|||Bernal Hts
+|||Civic
+|||Cole Valley
+|||Cow Hollow
+|||Diamond Heights
+|||Diamond Hts
+|||Downtown
+|||Financial District
+|||Forest Hill
+|||Glen Park
+37.7697|-122.4781||Golden Gate Park
+|||Haight Ashbury
+37.7727|-122.4283||Hayes Valley
+|||Inner Richmond
+|||Inner Sunset
+|||Laurel Heights
+|||Laurel Hts
+|||Lower Haight
+|||Lower Nob Hill
+|||Lower Pac Hts
+|||Lower Pacific Heights
+|||Marina
+37.7598|-122.4271||Mission District
+|||Nob Hill
+|||Noe Valley
+|||Nopa
+|||North Beach
+|||Pacific Heights
+|||Panhandle
+|||Portola District
+|||Potrero Hill
+37.8496|-122.5031||Presidio
+|||Richmond 
+|||Seacliff
+|||Russian Hill
+|||SOMA
+|||South Beach
+|||Sunset District
+|||Sunset Parkside
+|||Telegraph Hill
+|||Tenderloin 
+|||Twin Peaks
+|||UCSF
+|||Upper Haight
+|||USF
+|||Van Ness
+|||Visitacion Valley
+|||West Portal
+|||Western Addition
+37.7894|-122.4077||Hackbright Academy
+37.8840|-122.4564||Tiburon
