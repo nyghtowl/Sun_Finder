@@ -1,5 +1,7 @@
 #Sun Finder
 
+- Update: Plans to revampt the site and launch on Heroku for July.
+
 A Bay Area inspired web application to simplify search for micro climate weather results by just entering a San Francisco neighborhood. 
 
 Developed in 3 weeks at the end of Hackbright Spring 2013.

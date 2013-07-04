@@ -213,10 +213,10 @@ def privacy():
     return render_template('privacy.html', locations=neighborhood, l_form=l_form)
     
 
-# create map view - set this up to test
-@app.route('/map_view')
-def map_view():
-    return render_template('map_view.html')
+# # create map view - set this up to test
+# @app.route('/map_view')
+# def map_view():
+#     return render_template('map_view.html')
 
 
 # create profile page view with favorites and ability report on validty of sun
