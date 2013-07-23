@@ -68,6 +68,10 @@ class Location(Base):
 
         # if self.n_hood == txt:
         #     return (self.lat, self.lng)
+    
+    # used to print human readable presentation of an object - for testing purposes
+    def __repr__(self):
+        return '<Location %r' % (self.n_hood)
 
 # passes back session for seeding the db
 def connect():
