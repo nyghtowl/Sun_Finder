@@ -12,11 +12,10 @@ import os
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
-# create class and table for users
 class User(db.Model):
     __tablename__ = "users"
 
-    # creates user db.columns, nullable = False means its required
+    # Creates user db.columns, nullable = False means its required
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
@@ -24,34 +23,37 @@ class User(db.Model):
     lname = db.Column(db.String(64), nullable=True)
     mobile = db.Column(db.String(15), nullable=True)
     zipcode = db.Column(db.Integer, nullable=True)
-    # accept terms of service
+    # Accept terms of service
     accept_tos = db.Column(db.Boolean, unique=False, default=True)
-    # track when the user created the account
+    # Track when the user created the account
     timestamp = db.Column(db.String(64), nullable=False)
    
-    #methods below for the Flask-login to work
+    # Flask-login methods
 
-    #returns true if user provides valid credentials
+    # Return true unless user not allowed to authenticate
     def is_authenticated(self):
         return True
 
-    # #returns true if the account is active and not suspended
+    # Returns False for a banned user
     def is_active(self):
         return True
 
-    # #returns true if anonymouse user
+    # Return true for fake users not supposed to login
     def is_anonymous(self):
         return False
 
-    # #uniquely identifies the user and can be used to load the user from the user_loader callback. Must be unicode and must conver id if int
+    # Generate unique id for user 
     def get_id(self):
         return unicode(self.id)
 
-    # used to print human readable presentation of an object - for testing purposes
+    # Gravatar field
+    def avatar(self, size):
+        return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+
+    # Testing purposes
     def __repr__(self):
         return '<User %r' % (self.name)
 
-# create class and table for locations
 class Location(db.Model):
     __tablename__="location"
 
@@ -67,7 +69,7 @@ class Location(db.Model):
         # if self.n_hood == txt:
         #     return (self.lat, self.lng)
     
-    # used to print human readable presentation of an object - for testing purposes
+    # Testing purposes
     def __repr__(self):
         return '<Location %r' % (self.n_hood)
 
