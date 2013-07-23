@@ -205,7 +205,3 @@ def privacy():
 # @app.route('/some_json_route')
 # def some_json():
 #     return json.dumps({"thing" : "stuff"})
-
-# runs app
-if __name__ == "__main__":
-    app.run(debug=True)
