@@ -1,9 +1,5 @@
 """
-sun_model.db holds code to setup and reference related databases 
-
-applying sqlalchemy
-
-Go Live: set echo back to False
+Models.db 
 
 """
 from app import db
