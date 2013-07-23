@@ -1,15 +1,12 @@
 import os
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.ext.declarative import declarative_base
 from flask.ext.login import LoginManager
 from config import DB_SESSION
 
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
-#app.secret_key = os.environ.get('flask_key')
-app.secret_key = os.environ.get('key')
 
 app.config.from_object('config') 
 
