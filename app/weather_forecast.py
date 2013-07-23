@@ -206,7 +206,7 @@ class Weather(object):
     # convert icon result to an moon image if night
     def add_night_pic(self, pic_loc):
         night_pics = {
-            "First Quarter":"firstquarter.png", 
+            "First Quarter":"moon_firstquarter.png", 
             "Full Moon":"full_moon1.jpg", 
             "Last Quarter":"moon_lastquarter.png", 
             "New Moon":"newmoon.png", 
