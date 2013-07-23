@@ -45,39 +45,19 @@ QUESTIONS / ERROR:
 
 """
 
-from flask import Flask, render_template, redirect, url_for, session, flash, request
-# import model and assign to db_session variable
-from sun_model import session as db_session, Location, User
+from flask import render_template, flash, redirect, session, url_for, request, jsonify
 #login import
-from flask.ext.login import login_user, logout_user, login_required
-from flask.ext.login import LoginManager, current_user
+from flask.ext.login import login_user, logout_user, current_user, login_required
+from app import session as db_session, app, login_manager
+# import model and assign to db_session variable
+from sun_model import Location, User
 #import form objects 
 from forms import LoginForm, CreateLogin
-# expect to need for pulling api key from environment
-import os
+from config import G_KEY, FIO_KEY, WUI_KEY
+
 import sun_functions
 import weather_forecast
 import json 
-
-# initialize program to be a Flask app and set a key to keep client side session secure
-app = Flask(__name__)
-#app.secret_key = os.environ.get('flask_key')
-app.secret_key = os.environ.get('key')
-
-app.config.from_object(__name__) # allows for setting all caps var as global var
-
-# pull api keys from environment
-G_KEY = os.environ.get('G_KEY')
-FIO_KEY = os.environ.get('FIO_KEY')
-WUI_KEY = os.environ.get('WUI_KEY')
-
-#login information
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-# Redirect non-loggedin users to login screen
-login_manager.login_view = "login" # result if user not logged in
-login_manager.login_message = u"Login to customize your weather view."
 
 # user load callback - populates current user
 @login_manager.user_loader
@@ -93,7 +73,6 @@ def index():
     l_form = LoginForm()
     
     return render_template('index.html', locations=neighborhood, l_form=l_form)
-
 
 # Login user
 @app.route('/login', methods=['GET', 'POST'])
