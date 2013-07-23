@@ -7,6 +7,7 @@ Go Live: set echo back to False
 
 """
 from app import Base, db, engine
+from sqlalchemy import Column Integer String Float Boolean
 import os
 
 
@@ -14,18 +15,18 @@ import os
 class User(Base):
     __tablename__ = "users"
 
-    # creates user db.columns, nullable = False means its required
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
-    fname = db.Column(db.String(64), nullable=False)
-    lname = db.Column(db.String(64), nullable=True)
-    mobile = db.Column(db.String(15), nullable=True)
-    zipcode = db.Column(db.Integer, nullable=True)
+    # creates user columns, nullable = False means its required
+    id = Column(Integer, primary_key=True)
+    email = Column(String(64), nullable=False)
+    password = Column(String(64), nullable=False)
+    fname = Column(String(64), nullable=False)
+    lname = Column(String(64), nullable=True)
+    mobile = Column(String(15), nullable=True)
+    zipcode = Column(Integer, nullable=True)
     # accept terms of service
-    accept_tos = db.Column(db.Boolean, unique=False, default=True)
+    accept_tos = Column(Boolean, unique=False, default=True)
     # track when the user created the account
-    timestamp = db.Column(db.String(64), nullable=False)
+    timestamp = Column(String(64), nullable=False)
    
     #methods below for the Flask-login to work
 
@@ -53,11 +54,11 @@ class User(Base):
 class Location(Base):
     __tablename__="location"
 
-    id = db.Column(db.Integer, primary_key=True)
-    lat = db.Column(db.Float) # don't set a limit on size of db.float - apply to when output
-    lng = db.Column(db.Float)
-    rad = db.Column(db.Integer)
-    n_hood = db.Column(db.String(128))
+    id = Column(Integer, primary_key=True)
+    lat = Column(Float) # don't set a limit on size of float - apply to when output
+    lng = Column(Float)
+    rad = Column(Integer)
+    n_hood = Column(String(128))
 
     # FIX - figure out how to create a function out of comparing query txt to list of neighborhoods and return lat & lng
     #def query_match(self, txt):
