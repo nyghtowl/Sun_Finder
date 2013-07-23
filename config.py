@@ -13,8 +13,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # code to setup a postgres database
 SQLALCHEMY_DB_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'postgresql://' + os.path.join(basedir, 'sun_model.db'))
-ENGINE = create_engine(SQLALCHEMY_DB_URI, echo=True) # Shows translations till put to False
+engine = create_engine(SQLALCHEMY_DB_URI, echo=True) # Shows translations till put to False
+
+
+ # setting this up to generate the db when main is run directly from the command line
+Base.metadata.create_all(engine) 
 
 # opens on ongoing session with db
-DB_SESSION = scoped_session(sessionmaker(bind=ENGINE, autocommit=False, autoflush=False))
+DB_SESSION = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
 
+
+   
