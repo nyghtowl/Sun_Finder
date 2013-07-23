@@ -46,9 +46,9 @@ QUESTIONS / ERROR:
 """
 
 from flask import render_template, flash, redirect, session, url_for, request, jsonify
+from app import db as db_session, app, login_manager
 #login import
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import session as db_session, app, login_manager
 # import model and assign to db_session variable
 from models import Location, User
 #import form objects 
