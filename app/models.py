@@ -6,8 +6,8 @@ applying sqlalchemy
 Go Live: set echo back to False
 
 """
-from app import Base, session
-from config import ENGINE
+from app import Base
+from config import ENGINE, SESSION
 from sqlalchemy import Column, Integer, String, Float, Boolean
 import os
 
