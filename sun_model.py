@@ -6,41 +6,26 @@ applying sqlalchemy
 Go Live: set echo back to False
 
 """
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, types
-from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
+from app import Base, db, engine
+import os
 
-
-# variable represents connecting to db
-#engine = create_engine("sqlite:///sun_finder.db", echo=True)
-# code to setup a postgres database
-database_url = os.getenv('HEROKU_POSTGRESQL_GOLD_URL', 'postgresql://localhost/sun_finder_db')
-engine = create_engine(database_url, echo=True)
-
-# opens on ongoing session with db
-session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
-
-# class that connects to teh declarative_base of sqlalchemy
-Base = declarative_base()
-Base.query = session.query_property()
 
 # create class and table for users
 class User(Base):
     __tablename__ = "users"
 
-    # creates user columns, nullable = False means its required
-    id = Column(Integer, primary_key=True)
-    email = Column(String(64), nullable=False)
-    password = Column(String(64), nullable=False)
-    fname = Column(String(64), nullable=False)
-    lname = Column(String(64), nullable=True)
-    mobile = Column(String(15), nullable=True)
-    zipcode = Column(Integer, nullable=True)
+    # creates user db.columns, nullable = False means its required
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    fname = db.Column(db.String(64), nullable=False)
+    lname = db.Column(db.String(64), nullable=True)
+    mobile = db.Column(db.String(15), nullable=True)
+    zipcode = db.Column(db.Integer, nullable=True)
     # accept terms of service
-    accept_tos = Column(Boolean, unique=False, default=True)
+    accept_tos = db.Column(db.Boolean, unique=False, default=True)
     # track when the user created the account
-    timestamp = Column(String(64), nullable=False)
+    timestamp = db.Column(db.String(64), nullable=False)
    
     #methods below for the Flask-login to work
 
@@ -68,11 +53,11 @@ class User(Base):
 class Location(Base):
     __tablename__="location"
 
-    id = Column(Integer, primary_key=True)
-    lat = Column(Float) # don't set a limit on size of float - apply to when output
-    lng = Column(Float)
-    rad = Column(Integer)
-    n_hood = Column(String(128))
+    id = db.Column(db.Integer, primary_key=True)
+    lat = db.Column(db.Float) # don't set a limit on size of db.float - apply to when output
+    lng = db.Column(db.Float)
+    rad = db.Column(db.Integer)
+    n_hood = db.Column(db.String(128))
 
     # FIX - figure out how to create a function out of comparing query txt to list of neighborhoods and return lat & lng
     #def query_match(self, txt):
