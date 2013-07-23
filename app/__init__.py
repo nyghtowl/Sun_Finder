@@ -5,15 +5,15 @@ from flask.ext.login import LoginManager
 from config import DB_SESSION
 
 
-# initialize program to be a Flask app and set a key to keep client side session secure
+# Initialize Flask app
 app = Flask(__name__)
 
 app.config.from_object('config') 
 
-# variable represents sqlalchemy
+# Variable represents sqlalchemy
 db = SQLAlchemy(app)
 
-#login information
+# Login information
 login_manager = LoginManager()
 login_manager.init_app(app)
 
