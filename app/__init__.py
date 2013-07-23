@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
+# from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask.ext.login import LoginManager
@@ -14,7 +14,7 @@ app.secret_key = os.environ.get('key')
 app.config.from_object(__name__) # allows for setting all caps var as global var
 
 # variable represents sqlalchemy
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
 # opens on ongoing session with db
 session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
