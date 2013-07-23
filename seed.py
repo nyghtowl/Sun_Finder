@@ -4,7 +4,7 @@ seed.py is the file to use to setup the databases
 Go Live: Add this and database info to gitignore
 
 """
-import sun_model
+from app.models import Location
 import csv
 
 def load_location(session):
@@ -14,7 +14,7 @@ def load_location(session):
 	loc_obj = csv.reader(loc_file, delimiter="|")
 	# pull each row and assign and store based on data labels 
 	for row in loc_obj:
-		store_content = sun_model.Location(id=row[0], lat=row[1], lng=row[2], rad=row[3], n_hood=row[4])
+		store_content = Location(id=row[0], lat=row[1], lng=row[2], rad=row[3], n_hood=row[4])
 		# adds the content to the db session
 		session.add(store_content)
 
