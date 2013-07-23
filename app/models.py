@@ -6,7 +6,8 @@ applying sqlalchemy
 Go Live: set echo back to False
 
 """
-from app import Base, engine, session
+from app import Base, session
+from config import ENGINE
 from sqlalchemy import Column, Integer, String, Float, Boolean
 import os
 
@@ -73,7 +74,7 @@ def connect():
 
 # setting this up to generate the db when main is run directly from the command line
 def main():
-    Base.metadata.create_all(engine)    
+    Base.metadata.create_all(ENGINE)    
 
 if __name__ == "__main__":
     main()
