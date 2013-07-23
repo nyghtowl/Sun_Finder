@@ -6,7 +6,7 @@ applying sqlalchemy
 Go Live: set echo back to False
 
 """
-from app import Base, engine
+from app import Base, engine, session
 from sqlalchemy import Column, Integer, String, Float, Boolean
 import os
 
@@ -66,16 +66,14 @@ class Location(Base):
         # if self.n_hood == txt:
         #     return (self.lat, self.lng)
 
-
-# setting this up to generate the db when main is run directly from the command line
-def main():
-    Base.metadata.create_all(engine)
-    
-
 # passes back session for seeding the db
 def connect():
     # passes back session for seeding the db
     return session()
+
+# setting this up to generate the db when main is run directly from the command line
+def main():
+    Base.metadata.create_all(engine)    
 
 if __name__ == "__main__":
     main()
