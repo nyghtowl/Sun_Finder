@@ -28,20 +28,7 @@ class Weather(object):
         self.sun_result = None
         self.moonphase = None
         self.pic = None
-
-        self.day0_icon = wui_response['forecast']['simpleforecast']['forecastday'][0]['icon']
-        self.day1_icon = wui_response['forecast']['simpleforecast']['forecastday'][1]['icon']
-        self.day2_icon = wui_response['forecast']['simpleforecast']['forecastday'][2]['icon']
-        self.day3_icon = wui_response['forecast']['simpleforecast']['forecastday'][3]['icon']
-        self.day0_htemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['high']['fahrenheit']
-        self.day0_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['low']['fahrenheit']
-        self.day1_htemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['high']['fahrenheit']
-        self.day1_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['low']['fahrenheit']
-        self.day2_htemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['high']['fahrenheit']
-        self.day2_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['low']['fahrenheit']
-        self.day3_htemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['high']['fahrenheit']
-        self.day3_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['low']['fahrenheit']
-
+        self.days = {}
 
         # determines if date is current or future to determine what data points to pull
         if as_of.date() == datetime.date.today():
@@ -106,6 +93,35 @@ class Weather(object):
         self.cloud_cover = fio_fragment['cloudCover']
         self.wind_mph = wui_fragment['avewind']['mph'] 
         self.humidity = wui_fragment['avehumidity']
+
+    # part of pair program 
+    # def dict_index(wui_response):
+        
+    #     return wui_response['forecast']['simpleforecast']['forecastday']
+
+
+    def grab_all_weather(self, fio_response, wui_response, as_of):
+        # hold multiple days of weather data to display
+
+        if as_of == datetime.now().date():
+            for i in range(4):
+                as_of += datetime.timedelta(days=1)
+                self.days[i] = find_for(self, fio_response, wui_response, as_of)
+
+
+
+    # self.day0_icon = [0]['icon']
+    # self.day1_icon = wui_response['forecast']['simpleforecast']['forecastday'][1]['icon']
+    # self.day2_icon = wui_response['forecast']['simpleforecast']['forecastday'][2]['icon']
+    # self.day3_icon = wui_response['forecast']['simpleforecast']['forecastday'][3]['icon']
+    # self.day0_htemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['high']['fahrenheit']
+    # self.day0_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['low']['fahrenheit']
+    # self.day1_htemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['high']['fahrenheit']
+    # self.day1_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['low']['fahrenheit']
+    # self.day2_htemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['high']['fahrenheit']
+    # self.day2_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['low']['fahrenheit']
+    # self.day3_htemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['high']['fahrenheit']
+    # self.day3_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['low']['fahrenheit']
 
 
     #FIX Pull out by hour
