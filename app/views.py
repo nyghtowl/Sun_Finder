@@ -50,7 +50,7 @@ from flask import render_template, flash, redirect, session, url_for, request, j
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import session as db_session, app, login_manager
 # import model and assign to db_session variable
-from sun_model import Location, User
+from models import Location, User
 #import form objects 
 from forms import LoginForm, CreateLogin
 from config import G_KEY, FIO_KEY, WUI_KEY
