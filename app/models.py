@@ -7,7 +7,8 @@ Go Live: set echo back to False
 
 """
 from app import db
-import os
+# Secure hash
+from hashlib import md5
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
