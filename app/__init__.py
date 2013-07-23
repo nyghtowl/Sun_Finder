@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-# from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declarative_base
 from flask.ext.login import LoginManager
 from config import DB_SESSION
@@ -14,7 +14,7 @@ app.secret_key = os.environ.get('key')
 app.config.from_object('config') 
 
 # variable represents sqlalchemy
-# db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 # class that connects to the declarative_base of sqlalchemy
 Base = declarative_base()
