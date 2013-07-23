@@ -6,7 +6,7 @@ applying sqlalchemy
 Go Live: set echo back to False
 
 """
-from app import Base, db, engine
+from app import Base, engine
 from sqlalchemy import Column, Integer, String, Float, Boolean
 import os
 
