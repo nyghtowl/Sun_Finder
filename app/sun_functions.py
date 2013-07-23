@@ -3,11 +3,10 @@ sun_functions.py -  Sun Finder functions
 
 """
 
+from app import session as db_session
 # import model and assign to db_session variable
 from models import Location, User
 # use requests to pull api info - alternative is urllib - this is more human
-
-from app import session as db_session
 import requests
 import weather_forecast
 # utilize for regular expressions
