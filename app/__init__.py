@@ -13,10 +13,6 @@ app.config.from_object('config')
 # variable represents sqlalchemy
 db = SQLAlchemy(app)
 
-# class that connects to the declarative_base of sqlalchemy
-Base = declarative_base()
-Base.query = DB_SESSION.query_property()
-
 #login information
 login_manager = LoginManager()
 login_manager.init_app(app)
