@@ -47,11 +47,11 @@ QUESTIONS / ERROR:
 
 from flask import render_template, flash, redirect, session, url_for, request, jsonify
 from app import db as db_session, app, login_manager
-#login import
+# Login import
 from flask.ext.login import login_user, logout_user, current_user, login_required
-# import model and assign to db_session variable
+# Import model and assign to db_session variable
 from models import Location, User
-#import form objects 
+# Import form objects 
 from forms import LoginForm, CreateLogin
 from config import G_KEY, FIO_KEY, WUI_KEY
 
@@ -59,12 +59,12 @@ import sun_functions
 import weather_forecast
 import json 
 
-# user load callback - populates current user
+# User load callback - populates current user
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
 
-# main index page
+
 @app.route('/')
 def index():
     # return redirect(url_for('search'))
@@ -74,7 +74,6 @@ def index():
     
     return render_template('index.html', locations=neighborhood, l_form=l_form)
 
-# Login user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     l_form = LoginForm()
@@ -95,7 +94,6 @@ def login():
             return redirect('login')
     return render_template('login.html', title="Login", l_form=l_form, cl_form=cl_form)
 
-#logout
 @app.route('/logout')
 @login_required # confirms if user_id in session - sends to login view if not
 def logout():
@@ -103,7 +101,7 @@ def logout():
     flash('You are now logged out')
     return redirect(url_for('search', locations=None))
 
-#create user form view
+# Create user
 @app.route('/create_login', methods = ['POST', 'GET'])
 def create_login():
     cl_form = CreateLogin()
@@ -154,7 +152,7 @@ def ajax_search():
     return render_template('search_result_partial.html', result=weather)
     print "hello"
 
-# renders result page after a search 
+# Search result 
 @app.route('/search', methods=['POST'])
 def search():
     # generate local neighborhood object
@@ -168,15 +166,13 @@ def search():
     
     return render_template('fast_result.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
 
-
-# about page
 @app.route('/about')
 def about():  
     neighborhood = db_session.query(Location).all()
     l_form = LoginForm()  
     return render_template('about.html', locations=neighborhood, l_form=l_form)
 
-# terms of service page
+# Terms of service page
 @app.route('/tos')
 def tos(): 
     neighborhood = db_session.query(Location).all()
@@ -184,7 +180,7 @@ def tos():
     return render_template('tos.html', locations=neighborhood, l_form=l_form)
 
 
-# privacy policy page
+# Privacy policy page
 @app.route('/privacy')
 def privacy():    
     neighborhood = db_session.query(Location).all()
