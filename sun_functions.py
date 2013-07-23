@@ -68,7 +68,7 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
 def validate_date(as_of):
     if as_of.date() < datetime.now().date():
         return False
-    if as_of.date() > (datetime.now() + timedelta(days=4)).date():
+    if as_of.date() > (datetime.now() + timedelta(days=7)).date():
         return False
     return True
 
