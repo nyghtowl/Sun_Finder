@@ -4,7 +4,7 @@ seed.py is the file to use to setup the databases
 Go Live: Add this and database info to gitignore
 
 """
-from app import models
+import models
 import csv
 
 def load_location(db_session):
