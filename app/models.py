@@ -7,10 +7,12 @@ Go Live: set echo back to False
 
 """
 from app import Base
-from config import ENGINE, SESSION
+from config import DB_SESSION
 from sqlalchemy import Column, Integer, String, Float, Boolean
 import os
 
+ROLE_USER = 0
+ROLE_ADMIN = 1
 
 # create class and table for users
 class User(Base):
@@ -70,11 +72,4 @@ class Location(Base):
 # passes back session for seeding the db
 def connect():
     # passes back session for seeding the db
-    return session()
-
-# setting this up to generate the db when main is run directly from the command line
-def main():
-    Base.metadata.create_all(ENGINE)    
-
-if __name__ == "__main__":
-    main()
+    return DB_SESSION()
