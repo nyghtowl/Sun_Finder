@@ -4,20 +4,21 @@ from flask import Flask
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask.ext.login import LoginManager
-from config import engine
+from config import ENGINE
 
 
 # initialize program to be a Flask app and set a key to keep client side session secure
 app = Flask(__name__)
 #app.secret_key = os.environ.get('flask_key')
 app.secret_key = os.environ.get('key')
-app.config.from_object(__name__) # allows for setting all caps var as global var
+
+app.config.from_object('config') 
 
 # variable represents sqlalchemy
 # db = SQLAlchemy(app)
 
 # opens on ongoing session with db
-session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
+session = scoped_session(sessionmaker(bind=ENGINE, autocommit=False, autoflush=False))
 
 # class that connects to the declarative_base of sqlalchemy
 Base = declarative_base()
