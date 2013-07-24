@@ -46,12 +46,9 @@ QUESTIONS / ERROR:
 """
 
 from flask import render_template, flash, redirect, session, url_for, request, jsonify
-from app import db as db_session, app, login_manager
-# Login import
+from app import db, app, login_manager
 from flask.ext.login import login_user, logout_user, current_user, login_required
-# Import model and assign to db_session variable
 from models import Location, User
-# Import form objects 
 from forms import LoginForm, CreateLogin
 from config import G_KEY, FIO_KEY, WUI_KEY
 
@@ -69,7 +66,8 @@ def load_user(user_id):
 def index():
     # return redirect(url_for('search'))
 
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
     l_form = LoginForm()
     
     return render_template('index.html', locations=neighborhood, l_form=l_form)
@@ -81,8 +79,9 @@ def login():
 
     # login and validate the user exists in the database
     if l_form.validate_on_submit():
-        user = db_session.query(User).filter(User.email==l_form.email.data).first()
-
+        # user = db.query(User).filter(User.email==l_form.email.data).first()
+        user = User.query.filter(User.email==l_form.email.data).first()
+ 
         # if user exists then apply login user functionatlity to generate current_user session
         if user is not None:
             user_password = user.password
@@ -106,9 +105,15 @@ def logout():
 def create_login():
     cl_form = CreateLogin()
     l_form = LoginForm()
-    neighborhood = db_session.query(Location).all()
+
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
+
     if cl_form.validate_on_submit():
-        user = db_session.query(User).filter(User.email == cl_form.email.data).first()
+
+        # user = db.query(User).filter(User.email==cl_form.email.data).first()
+        user = User.query.filter(User.email==cl_form.email.data).first()
+
         if user != None:
             user_email = user.email
             if user_email == cl_form.email.data:
@@ -126,8 +131,8 @@ def create_login():
                         #don't need to save this - can be assumed since required on form
                         accept_tos=True,
                         timestamp=time.time())
-            db_session.add(new_user)
-            db_session.commit()
+            db.session.add(new_user)
+            db.session.commit()
             flash('Account creation successful. Please login to your account.')
             return redirect('/')
     return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form, locations=neighborhood)
@@ -137,7 +142,8 @@ def create_login():
 @app.route("/ajax_search", methods = ['POST', 'GET'])
 def ajax_search():
     # generate local neighborhood object
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
 
     # # capture search form query text
     txt_query = request.form['query']
@@ -156,7 +162,9 @@ def ajax_search():
 @app.route('/search', methods=['POST'])
 def search():
     # generate local neighborhood object
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
+
     l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
 
     txt_query = request.form['query']
@@ -168,14 +176,16 @@ def search():
 
 @app.route('/about')
 def about():  
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
     l_form = LoginForm()  
     return render_template('about.html', locations=neighborhood, l_form=l_form)
 
 # Terms of service page
 @app.route('/tos')
 def tos(): 
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
     l_form = LoginForm()  
     return render_template('tos.html', locations=neighborhood, l_form=l_form)
 
@@ -183,7 +193,8 @@ def tos():
 # Privacy policy page
 @app.route('/privacy')
 def privacy():    
-    neighborhood = db_session.query(Location).all()
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
     l_form = LoginForm()  
     return render_template('privacy.html', locations=neighborhood, l_form=l_form)
     
@@ -201,3 +212,4 @@ def privacy():
 # @app.route('/some_json_route')
 # def some_json():
 #     return json.dumps({"thing" : "stuff"})
+
