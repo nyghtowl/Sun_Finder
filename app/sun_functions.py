@@ -3,7 +3,7 @@ sun_functions.py -  Sun Finder functions
 
 """
 
-from app import session as db_session
+from app import db as db_session
 # import model and assign to db_session variable
 from models import Location, User
 # use requests to pull api info - alternative is urllib - this is more human
