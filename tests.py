@@ -13,7 +13,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://' + os.path.join(basedir, 'test.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://' + os.path.join(basedir, 'test_db')
         db.create_all()
 
     def tearDown(self):
@@ -26,3 +26,6 @@ class TestCase(unittest.TestCase):
         expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
         assert avatar[0:len(expected)] == expected
 
+
+if __name__ == '__main__':
+    unittest.main()
