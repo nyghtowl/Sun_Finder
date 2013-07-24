@@ -25,6 +25,6 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/sun_finder_db'
 # SQLALCHEMY_DATABASE_URI = os.getenv(os.environ['DATABASE_URL'], SUN_MODEL)
 
 # Stores migrate data files
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_respository')
+SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
