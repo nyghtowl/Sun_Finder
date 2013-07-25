@@ -25,26 +25,7 @@
 			<div id="push"></div>
 		</div>
 		
-<!-- Footer -->
-		<div id="footer">
-			<div class="container-fluid">
-				<div class="row row-fluid">
-					<p class="text-center">
-						<small>
-							<a href="{{url_for('index')}}">Home</a> | 
-							<a href="{{url_for('about')}}">About & AK</a> |
-							<a href="{{url_for('tos')}}">Terms of Service</a> |
-							<a href="{{url_for('privacy')}}">Privacy Policy </a> |
-							<a href="http://http://nyghtowl.tumblr.com/">Blog</a> <br>
-							<a href="http://google.com/"><img src="/static/img/powered-by-google-on-white.png"></a> | 
-							<a href="http://www.wunderground.com">Weather Underground (WUI)</a> | 
-							<a href="http://forecast.io/">Forecast.io</a><br>
-							© 2013 Sun Finder Org
-						</small>
-					</p>
-				</div>
-			</div>
-		</div>
+	{% include "footer.html" %}
 
 		<!-- for JQuery to work-->
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
