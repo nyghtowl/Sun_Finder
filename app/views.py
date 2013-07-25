@@ -39,9 +39,6 @@ TO DO:
 
     Places API responses may include Listings provider attributions in HTML format that must be displayed to the user as provided. Put below search results 
 
-QUESTIONS / ERROR:
-    Help finding Ajax page that shows loading - jquery.post
-
 
 """
 
