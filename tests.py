@@ -1,5 +1,8 @@
 #!flask/bin/python
 # -*- coding: utf8 -*-
+from coverage import coverage
+cov = coverage(branch = True, omit = ['env/*', 'tests.py'])
+cov.start()
 
 import os
 import unittest
@@ -13,7 +16,7 @@ class TestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://' + os.path.join(basedir, 'test_db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/test_db')
         db.create_all()
 
     def tearDown(self):
@@ -28,4 +31,14 @@ class TestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    try:
+        unittest.main()
+    except:
+        pass
+    cov.stop()
+    cov.save()
+    print "\n\nCoverage Report:\n"
+    cov.report()
+    print "HTML version: " + os.path.join(basedir, "tmp/coverage/index.html")
+    cov.html_report(directory = 'tmp/coverage')
+    cov.erase()
