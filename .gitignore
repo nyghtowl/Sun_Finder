@@ -17,6 +17,7 @@ develop-eggs
 flask/*
 env
 .env
+tmp
 
 # Installer logs
 pip-log.txt
