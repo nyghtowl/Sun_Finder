@@ -114,7 +114,7 @@ def create_login():
         if user != None:
             user_email = user.email
             if user_email == cl_form.email.data:
-                flash ('email already exists')
+                flash ('%(email)s already exists. Please login or enter a different email.', email = user_email)
                 return redirect(url_for('login'))
         #if user doesn't exist, save from data in User object to commit to db
         if user == None:
@@ -136,7 +136,7 @@ def create_login():
 
 
 # FIX - view template to run Ajax spinner
-@app.route("/ajax_search", methods = ['POST', 'GET'])
+@app.route("/ajax_search", methods = ['POST'])
 def ajax_search():
     # generate local neighborhood object
     # neighborhood = db.query(Location).all()
