@@ -4,7 +4,7 @@
 
 {% block body %}
 	<div class="ui-widget">
-	
+
 	    <!-- Create Account and Login Buttons - trigger modal -->
 	    <div class = "row-fluid">
 		    <div class="span3 offset8 margin60">
@@ -20,9 +20,8 @@
 
 		<div class="row-fluid">
 			<h1 class="text-center"> Sun Finder </h1>
+			{% include 'flash.html' %}
 		</div>
-
-
 			<form action="{{ url_for('search') }}" method="POST" class="form-search">
 			<div class="row-fluid">
 				<div class="text-center">
@@ -43,8 +42,9 @@
 			</form>
 		</div>
 	</div>
-	<script>	
-		// sets lat and long to false so the map load will not initialize	
+	<script>
+
+		// Sets lat and long to false so the map load will not initialize	
 		var map_lat = false;
 		var map_long = false;
 
