@@ -134,27 +134,6 @@ def create_login():
             return redirect('/')
     return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form, locations=neighborhood)
 
-
-# FIX - view template to run Ajax spinner
-@app.route("/ajax_search", methods = ['POST'])
-def ajax_search():
-    # generate local neighborhood object
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
-
-    # # capture search form query text
-    txt_query = request.form['query']
-    # # catpure form date filter
-    date = request.form['date']
-
-#    date=request.args['date'] - calls through browser
-#    txt_query=request.args['query']
-
-    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
-
-    return render_template('search_result_partial.html', result=weather)
-    print "hello"
-
 # Search result 
 @app.route('/search', methods=['POST'])
 def search():
@@ -170,6 +149,29 @@ def search():
 
     
     return render_template('fast_result.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
+
+
+# Ajax spinner
+@app.route("/ajax_search", methods = ['POST'])
+def ajax_search():
+    # generate local neighborhood object
+    # neighborhood = db.query(Location).all()
+    neighborhood = Location.query.all()
+
+    # # capture search form query text
+    txt_query = request.form['query']
+    # # catpure form date filter
+    date = request.form['date']
+
+#    date=request.args['date'] - calls through browser
+#    txt_query=request.args['query']
+
+    # weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+    result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+
+    # return render_template('search_result_partial.html', result=weather)
+    return result
+
 
 @app.route('/about')
 def about():  
