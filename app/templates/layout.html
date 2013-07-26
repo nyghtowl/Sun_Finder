@@ -5,26 +5,27 @@
 	{% include "header.html" %}
 	
 	<body>
-		<!-- part of setting the body apart from the footer -->
+		<!-- Wrap sets the the body apart from the footer -->
 		<div id="wrap"> 
 			<div class="container-fluid">
 				<div class="row-fluid">
 					{% block body %} {% endblock %}
 				</div>
 			</div>
-			<!-- helps push the footer to the bottom of the page showing -->
+			<!-- Push moves the footer below -->
 			<div id="push"></div>
 		</div>
 		<div id="footer">
 			{% include "footer.html" %}
 		</div>
-		<!-- for JQuery to work-->
+
+		<!-- JQuery load -->
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-		<!-- for Bootstrap to work-->
+		<!-- Bootstrap load -->
 		<script src="static/js/bootstrap.min.js"></script>
 		
-		<!-- for Google Maps to work-->
+		<!-- Google Maps load -->
 		<script src="http://maps.googleapis.com/maps/api/js?libraries=weather&sensor=false"></script>
 		<script src="static/js/markerwithlabel.js" type="text/javascript"></script>
 
@@ -34,7 +35,7 @@
 		<script>
 		console.log("page immediate"); // test
 
-		   //autocomplete list var
+		   // Autocomplete list var
 	        var availableTags = [ 
 	        	{% for location in locations %}
 					"{{ location.n_hood|safe }}", 
