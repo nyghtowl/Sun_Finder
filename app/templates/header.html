@@ -1,5 +1,16 @@
 <!-- Header for Sun Finder when not index-->
-
+<head>
+    <title>Sun Finder</title>
+    <meta name = "viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <!-- Responsive layout -->
+    <link rel="stylesheet" href="static/css/bootstrap-responsive.min.css" media="screen" type="text/css">
+    <!-- CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
+    <link rel="stylesheet" href="static/css/main.css" media="screen" type="text/css">
+    <!-- Datepicker jquery format -->
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+</head>
+    
 <div class="row-fluid">
     <div class="offset1">  
         <h3> Sun Finder </h3>
@@ -10,15 +21,8 @@
 </div>
 
 <div class="row-fluid ui-widget">    
-    <!-- search bar -->
-    <div class="span5 offset1">
-        <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
-            <input type="text" name="query" class="input-medium search-query loc" placeholder="enter neighborhood" autocomplete="off">
-            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button><br>
-            <i class="icon-calendar"></i> <input type="text" name="date" class="search-query input-small datepicker" placeholder="select date"> <i class=" icon-map-marker"></i>
-
-        </form>
-    </div>
+    
+    {% 'include search.html' %}
 
     <!-- Create Account and Login Buttons - trigger modal -->
     <div class="span4 offset2">
