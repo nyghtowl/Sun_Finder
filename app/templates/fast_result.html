@@ -15,11 +15,11 @@
     </div>
 
 	<div id="search_result_target">
-	<div id="spinner" class="ajax_txt_pad">
-		<p id=”progress” class="text-center">Forecasting in Progress…<br>
-		<img id=”progress_image” src="static/img/spiffygif_56x56.gif" class="ajax_img_pad"> 
-		</p>
-	</div>
+		<div id="spinner" class="ajax_txt_pad">
+			<p id=”progress” class="text-center">Forecasting in Progress…<br>
+			<img id=”progress_image” src="static/img/spiffygif_56x56.gif" class="ajax_img_pad"> 
+			</p>
+		</div>
 	</div>
 
 <script type="text/javascript">
@@ -30,14 +30,18 @@
 	var map_lat = false;
 	var map_long = false;
  
-	function do_search()
-	{
-		// $.post('ajax_search', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-		$.post('ajax_search', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-	 		$('#search_result_target').html(data);
-//			alert('ajax_search returned');
+// 	function do_search()
+// 	{
+// 		// $.post('ajax_search', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+// 		$.post('ajax_search', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+// 	 		$('#search_result_target').html(data);
+// //			alert('ajax_search returned');
 
-		}); 
+// 		}); 
+// 	}
+
+	function do_search(){
+		$('search_result_target').load('search_result_partial.html')
 	}
 
 	function dom_ready()
