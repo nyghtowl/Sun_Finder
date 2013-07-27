@@ -119,7 +119,7 @@ $(function() {
 
 // $(document).ready(function() {....}) - example
 
-// jquery autocomplete function
+// jquery autocomplete function - Remove once typeahead works
 $(function() {
 console.log("anon autocomplete"); //test
 	var tags = availableTags;
@@ -128,6 +128,24 @@ console.log("anon autocomplete"); //test
     	source: tags, minLength: 1
 	});
 });
+
+
+// Enables predictive functionality 
+$('.typeahead').typeahead({
+	console.log("Automcomplete engaged"); //test
+
+    source: function (typeahead, query) {
+        return $.post(
+            '/autocomplete', 
+            { msg: query }, 
+            function (data) {
+                return typeahead.process(data.split(" "));
+            })
+    }
+});
+
+
+
 
 //datepicker
 $(function() {
