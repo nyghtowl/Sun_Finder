@@ -10,7 +10,7 @@
         <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
 
             {% include 'search.html' %}
-            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button><br>
+            {% include 'search_submit.html' %}<br>
             {% include 'calendar_map.html' %}
     
         </form>
