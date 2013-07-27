@@ -8,11 +8,9 @@
 <div class="row-fluid ui-widget">    
     <div class="span5 offset1">
         <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
-
             {% include 'search.html' %}
             {% include 'search_submit.html' %}<br>
             {% include 'calendar_map.html' %}
-    
         </form>
     </div>
 
@@ -22,4 +20,6 @@
 
 </div>
 
-{% include 'flash.html' %}
+<div class="row-fluid">    
+    {% include 'flash.html' %}
+</div>
