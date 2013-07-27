@@ -1,0 +1,25 @@
+<!-- Top Bar -->
+<div class="row-fluid">
+    <div class="offset1">  
+        <h3> Sun Finder </h3>
+    </div>
+</div>
+
+<div class="row-fluid ui-widget">    
+    <div class="span5 offset1">
+        <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
+
+            {% include 'search.html' %}
+            <button type="submit" class="btn btn-warning" id="search_btn2">Sun Search Again</button><br>
+            {% include 'calendar.html' %}
+    
+        </form>
+    </div>
+
+    <div class="span4 offset2">
+        {% include 'account.html' %}
+    </div>
+
+</div>
+
+{% include 'flash.html' %}
