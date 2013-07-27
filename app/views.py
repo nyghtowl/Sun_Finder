@@ -148,7 +148,7 @@ def search():
     date = request.form['date']
 
     
-    return render_template('fast_result.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
+    return render_template('result_shell.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
 
 
 # Ajax spinner
