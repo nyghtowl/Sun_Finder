@@ -9,11 +9,15 @@
 /* Search Format
 -------------------------------------------------- */
 
-.search-bar input[type="neighborhood"] {
+.my-search input[type="neighborhood"] {
   font-size: 16px;
   height: auto;
   margin-bottom: 15px;
   padding: 7px 9px;
+}
+
+.typeahead.dropdown-menu > li {
+  text-align: left;
 }
 
 /* gives margin for index page elements */
