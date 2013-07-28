@@ -125,7 +125,7 @@ $(function() {
 $(function() {
 console.log("anon autocomplete"); //test
 
-$(".typeahead").typeahead({
+$(".my-search").typeahead({
     source: function (query, process) {
         return $.post(
             '/autocomplete', 
