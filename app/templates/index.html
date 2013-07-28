@@ -6,6 +6,7 @@
 	<div class="ui-widget">
 
 	    <div class = "row-fluid">
+	    {% include 'flash.html' %}
 		    <div class="span3 offset8 margin60">
 			    {% include 'account.html' %}
 			</div>
@@ -17,9 +18,8 @@
 
 		<div class="row-fluid">
 			<h1 class="text-center"> Sun Finder </h1>
-			{% include 'flash.html' %}
 		</div>
-			<form action="{{ url_for('search') }}" method="POST" class="form-search">
+			<form action="{{ url_for('search') }}" method="POST" class="form-search centered">
 			<div class="row-fluid">
 				<div class="text-center">
 					<p>{% include 'search.html' %}</p>
