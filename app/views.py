@@ -63,11 +63,10 @@ def load_user(user_id):
 def index():
     # return redirect(url_for('search'))
 
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
+    # neighborhood = Location.query.all() locations=neighborhood,
     l_form = LoginForm()
     
-    return render_template('index.html', locations=neighborhood, l_form=l_form)
+    return render_template('index.html', l_form=l_form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,8 +102,7 @@ def create_login():
     cl_form = CreateLogin()
     l_form = LoginForm()
 
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
+    # neighborhood = Location.query.all() , locations=neighborhood
 
     if cl_form.validate_on_submit():
 
@@ -132,14 +130,13 @@ def create_login():
             db.session.commit()
             flash('Account creation successful. Please login to your account.')
             return redirect('/')
-    return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form, locations=neighborhood)
+    return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form)
 
 # Search result 
 @app.route('/search', methods=['POST'])
 def search():
     # generate local neighborhood object
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
+    # neighborhood = Location.query.all() , locations=neighborhood
 
     l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
 
@@ -148,14 +145,13 @@ def search():
     date = request.form['date']
 
     
-    return render_template('result_shell.html', locations=neighborhood, l_form=l_form, query= txt_query, date=date)
+    return render_template('result_shell.html', l_form=l_form, query= txt_query, date=date)
 
 
 # Ajax spinner
 @app.route("/ajax_search", methods = ['POST'])
 def ajax_search():
     # generate local neighborhood object
-    # neighborhood = db.query(Location).all()
     neighborhood = Location.query.all()
 
     # # capture search form query text
@@ -175,28 +171,39 @@ def ajax_search():
 
 @app.route('/about')
 def about():  
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
     l_form = LoginForm()  
-    return render_template('about.html', locations=neighborhood, l_form=l_form)
+    return render_template('about.html', l_form=l_form)
 
 # Terms of service page
 @app.route('/tos')
 def tos(): 
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
     l_form = LoginForm()  
-    return render_template('tos.html', locations=neighborhood, l_form=l_form)
+    return render_template('tos.html', l_form=l_form)
 
 
 # Privacy policy page
 @app.route('/privacy')
 def privacy():    
-    # neighborhood = db.query(Location).all()
-    neighborhood = Location.query.all()
     l_form = LoginForm()  
-    return render_template('privacy.html', locations=neighborhood, l_form=l_form)
+    return render_template('privacy.html', l_form=l_form)
     
+
+@app.route('/autocomplete', methods=['POST'])
+def autocomplete():
+    txt_so_far = None
+
+    # Pull letters entered so far
+    if requested.method == 'POST':
+        txt_so_far = str(request.form['msg'])
+
+    # Lookup locations to recommend based on beginning of request
+    if txt_so_far:
+        prediction = Location.query.filter(n_hood.like(text_so_far+"%")).all() # Review if structure should change? - maybe text file with startswith?
+        print prediction
+    else:
+        prediction = []
+
+    return ''.join(prediction)
 
 # # create map view - set this up to test
 # @app.route('/map_view')
