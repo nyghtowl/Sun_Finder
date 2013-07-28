@@ -1,5 +1,10 @@
 // Main Javascript file for Sun Finder
 
+console.log("main js immediate"); //test
+
+// sets lat and long to false so the map load will not initialize   
+var map_lat = false;
+var map_long = false;
 
 // load map of SF with central location based on search
 function initialize() { 
@@ -106,7 +111,6 @@ console.log("initialize"); // test
 
 }
 
-console.log("main immediate"); //test
 
 
 // jquery search event map load - set as if there is coord then initialize
@@ -117,35 +121,23 @@ $(function() {
 })
 
 
-// $(document).ready(function() {....}) - example
 
-// jquery autocomplete function - Remove once typeahead works
 $(function() {
 console.log("anon autocomplete"); //test
-	var tags = availableTags;
 
-	$( ".loc" ).autocomplete({
-    	source: tags, minLength: 1
-	});
-});
-
-
-// Enables predictive functionality 
-$('.typeahead').typeahead({
-	console.log("Automcomplete engaged"); //test
-
-    source: function (typeahead, query) {
+$(".typeahead").typeahead({
+    source: function (query, process) {
         return $.post(
             '/autocomplete', 
             { msg: query }, 
             function (data) {
-                return typeahead.process(data.split(" "));
+            	var data = JSON.parse(data)
+                return process(data.options);
             })
     }
 });
 
-
-
+});
 
 //datepicker
 $(function() {
