@@ -32,27 +32,36 @@
 		<script src="static/js/main.js"></script>
 		
 		<script>
-	        // sets lat and long to false so the map load will not initialize   
-	        var map_lat = false;
-	        var map_long = false;
 
 	        // function dom_ready() {}
         
 
-			console.log("page immediate"); // test
+			console.log("layout"); // check load
 
-		   // Autocomplete list var
-	        var availableTags = [ 
-	        	{% for location in locations %}
-					"{{ location.n_hood|safe }}", 
-				{% endfor %} 
-				];
+		   // Autocomplete list var - Remove once type ahead works
+	   //      var availableTags = [ 
+	   //      	{% for location in locations %}
+				// 	"{{ location.n_hood|safe }}", 
+				// {% endfor %} 
+				// ];
 
 			var positionCoords = [
 				{% for coord in locations %}
 					new google.maps.LatLng({{ coord.lat}}, {{ coord.lng }}),
 				{% endfor %}
 				];
+
+
+			// $(".typeahead").typeahead({
+			//     source: function (typeahead, query) {
+			//         return $.post(
+			//             '/autocomplete', 
+			//             { msg: query }, 
+			//             function (data) {
+			//                 return typeahead.process(data.split(","));
+			//             })
+			// 	    }
+			// });
 		
 		</script>
 	</body>
