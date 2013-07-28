@@ -63,10 +63,10 @@ def load_user(user_id):
 def index():
     # return redirect(url_for('search'))
 
-    # neighborhood = Location.query.all() locations=neighborhood,
+    neighborhood = Location.query.all() 
     l_form = LoginForm()
     
-    return render_template('index.html', l_form=l_form)
+    return render_template('index.html', locations=neighborhood, l_form=l_form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -193,17 +193,21 @@ def autocomplete():
     txt_so_far = None
 
     # Pull letters entered so far
-    if requested.method == 'POST':
+    if request.method == 'POST':
         txt_so_far = str(request.form['msg'])
 
-    # Lookup locations to recommend based on beginning of request
+    print txt_so_far
+    # Lookup locations to recommend based on prefix
     if txt_so_far:
-        prediction = Location.query.filter(n_hood.like(text_so_far+"%")).all() # Review if structure should change? - maybe text file with startswith?
-        print prediction
+        txt_so_far = txt_so_far.capitalize() # Ensures all search on capitlalized letters
+        locations = Location.query.filter(Location.n_hood.startswith(txt_so_far)).limit(8)         
+        print locations
+        predictions = [location.n_hood for location in locations]
+        print predictions
     else:
-        prediction = []
+        predictions = []
 
-    return ''.join(prediction)
+    return json.dumps({ "options": predictions})
 
 # # create map view - set this up to test
 # @app.route('/map_view')
