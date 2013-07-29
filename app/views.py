@@ -89,7 +89,7 @@ def logout():
     flash('You are now logged out')
     return redirect(url_for('index'))
 
-# Create user
+
 @app.route('/create_login', methods = ['POST', 'GET'])
 def create_login():
     cl_form = CreateLogin()
