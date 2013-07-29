@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Layout page -->
+<!-- Layout -->
 <html lang="en">
 	
 	{% include "header.html" %}
@@ -38,12 +38,6 @@
 
 			console.log("layout"); // check load
 
-		   // Autocomplete list var - Remove once type ahead works
-	   //      var availableTags = [ 
-	   //      	{% for location in locations %}
-				// 	"{{ location.n_hood|safe }}", 
-				// {% endfor %} 
-				// ];
 
 			var positionCoords = [
 				{% for coord in locations %}
@@ -51,17 +45,6 @@
 				{% endfor %}
 				];
 
-
-			// $(".typeahead").typeahead({
-			//     source: function (typeahead, query) {
-			//         return $.post(
-			//             '/autocomplete', 
-			//             { msg: query }, 
-			//             function (data) {
-			//                 return typeahead.process(data.split(","));
-			//             })
-			// 	    }
-			// });
 		
 		</script>
 	</body>
