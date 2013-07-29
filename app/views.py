@@ -128,8 +128,8 @@ def search():
 
 
 # Ajax spinner
-@app.route("/ajax_search", methods = ['POST'])
-def ajax_search():
+@app.route("/search_results", methods = ['POST'])
+def search_results():
     # generate local neighborhood object
     neighborhood = Location.query.all()
 
@@ -147,6 +147,13 @@ def ajax_search():
     # return render_template('search_result_partial.html', result=weather)
     return result
 
+# create map view - set this up to test
+@app.route('/map_view')
+def map_view():
+    # generate local neighborhood object
+    neighborhood = Location.query.all()
+
+    return json.dump({ 'locations': neighborhood })
 
 @app.route('/about')
 def about():  
@@ -185,23 +192,19 @@ def autocomplete():
 
     return json.dumps({ "options": predictions})
 
-# # create map view - set this up to test
-# @app.route('/map_view')
-# def map_view():
-#     return render_template('map_view.html')
 
 
 # User view with favorites and ability to report on validity of sun
-@app.route('/user/<fname>')
-@login_required # Restricts page access without login
-def user(fname):
-    user = User.query.filter_by(User.fname = fname).first()
+# @app.route('/user/<fname>')
+# @login_required # Restricts page access without login
+# def user(fname):
+#     user = User.query.filter_by(User.fname = fname).first()
 
-    if user == None:
-        flash('User %(fname)s not found.', fname = fname))
-        return redirect(url_for('index'))
-    return render_template("user.html", 
-        user = user)
+#     if user == None:
+#         flash('User %(fname)s not found.', fname = fname))
+#         return redirect(url_for('index'))
+#     return render_template("user.html", 
+#         user = user)
 
 # @app.route('/edit', methods = ['GET', 'POST'])
 # @login_required
