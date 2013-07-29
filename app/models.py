@@ -1,5 +1,5 @@
 """
-Models.db 
+Models
 
 """
 from app import db
