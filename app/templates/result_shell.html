@@ -14,7 +14,7 @@
         
     </div>
 
-	<div id="search_result_target">
+	<div id="search_result_target" class="page_results">
 		<div id="spinner" class="ajax_txt_pad">
 			<p id=”progress” class="text-center">Forecasting in Progress…<br>
 			<img id=”progress_image” src="static/img/spiffygif_56x56.gif" class="ajax_img_pad"> 
@@ -24,19 +24,6 @@
 
 <script type="text/javascript">
      
-	function do_search()
-	{
-		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-	 		$('#search_result_target').html(data);
-			// alert('ajax_search returned');
-
-		}); 
-	}
-
-	// function do_search(){
-	// 	$('search_result_target').load('search_results.html')
-	// }
 
 	function dom_ready()
 	{
