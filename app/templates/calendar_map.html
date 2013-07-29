@@ -28,26 +28,31 @@
 
 	console.log("calendar_map"); // check load
 
-	var locations = JSON.parse({{ locations }}) // FIXpull locations into dict  in views
 
-	// Locations for map
-	var availableTags = [ 
-		{% for location in locations %}
-			"{{ location.n_hood|safe }}", 
-		{% endfor %} 
-		];
-
-
-	// Coordinates to generate map
-	var positionCoords = [
-		{% for coord in locations %}
-			new google.maps.LatLng({{ coord.lat}}, {{ coord.lng }}),
-		{% endfor %}
-		];
 
 	// Initialize map
-	$('.open_map').on('click', function(e) { 
-		initialize();
-	});
+	// $('.open_map').on('click', function(e) { 
+	// 	var map_lat = 37.7655
+ //        var map_long = -122.4429
+
+	// 	var locations = JSON.parse({{ locations }}) // FIX pull locations into dict  in views
+
+	// 	// Locations for map
+	// 	var availableTags = [ 
+	// 		{% for location in locations %}
+	// 			"{{ location.n_hood|safe }}", 
+	// 		{% endfor %} 
+	// 		];
+
+
+	// 	// Coordinates to generate map
+	// 	var positionCoords = [
+	// 		{% for coord in locations %}
+	// 			new google.maps.LatLng({{ coord.lat}}, {{ coord.lng }}),
+	// 		{% endfor %}
+	// 		];
+
+	// 	initialize();
+	// });
 
 </script>
