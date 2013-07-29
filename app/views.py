@@ -71,11 +71,10 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     l_form = LoginForm()
-    cl_form = CreateLogin()
+    # cl_form = CreateLogin() -  cl_form=cl_form
 
     # login and validate the user exists in the database
     if l_form.validate_on_submit():
-        # user = db.query(User).filter(User.email==l_form.email.data).first()
         user = User.query.filter(User.email==l_form.email.data).first()
  
         # if user exists then apply login user functionatlity to generate current_user session
@@ -85,9 +84,8 @@ def login():
             flash('Logged in successfully.')
             return redirect(url_for('search'))
         else:
-            flash('Incorrect Password')
-            return redirect('login')
-    return render_template('login.html', title="Login", l_form=l_form, cl_form=cl_form)
+            flash('Your email or password are incorrect. Please login again.')
+    return render_template('login.html', l_form=l_form)
 
 @app.route('/logout')
 @login_required # confirms if user_id in session - sends to login view if not
