@@ -15,9 +15,7 @@
     </div>
 
     <div class="span4 offset2">
-        <a href="{{ url_for('create_login') }}">Create Account</a> 
-        <!-- Login Buttons -->
-        <a href="{{ url_for('login') }}" role="button" class="btn btn-warning">Login</a>   
+        {% include 'account.html' %}   
     </div>
 
 </div>
