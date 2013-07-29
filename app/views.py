@@ -124,17 +124,8 @@ def create_login():
 # Search result 
 @app.route('/search', methods=['POST'])
 def search():
-    # generate local neighborhood object
-    # neighborhood = Location.query.all() , locations=neighborhood
-
-    l_form = LoginForm() # FIX - passing to make the pages work but need to pull out of view
-
-    txt_query = request.form['query']
-    # # catpure form date filter
-    date = request.form['date']
-
     
-    return render_template('result_shell.html', l_form=l_form, query= txt_query, date=date)
+    return render_template('result_shell.html')
 
 
 # Ajax spinner
