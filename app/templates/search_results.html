@@ -34,9 +34,7 @@
             <!-- Temperature results -->
             <dl class="dl-horizontal tempr_block">
                 <dt>WUI Temperature:</dt>
-                <dt>Forecast.io Temp:</dt>
                     <dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
-                <dd>{{ result.tempr_fio_F|round(1, 'ceil') }} °F</dd>
             </dl>
        
 <!-- More Details expansion -->
@@ -88,7 +86,6 @@
         </div>
 
         <script>
-            //  lat and lng to test with (37.7655,-122.4429),
             
             // condition to set map_lat & map_long to false if no result
             {% if result.lat %}
