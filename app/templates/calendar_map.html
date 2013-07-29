@@ -1,4 +1,53 @@
 <!-- Calendar & Map -->
-<i class="icon-calendar"></i> <input type="text" name="date" class="datepicker input-small search-query" placeholder="select date"> <i class=" icon-map-marker"></i>
+<i class="icon-calendar"></i> <input type="text" name="date" class="datepicker input-small search-query" placeholder="select date"> 
 
-<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
+<a href="#myModal" role="button" class="open_map"><i class=" icon-map-marker"></i></a>
+
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h5 id="myModalLabel">Map View</h5>
+    </div>
+
+    <form action="" method="POST" name="map_view">
+        <div class="modal-body">
+			<div class="span7" id="map_canvas"></div>
+        </div>
+    
+        <div class="modal-footer control-group">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+
+	console.log("calendar_map"); // check load
+
+	var locations = JSON.parse({{ locations }}) // FIXpull locations into dict  in views
+
+	// Locations for map
+	var availableTags = [ 
+		{% for location in locations %}
+			"{{ location.n_hood|safe }}", 
+		{% endfor %} 
+		];
+
+
+	// Coordinates to generate map
+	var positionCoords = [
+		{% for coord in locations %}
+			new google.maps.LatLng({{ coord.lat}}, {{ coord.lng }}),
+		{% endfor %}
+		];
+
+	// Initialize map
+	$('.open_map').on('click', function(e) { 
+		initialize();
+	});
+
+</script>
