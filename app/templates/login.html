@@ -8,8 +8,9 @@
 {% block body %}
     <div>
         <h1 class="form-signin-heading text-center"> Sun Finder Login </h1>
+        {% include 'flash.html' %}
 
-        <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal"    >
+        <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal">
             <!-- utilize hidden tag to render any hidden fields-->
             {{l_form.hidden_tag()}}
             
@@ -18,12 +19,12 @@
                 <!-- made sure to not print csrf token -->
                 {% if field.short_name != "csrf_token" %}
                     <div class="control-group">
-                        <!-- updates to WTForms returns an HTML safe string so form elements do not need to be escaped -->           
+                        <!-- WTForms do not need to be escaped -->
                         <label class="control-label">{{field.label}}</label>
                             <div class="controls">
-                                <!-- placeholder will add text inline -->
+                                <!-- Placeholder inline text -->
                                 {{ field(size=30, placeholder=field.short_name) }}
-                                <!-- form is replaced by field-->
+                                <!-- Error -->
                                 {% for error in field.errors %}
                                     <span style = "color: red;">[{{error}}]</span>
                                 {% endfor %}
