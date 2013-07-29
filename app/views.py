@@ -141,19 +141,21 @@ def search_results():
 #    date=request.args['date'] - calls through browser
 #    txt_query=request.args['query']
 
-    # weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
-    result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+    # result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
 
-    # return render_template('search_result_partial.html', result=weather)
-    return result
+    return render_template('search_results.html', result=weather)
+    # return result
 
 # create map view - set this up to test
 @app.route('/map_view')
 def map_view():
     # generate local neighborhood object
-    neighborhood = Location.query.all()
+    nh = Location.query.all()
 
-    return json.dump({ 'locations': neighborhood })
+    print 'loc list', [(nh.n_hood,nh.lat,nh.lng ) for neihborhood in neighborhoods]
+    return json.dump({ 'locations': [(nh.n_hood,nh.lat,nh.lng ) for neihborhood in neighborhoods] })
+
 
 @app.route('/about')
 def about():  
