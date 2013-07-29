@@ -23,21 +23,20 @@
 	</div>
 
 <script type="text/javascript">
-//  lat and lng to test with (37.7655,-122.4429),
      
-// 	function do_search()
-// 	{
-// 		// $.post('ajax_search', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-// 		$.post('ajax_search', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-// 	 		$('#search_result_target').html(data);
-// //			alert('ajax_search returned');
+	function do_search()
+	{
+		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+	 		$('#search_result_target').html(data);
+			// alert('ajax_search returned');
 
-// 		}); 
-// 	}
-
-	function do_search(){
-		$('search_result_target').load('search_results.html')
+		}); 
 	}
+
+	// function do_search(){
+	// 	$('search_result_target').load('search_results.html')
+	// }
 
 	function dom_ready()
 	{
