@@ -58,7 +58,6 @@ import json
 def load_user(user_id):
   return User.query.get(int(user_id))
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -204,3 +203,18 @@ def user(fname):
     return render_template("user.html", 
         user = user)
 
+# @app.route('/edit', methods = ['GET', 'POST'])
+# @login_required
+# def edit():
+#     form = EditForm(g.user.nickname)
+#     if form.validate_on_submit():
+#         g.user.nickname = form.fname.data
+#         g.user.about_me = form.about_me.data
+#         db.session.add(g.user)
+#         db.session.commit()
+#         flash(gettext('Your changes have been saved.'))
+#         return redirect(url_for('edit'))
+#     elif request.method != "POST":
+#         form.nickname.data = g.user.nickname
+#         form.about_me.data = g.user.about_me
+#     return render_template('edit.html', form = form)
