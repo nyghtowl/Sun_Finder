@@ -60,21 +60,15 @@ def load_user(user_id):
 
 
 @app.route('/')
+@app.route('/index')
 def index():
-    # return redirect(url_for('search'))
-
-    # neighborhood = Location.query.all() 
-    # l_form = LoginForm()
-    
-    # return render_template('index.html', locations=neighborhood, l_form=l_form)
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     l_form = LoginForm()
-    # cl_form = CreateLogin() -  cl_form=cl_form
 
-    # login and validate the user exists in the database
+    # Validate login
     if l_form.validate_on_submit():
         user = User.query.filter(User.email==l_form.email.data).first()
  
@@ -99,13 +93,9 @@ def logout():
 @app.route('/create_login', methods = ['POST', 'GET'])
 def create_login():
     cl_form = CreateLogin()
-    l_form = LoginForm()
-
-    # neighborhood = Location.query.all() , locations=neighborhood
 
     if cl_form.validate_on_submit():
 
-        # user = db.query(User).filter(User.email==cl_form.email.data).first()
         user = User.query.filter(User.email==cl_form.email.data).first()
 
         if user != None:
@@ -128,8 +118,8 @@ def create_login():
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.')
-            return redirect('/')
-    return render_template('create_login.html', title='Create Account Form', cl_form=cl_form, l_form=l_form)
+            return redirect(url_for('index'))
+    return render_template('create_login.html', cl_form=cl_form)
 
 # Search result 
 @app.route('/search', methods=['POST'])
