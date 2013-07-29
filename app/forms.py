@@ -1,7 +1,7 @@
 """
-forms.py is the file to use to setup the databases
+Forms
 
-Go Live: Add this and database info to gitignore
+Apply WTF using classes to setup content db
 
 """
 
