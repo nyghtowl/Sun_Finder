@@ -151,21 +151,18 @@ def ajax_search():
 
 @app.route('/about')
 def about():  
-    l_form = LoginForm()  
-    return render_template('about.html', l_form=l_form)
+    return render_template('about.html')
 
-# Terms of service page
+# Terms of service
 @app.route('/tos')
 def tos(): 
-    l_form = LoginForm()  
-    return render_template('tos.html', l_form=l_form)
+    return render_template('tos.html')
 
 
-# Privacy policy page
+# Privacy policy
 @app.route('/privacy')
 def privacy():    
-    l_form = LoginForm()  
-    return render_template('privacy.html', l_form=l_form)
+    return render_template('privacy.html')
     
 
 @app.route('/autocomplete', methods=['POST'])
@@ -195,11 +192,15 @@ def autocomplete():
 #     return render_template('map_view.html')
 
 
-# create profile page view with favorites and ability report on validty of sun
+# User view with favorites and ability to report on validity of sun
+@app.route('/user/<fname>')
+@login_required # Restricts page access without login
+def user(fname):
+    user = User.query.filter_by(User.fname = fname).first()
 
-
-# FIX - Json view - what Liz added to help with adding Ajax - need to rework
-# @app.route('/some_json_route')
-# def some_json():
-#     return json.dumps({"thing" : "stuff"})
+    if user == None:
+        flash('User %(fname)s not found.', fname = fname))
+        return redirect(url_for('index'))
+    return render_template("user.html", 
+        user = user)
 
