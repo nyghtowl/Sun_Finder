@@ -63,10 +63,11 @@ def load_user(user_id):
 def index():
     # return redirect(url_for('search'))
 
-    neighborhood = Location.query.all() 
-    l_form = LoginForm()
+    # neighborhood = Location.query.all() 
+    # l_form = LoginForm()
     
-    return render_template('index.html', locations=neighborhood, l_form=l_form)
+    # return render_template('index.html', locations=neighborhood, l_form=l_form)
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -92,7 +93,7 @@ def login():
 def logout():
     logout_user()
     flash('You are now logged out')
-    return redirect(url_for('search', locations=None))
+    return redirect(url_for('index'))
 
 # Create user
 @app.route('/create_login', methods = ['POST', 'GET'])
