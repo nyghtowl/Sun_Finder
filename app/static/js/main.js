@@ -1,12 +1,13 @@
 // Main Javascript file for Sun Finder
 
-console.log("main js immediate"); //test
+// Confirm load
+console.log("main js immediate");
 
-// sets lat and long to false so the map load will not initialize   
+// Initializes lat and long since map is not ready to load  
 var map_lat = false;
 var map_long = false;
 
-// load map of SF with central location based on search
+// Load map  - currently SF biased
 function initialize() { 
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
@@ -21,10 +22,10 @@ console.log("initialize"); // test
 	  mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	
-	//map var
+	// Establishes Google maps
 	var map = new google.maps.Map(map_canvas, map_options)
 	
-	// set map style
+	// Map style - move to css?
 	map.set('styles', [
 	  {
 	    featureType: 'all',
@@ -43,7 +44,7 @@ console.log("initialize"); // test
 	  }
 	]);
 
-	//search result marker - custom img and marker variable
+	// Search result marker - custom img and marker variable
 	var img_map = {
 		scaledSize: new google.maps.Size(20, 25),
 		size: new google.maps.Size(25, 32),
@@ -77,7 +78,7 @@ console.log("initialize"); // test
     // });
 
 
-	// apply MarkerWith Label to putting multiple markers on the map
+	// Apply MarkerWith Label - add multiple markers on the map
 	function createMarker(position, label) {
 		return new MarkerWithLabel({
 	       position: position,
@@ -86,42 +87,41 @@ console.log("initialize"); // test
 	       map: map,
 	       labelContent: label,
 	       labelAnchor: new google.maps.Point(22, 0),
-	       labelClass: "labels", // connects to CSS class label
+	       labelClass: "labels", // Connects to CSS class label
 	       labelStyle: {opacity: 1}
     	});
 	}
 
-	// create multiple markers
+	// Create multiple markers
 	var readData = function(positions, labels) { 
 		for (var i = 0; i < positions.length; i++) {
 	    	createMarker(positions[i], labels[i]);
 	  	}     
 	 }
 
-	// google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
+	// Google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
 	var weatherLayer = new google.maps.weather.WeatherLayer({
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
 
-  	//loads weather layer
+  	// Loads weather layer
   	weatherLayer.setMap(map);
 
-  	//adds static neighborhood markers based on lat, long
+  	// Adds static neighborhood markers based on lat, long
     readData(positionCoords, availableTags);
 
 }
 
 
 
-// jquery search event map load - set as if there is coord then initialize
+// Jquery search event map load - set as if there is coord then initialize
 $(function() { 
 	if(map_lat && map_long){
 		initialize();
 	};
 })
 
-
-
+// Autocomplete
 $(function() {
 console.log("anon autocomplete"); //test
 
@@ -139,7 +139,7 @@ $(".my-search").typeahead({
 
 });
 
-//datepicker
+// Datepicker
 $(function() {
 		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 	});
