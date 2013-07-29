@@ -152,7 +152,7 @@ function do_search()
 {
 	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
 	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
- 		$('#search_result_target').html(data);
+ 		$('.page_results').html(data);
 		// alert('ajax_search returned');
 
 	}); 
