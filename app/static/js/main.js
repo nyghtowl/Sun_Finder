@@ -7,6 +7,7 @@ console.log("main js immediate");
 var map_lat = false;
 var map_long = false;
 
+
 // Load map  - currently SF biased
 function initialize() { 
     //stops other event listeners from firing on search button
@@ -111,7 +112,6 @@ console.log("initialize"); // test
     readData(positionCoords, availableTags);
 
 }
-
 
 
 // Jquery search event map load - set as if there is coord then initialize
