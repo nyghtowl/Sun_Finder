@@ -13,7 +13,8 @@ function initialize() {
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
 console.log("initialize"); // test
-	//pulls lat, lng from fast result html
+	
+	//Pulls lat, lng from search result
 	var myLatlng = new google.maps.LatLng(map_lat,map_long);
 	var map_canvas = document.getElementById('map_canvas');
 	var map_options = {
@@ -106,7 +107,7 @@ console.log("initialize"); // test
   	});
 
   	// Loads weather layer
-  	weatherLayer.setMap(map);
+  	// weatherLayer.setMap(map);
 
   	// Adds static neighborhood markers based on lat, long
     readData(positionCoords, availableTags);
@@ -126,6 +127,7 @@ $(function() {
 console.log("anon autocomplete"); //test
 
 $(".my-search").typeahead({
+    minLength: 2,
     source: function (query, process) {
         return $.post(
             '/autocomplete', 
@@ -143,6 +145,18 @@ $(".my-search").typeahead({
 $(function() {
 		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 	});
+
+
+// Generate Search
+function do_search()
+{
+	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+ 		$('#search_result_target').html(data);
+		// alert('ajax_search returned');
+
+	}); 
+}
 
  
 $(document).ready(dom_ready);
