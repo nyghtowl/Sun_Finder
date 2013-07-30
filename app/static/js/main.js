@@ -1,7 +1,7 @@
 // Main Javascript file for Sun Finder
 
 // Confirm load
-console.log("main js immediate");
+console.log("main js");
 
 // Initializes lat and long since map is not ready to load  
 var map_lat = false;
@@ -159,6 +159,20 @@ function do_search()
 }
 
  
+function about_load() {
+    
+    // $('#about_load').on('click', function(){
+    // 	alert('Arrived')
+    // });
+    $('#about_load').on('click', function(e){
+  		console.log('hello world');
+  		$('.page_results').load('about.html .page_results');
+  		// $.post('about', function(data){
+  		// 	$('.page_results').html(data);
+  		// });
+  	});
+}
+
 $(document).ready(dom_ready);
 
 
