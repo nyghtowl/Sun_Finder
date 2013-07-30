@@ -5,7 +5,7 @@
 			<p class="text-center">
 				<small>
 					<a href="{{url_for('index')}}">Home</a> | 
-					<a href="javascript:;" id="about_load">About & AK</a> |
+					<a href="#" id="about_load">About & AK</a> |
 					<a href="{{url_for('tos')}}">Terms of Service</a> |
 					<a href="{{url_for('privacy')}}" id="privacy_load">Privacy Policy </a> |
 					<a href="http://http://nyghtowl.tumblr.com/">Blog</a> <br>
@@ -17,3 +17,11 @@
 		</div>
 	</div>
 </div>
+<script>
+	    console.log("footer"); // check load
+
+		function dom_ready() {	    
+			about_load();
+		}
+
+</script>
