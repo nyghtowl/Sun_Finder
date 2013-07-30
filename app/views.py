@@ -164,12 +164,12 @@ def tos():
 
 
 # Privacy policy
-@app.route('/privacy')
+@app.route('/privacy', methods=['POST'])
 def privacy():    
     return render_template('privacy.html')
     
 
-@app.route('/autocomplete')
+@app.route('/autocomplete', methods=['POST'])
 def autocomplete():
     txt_so_far = None
 
