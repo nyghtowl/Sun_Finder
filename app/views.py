@@ -158,7 +158,7 @@ def about():
     return render_template('about.html')
 
 # Terms of service
-@app.route('/tos')
+@app.route('/tos', methods=['POST'])
 def tos(): 
     return render_template('tos.html')
 
