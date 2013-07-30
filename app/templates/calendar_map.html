@@ -1,7 +1,7 @@
 <!-- Calendar & Map -->
 <i class="icon-calendar"></i> <input type="text" name="date" class="datepicker input-small search-query" placeholder="select date"> 
 
-<a href="#myModal" role="button" id="open_map" data-toggle="modal" title data-content="Now where?" original-title="A Title"><i class=" icon-map-marker"></i></a>
+<a href="#myModal" role="button" id="open_map" data-toggle="modal"><i class=" icon-map-marker"></i></a>
 
 
 <!-- Map Modal -->
@@ -38,6 +38,7 @@
 			var locations = JSON.parse({{ map_markers }}) // FIX pull locations into dict  in views
 			console.log(locations);
 
+			alert('How goes it');
 			// Locations for map
 			// var availableTags = [ 
 			// 	{% for location in locations %}
