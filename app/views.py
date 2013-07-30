@@ -1,5 +1,5 @@
 """
-finder_view.py -- A flask based sun search tool
+Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     Go Live: 
@@ -7,38 +7,31 @@ TO DO:
         turn off debug
 
 
+    Search - fix passing data so search will work (coords and locations from db for map)
+    Ajax - get pages to load into result_shell
+
+    Map - Get to load in modal (possibly change to popover if can fix problem)
+        Put text and links on map - populate autocomplete based on click
+        Change what labels show based on the zoom level of map
+
+
+    Weather Data - change returned data to populate page through jason & remove fui
+
     Date - add a couple additional data points for date
+        setup ability to choose time
 
-    add flash messages
-
-    Put text and links on map
-    Change what labels show based on the zoom level of map
-
-    Setup map to pop-up on first page and allow selection of neighborhood for autocomplete
-    Put datepicker on results page
-
-    clean up data passing in views form
+    flash messages - setup so it will load after page loads
 
     run linter
-    
-    setup ability to choose time
-
-    polygon file - aquire for neihborhood - google maps has a way to apply polygon shape and make clickable
-
-    Can set a loop to compare coordinates for closest to the central ones for neighborhood in local db?
-
 
     look into lscache - to store content on the local computer - would be good for storing weather
+    get weather results ahead and cache
 
     utilize makefile or grunt to prepare the code and combine to push out
     look at github/pamalafox/everday/blob/master/application/urls.py - for additional ideas on user data to structure for users
 
-    deployment
-
-    get weather results ahead and cache
 
     Places API responses may include Listings provider attributions in HTML format that must be displayed to the user as provided. Put below search results 
-
 
 """
 
@@ -160,7 +153,7 @@ def map_view():
     
     return map_markers
 
-@app.route('/about')
+@app.route('/about', methods=['POST'])
 def about():  
     return render_template('about.html')
 
@@ -176,7 +169,7 @@ def privacy():
     return render_template('privacy.html')
     
 
-@app.route('/autocomplete', methods=['POST'])
+@app.route('/autocomplete')
 def autocomplete():
     txt_so_far = None
 
