@@ -148,14 +148,17 @@ def search_results():
     # return result
 
 # create map view - set this up to test
-@app.route('/map_view')
+@app.route('/map_view', methods = ['POST'])
 def map_view():
     # generate local neighborhood object
-    nh = Location.query.all()
+    neighborhoods = Location.query.all()
 
-    print 'loc list', [(nh.n_hood,nh.lat,nh.lng ) for neihborhood in neighborhoods]
-    return json.dump({ 'locations': [(nh.n_hood,nh.lat,nh.lng ) for neihborhood in neighborhoods] })
+    print 'loc list', [nh.n_hood for nh in neighborhoods]
 
+    map_markers = json.dump({ 'locations': [nh.n_hood for nh in neighborhoods], 
+        'coords': [(nh.lat,nh.lng) for nh in neighborhoods] })
+    
+    return map_markers
 
 @app.route('/about')
 def about():  
