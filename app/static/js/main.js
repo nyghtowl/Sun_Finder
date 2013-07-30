@@ -161,16 +161,18 @@ function do_search()
  
 function about_load() {
     
-    // $('#about_load').on('click', function(){
-    // 	alert('Arrived')
-    // });
     $('#about_load').on('click', function(e){
   		console.log('hello world');
-  		$('.page_results').load('about.html .page_results');
-  		// $.post('about', function(data){
-  		// 	$('.page_results').html(data);
-  		// });
+  		$.post('about', function(data){
+  			$('.page_results').html(data);
+  		});
   	});
+
+	$('#privacy_load').on('click', function(e){
+		$.post('privacy', function(data){
+  			$('.page_results').html(data);
+  		});
+	});
 }
 
 $(document).ready(dom_ready);
