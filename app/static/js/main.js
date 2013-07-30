@@ -159,7 +159,7 @@ function do_search()
 }
 
  
-function about_load() {
+function footer_link_load() {
     
     $('#about_load').on('click', function(e){
   		console.log('hello world');
@@ -173,6 +173,13 @@ function about_load() {
   			$('.page_results').html(data);
   		});
 	});
+
+	$('#tos_load').on('click', function(e){
+		$.post('tos', function(data){
+  			$('.page_results').html(data);
+  		});
+	});
+
 }
 
 $(document).ready(dom_ready);
