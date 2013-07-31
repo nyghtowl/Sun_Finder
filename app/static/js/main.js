@@ -144,25 +144,7 @@ $(function() {
 	});
 
 
-// Capture query variables
-// $(function(){
-// 	console.log("gather query var"); //test
-
-// 	$(".sun-submit").on("click", function(){
-
-// 		var sunq = $(".sun-query").val();
-// 		var sd = $(".sun-date").val();
-// 		alert(sunq);
-// 	});
-
-
-// });
-
-// function get_search_var(){
-// 	console.log("gather query var"); //test
-// 	var sun_query;
-// 	var sun_date;
-
+// Weather Search
 $(function(){
   $(".sun-submit").on("click", handleSearch);
 });
@@ -174,34 +156,13 @@ function handleSearch(e) {
 	$('#spinner').show();
 	$('.page_results').hide();
 	console.log(query);
-	//$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
 		$('.page_results').show();
 		$('.page_results').html(data);
-	// alert('ajax_search returned');
 	});
 }
 
-// 	console.log(sun_query);
-
-// }
-
-
-// // Generate Search
-// function do_search()
-// {
-// 	console.log('do search called');
-// debugger
-// 	// $(".sun-submit").on("click", function(){ - need to figure out how to swap loading bar with page below to make this work...
-// 		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-// 		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-// 			$('.page_results').html(data);
-// 		// alert('ajax_search returned');
-// 		}); 
-// 	// });
-
-// }
 
 // Footer Link Load
 $(function (){
