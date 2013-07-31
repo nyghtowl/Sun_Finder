@@ -117,13 +117,11 @@ console.log("initialize"); // test
 
 }
 
-
-
 // Typeahead - Autocomplete
 $(function() {
 	console.log("typeahead"); //test
 
-	$(".sun-query").typeahead({
+	$("#sun-query1, #sun-query2").typeahead({
 	    minLength: 2,
 	    source: function (query, process) {
 	        return $.post(
@@ -150,7 +148,7 @@ $(function(){
 });
 
 function handleSearch(e) {
-	var query = $(".sun-query").val();
+	var query = $("#sun-query1").val();
 	var date = $(".sun-date").val();
 	e.preventDefault();
 	$('#spinner').show();
