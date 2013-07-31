@@ -1,10 +1,10 @@
 """
-sun_functions.py -  Sun Finder functions  
+Sun Functions  
 
 """
 
 from app import db as db_session
-# import model and assign to db_session variable
+from config import G_KEY
 from models import Location, User
 # use requests to pull api info - alternative is urllib - this is more human
 import requests
@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 import time
 
 
-def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
+def get_coord(txt_query, as_of):
     # use regex to swap space with plus and add neighborhood to help focus results
     txt_plus = re.sub('[ ]', '+', txt_query)
 
@@ -58,7 +58,7 @@ def get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of):
 
     # return Weather object if coordinates exist
     if g_lat:
-        return weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
+        return weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of)
     else:
         return None
 
@@ -92,7 +92,7 @@ def extract_as_of(date_string):
     return as_of 
 
 # function to generate search results for the different views
-def search_results(G_KEY, FIO_KEY, WUI_KEY, locations, date, txt_query):
+def search_results(locations, date, txt_query):
 
     g_lat = None
     g_lng = None
@@ -109,11 +109,11 @@ def search_results(G_KEY, FIO_KEY, WUI_KEY, locations, date, txt_query):
             g_lng = location.lng
             loc_name = location.n_hood
     if g_lat:
-        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, FIO_KEY, WUI_KEY, as_of)
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of)
         forecast_result.add_name(loc_name) # applies neighborhood name if from local db
     # if no query match to local db use Google Places
     else:
-        forecast_result = get_coord(txt_query, G_KEY, FIO_KEY, WUI_KEY, as_of)
+        forecast_result = get_coord(txt_query, as_of)
 
     # validate time of date to determine picture to assign
     forecast_result.apply_pic()
