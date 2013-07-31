@@ -174,6 +174,7 @@ function do_search()
 // Footer Link Load
 $(function (){
  console.log('in footer link load');  
+ 
     $('#about_load').on('click', function(e){
   		console.log('hello world');
   		$.post('about', function(data){
@@ -195,7 +196,7 @@ $(function (){
 
 });
 
-$(document).ready(dom_ready);
+$(document).ready(search_ready);
 
 // Jquery search event map load - set as if there is coord then initialize
 $(function() { 
