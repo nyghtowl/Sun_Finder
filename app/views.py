@@ -40,7 +40,6 @@ from app import db, app, login_manager
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from models import Location, User
 from forms import LoginForm, CreateLogin
-from config import G_KEY, FIO_KEY, WUI_KEY
 
 import sun_functions
 import weather_forecast
@@ -121,19 +120,22 @@ def search():
 
 
 # Ajax spinner
-@app.route("/search_results", methods = ['POST'])
-def search_results():
+@app.route("/weather_results", methods = ['POST'])
+def weather_results():
     # Local neighborhood object
-    neighborhood = Location.query.all()
+    neighborhoods = Location.query.all()
+    print 'search neighborhood', neighborhoods
 
     # Search form input
     txt_query = request.form['query']
     date = request.form['date']
 
-    weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
+    print 'search query', txt_query
+
+    weather = sun_functions.search_results(neighborhoods, date, txt_query)
     # result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
 
-    return render_template('search_results.html', result=weather)
+    return render_template('weather_results.html', result=weather)
     # return result
 
 # create map view - set this up to test
