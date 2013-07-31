@@ -126,7 +126,7 @@ $(function() {
 $(function() {
 	console.log("typeahead"); //test
 
-	$(".my-search").typeahead({
+	$(".sun-query").typeahead({
 	    minLength: 2,
 	    source: function (query, process) {
 	        return $.post(
@@ -152,10 +152,11 @@ $(function() {
 $(function(){
 	console.log("query"); //test
 
-	$('.sun-search').on('click', function(e){
+	$('.sun-submit').on('click', function(e){
 
-		var sq = $('.my-search').val();
-		alert(sq);
+		var sq = $('.sun-query').val();
+		var sd = $('.sun-date').val();
+		alert(sd);
 
 
 		// var search_date = "{{ date }};
