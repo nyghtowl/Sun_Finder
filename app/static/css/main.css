@@ -16,6 +16,10 @@
   padding: 7px 9px;
 }
 
+.top-bar {
+  display: none;
+}
+
 .typeahead.dropdown-menu > li {
   text-align: left;
 }
