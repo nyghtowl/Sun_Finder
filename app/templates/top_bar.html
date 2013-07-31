@@ -1,28 +1,33 @@
 <!-- Top Bar -->
-<div class="row-fluid">
-    <div class="offset1">  
-        <h3> Sun Finder </h3>
+<div class="ui-widget">
+    <div class="row-fluid">
+        <div class="offset1 top-bar">  
+            <h3> Sun Finder </h3>
+        </div>
+    </div>
+
+    <div class="row-fluid">    
+        <div class="span5 offset1">
+            <form action="#" method= "POST" class="form-inline form-search top-bar">
+                <!-- Search input -->
+                <p><input type="text" name="query" placeholder="enter neighborhood" autocomplete="off" id="sun-query2" data-provide="typeahead">
+                {% include 'search_submit.html' %}</p>
+                {% include 'calendar_map.html' %}
+            </form>
+        </div>
+
+        <div class="span4 offset2">
+            <a href="{{ url_for('create_login') }}">Create Account</a> 
+            <a href="{{ url_for('login') }}" role="button" class="btn btn-warning">Login</a>
+        </div>
+
+    </div>
+
+    <div class="row-fluid">    
+        {% include 'flash.html' %}
     </div>
 </div>
 
-<div class="row-fluid ui-widget">    
-    <div class="span5 offset1">
-        <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
-            <p>{% include 'search.html' %}
-            {% include 'search_submit.html' %}</p>
-            {% include 'calendar_map.html' %}
-        </form>
-    </div>
-
-    <div class="span4 offset2">
-        {% include 'account.html' %}   
-    </div>
-
-</div>
-
-<div class="row-fluid">    
-    {% include 'flash.html' %}
-</div>
 <script>
         console.log("top bar"); // check load
 </script>
