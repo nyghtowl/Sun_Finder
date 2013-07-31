@@ -2,6 +2,7 @@
 weather_forecast.py -  Weather class to manage weather data
 
 """
+from config import FIO_KEY, WUI_KEY
 # use requests to pull information from api requests - alternative is urllib - this is more human
 import requests
 # leverage for reporting time result
@@ -128,7 +129,7 @@ class Weather(object):
 
     # method that can be called before or without initializing the class
     @staticmethod
-    def get_forecast(lat, lon, FIO_KEY, WUI_KEY, as_of):
+    def get_forecast(lat, lon, as_of):
         # url to pass to Forecast.io
         fio_url="https://api.forecast.io/forecast/%s/%f,%f"
         # pull API key from env with FIO_KEY
