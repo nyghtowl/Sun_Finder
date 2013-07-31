@@ -8,7 +8,7 @@ TO DO:
 
 
     Search - fix passing data so search will work (coords and locations from db for map)
-    Ajax - get pages to load into result_shell
+    Ajax - consolidate index and results_shell
 
     Map - Get to load in modal (possibly change to popover if can fix problem)
         Put text and links on map - populate autocomplete based on click

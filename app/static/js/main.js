@@ -142,33 +142,49 @@ $(function() {
 
 
 // Capture query variables
-$(function(){
+// $(function(){
+// 	console.log("gather query var"); //test
+
+// 	$(".sun-submit").on("click", function(){
+
+// 		var sunq = $(".sun-query").val();
+// 		var sd = $(".sun-date").val();
+// 		alert(sunq);
+// 	});
+
+
+// });
+
+function get_search_var(){
 	console.log("gather query var"); //test
+	var sun_query;
+	var sun_date;
 
-	$(".sun-submit").on("click", function(e){
+	$(".sun-submit").on("click", function(){
 
-		sq = $(".sun-query").val();
-		sd = $(".sun-date").val();
-		console.log(sq);
-
+		sun_query = $(".sun-query").val();
+		sun_date = $(".sun-date").val();
+		console.log(sun_query);
 	});
-});
+
+	console.log(sun_query);
+
+}
 
 
 // Generate Search
-
 function do_search()
 {
 	console.log('do search called');
 
-    // $('.sun-submit').on('click', function(e){
-	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-		$('.page_results').html(data);
-	// alert('ajax_search returned');
+	// $(".sun-submit").on("click", function(){ - need to figure out how to swap loading bar with page below to make this work...
+		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+			$('.page_results').html(data);
+		// alert('ajax_search returned');
+		}); 
+	// });
 
-	}); 
-  	// });
 }
 
 // Footer Link Load
@@ -176,7 +192,6 @@ $(function (){
  console.log('in footer link load');  
  
     $('#about_load').on('click', function(e){
-  		console.log('hello world');
   		$.post('about', function(data){
   			$('.page_results').html(data);
   		});
@@ -197,7 +212,8 @@ $(function (){
 });
 
 // Triggers when to run search call
-$(document).ready(search_ready);
+$(document).ready(weather_ready);
+
 
 // Jquery search event map load - set as if there is coord then initialize
 $(function() { 
