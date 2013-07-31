@@ -8,8 +8,8 @@
 <div class="row-fluid ui-widget">    
     <div class="span5 offset1">
         <form action="{{ url_for('search') }}" method= "POST" class="form-inline form-search">
-            {% include 'search.html' %}
-            {% include 'search_submit.html' %}<br>
+            <p>{% include 'search.html' %}
+            {% include 'search_submit.html' %}</p>
             {% include 'calendar_map.html' %}
         </form>
     </div>
