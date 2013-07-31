@@ -91,10 +91,7 @@
 
             // Map_lat & map_long false if no result
             {% if result.lat %}
-                map_lat = {{ result.lat }};
-                map_long = {{ result.lng }};
-
-                initialize();
+                initialize({{ result.lat }}, {{ result.lng }});
                 
             {% else %}
                 map_lat = false;
