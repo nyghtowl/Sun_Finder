@@ -123,16 +123,12 @@ def search():
 # Ajax spinner
 @app.route("/search_results", methods = ['POST'])
 def search_results():
-    # generate local neighborhood object
+    # Local neighborhood object
     neighborhood = Location.query.all()
 
-    # # capture search form query text
+    # Search form input
     txt_query = request.form['query']
-    # # catpure form date filter
     date = request.form['date']
-
-#    date=request.args['date'] - calls through browser
-#    txt_query=request.args['query']
 
     weather = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
     # result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
@@ -177,7 +173,6 @@ def autocomplete():
     if request.method == 'POST':
         txt_so_far = str(request.form['msg'])
 
-    print txt_so_far
     # Lookup locations to recommend based on prefix
     if txt_so_far:
         txt_so_far = txt_so_far.capitalize() # Ensures all search on capitlalized letters
