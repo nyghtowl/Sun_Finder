@@ -112,16 +112,17 @@ def create_login():
             return redirect(url_for('index'))
     return render_template('create_login.html', cl_form=cl_form)
 
-# Search result 
+# Search shell
 @app.route('/search', methods=['POST'])
 def search():
     
     return render_template('result_shell.html')
 
 
-# Ajax spinner
-@app.route("/weather_results", methods = ['POST'])
-def weather_results():
+# Ajax spinner replacement
+@app.route("/search_results", methods = ['POST'])
+def search_results():
+    print 'in weather results'
     # Local neighborhood object
     neighborhoods = Location.query.all()
     print 'search neighborhood', neighborhoods
@@ -133,11 +134,9 @@ def weather_results():
     print 'search query', txt_query
 
     weather = sun_functions.search_results(neighborhoods, date, txt_query)
-    # result = sun_functions.search_results(G_KEY, FIO_KEY, WUI_KEY, neighborhood, date, txt_query)
-
-    return render_template('weather_results.html', result=weather)
-    # return result
-
+ 
+    return render_template('search_results.html', result=weather)
+ 
 # create map view - set this up to test
 @app.route('/map_view', methods = ['POST'])
 def map_view():

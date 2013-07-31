@@ -148,27 +148,31 @@ $(function() {
 
 
 // Capture query variables
-$(function(){
-	console.log("query"); //test
+// $(function(){
+// 	console.log("gather query var"); //test
 
-	$(".sun-submit").on("click", function(e){
+// 	$(".sun-submit").on("click", function(e){
 
-		sq = $(".sun-query").val();
-		sd = $(".sun-date").val();
+// 		sq = $(".sun-query").val();
+// 		sd = $(".sun-date").val();
 
-	});
-});
+// 	});
+// });
 
 
 // Generate Search
-function do_search(){
 
-		$.post("search_results", { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-		// $.post('search_results', { "date": sq, "query": sd }, function(data) {
-	 		$(".page_results").html(data);
+function do_search()
+{
+	console.log('do search called');
+    // $('.sun-submit').on('click', function(e){
+	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+		$('.page_results').html(data);
+	// alert('ajax_search returned');
 
-		}); 
-
+	}); 
+  	// });
 }
 
 // Footer Link Load
