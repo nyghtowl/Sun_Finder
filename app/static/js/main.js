@@ -122,22 +122,22 @@ $(function() {
 	};
 })
 
-// Autocomplete
+// Typeahead - Autocomplete
 $(function() {
-console.log("anon autocomplete"); //test
+	console.log("typeahead"); //test
 
-$(".my-search").typeahead({
-    minLength: 2,
-    source: function (query, process) {
-        return $.post(
-            '/autocomplete', 
-            { msg: query }, 
-            function (data) {
-            	var data = JSON.parse(data)
-                return process(data.options);
-            })
-    }
-});
+	$(".my-search").typeahead({
+	    minLength: 2,
+	    source: function (query, process) {
+	        return $.post(
+	            '/autocomplete', 
+	            { msg: query }, 
+	            function (data) {
+	            	var data = JSON.parse(data)
+	                return process(data.options);
+	            })
+	    }
+	});
 
 });
 
@@ -148,17 +148,27 @@ $(function() {
 
 
 // Generate Search
-function do_search()
-{
-	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
- 		$('.page_results').html(data);
-		// alert('ajax_search returned');
+// function do_search()
+$(function(){
+	console.log("query"); //test
 
-	}); 
-}
+	$('.sun-search').on('click', function(e){
 
- 
+		var sq = $('.my-search').val();
+		alert(sq);
+
+
+		// var search_date = "{{ date }};
+		// $.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+		// // $.post('search_results', { "date": "{{date}}", "query": "{{query}}" }, function(data) {
+	 // 		$('.page_results').html(data);
+
+		// }); 
+	});
+
+});
+
+// Footer Link Load
 function footer_link_load() {
     
     $('#about_load').on('click', function(e){
