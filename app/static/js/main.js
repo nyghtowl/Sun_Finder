@@ -115,12 +115,6 @@ console.log("initialize"); // test
 }
 
 
-// Jquery search event map load - set as if there is coord then initialize
-$(function() { 
-	if(map_lat && map_long){
-		initialize();
-	};
-})
 
 // Typeahead - Autocomplete
 $(function() {
@@ -148,16 +142,17 @@ $(function() {
 
 
 // Capture query variables
-// $(function(){
-// 	console.log("gather query var"); //test
+$(function(){
+	console.log("gather query var"); //test
 
-// 	$(".sun-submit").on("click", function(e){
+	$(".sun-submit").on("click", function(e){
 
-// 		sq = $(".sun-query").val();
-// 		sd = $(".sun-date").val();
+		sq = $(".sun-query").val();
+		sd = $(".sun-date").val();
+		console.log(sq);
 
-// 	});
-// });
+	});
+});
 
 
 // Generate Search
@@ -165,6 +160,7 @@ $(function() {
 function do_search()
 {
 	console.log('do search called');
+
     // $('.sun-submit').on('click', function(e){
 	$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
 	// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
@@ -176,8 +172,8 @@ function do_search()
 }
 
 // Footer Link Load
-function footer_link_load() {
-    
+$(function (){
+ console.log('in footer link load');  
     $('#about_load').on('click', function(e){
   		console.log('hello world');
   		$.post('about', function(data){
@@ -197,11 +193,16 @@ function footer_link_load() {
   		});
 	});
 
-}
+});
 
 $(document).ready(dom_ready);
 
-
+// Jquery search event map load - set as if there is coord then initialize
+$(function() { 
+	if(map_lat && map_long){
+		initialize();
+	};
+})
 // run spinner
 // function loadSubmit() {
 // 	ProgressImage = document.getElementById(’progress_image’);
