@@ -9,7 +9,10 @@ var map_long = false;
 
 
 // Load map  - currently SF biased
-function initialize() { 
+function initialize(map_lat, map_long) { 
+	if (!map_lat || !map_long) {
+		return
+	}
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
 console.log("initialize"); // test
@@ -155,37 +158,50 @@ $(function() {
 
 // });
 
-function get_search_var(){
-	console.log("gather query var"); //test
-	var sun_query;
-	var sun_date;
+// function get_search_var(){
+// 	console.log("gather query var"); //test
+// 	var sun_query;
+// 	var sun_date;
 
-	$(".sun-submit").on("click", function(){
+$(function(){
+  $(".sun-submit").on("click", handleSearch);
+});
 
-		sun_query = $(".sun-query").val();
-		sun_date = $(".sun-date").val();
-		console.log(sun_query);
+function handleSearch(e) {
+	var query = $(".sun-query").val();
+	var date = $(".sun-date").val();
+	e.preventDefault();
+	$('#spinner').show();
+	$('.page_results').hide();
+	console.log(query);
+	//$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+	$.post('search_results', { "date": date, "query": query }, function(data) {
+		$('#spinner').hide();
+		$('.page_results').show();
+		$('.page_results').html(data);
+	// alert('ajax_search returned');
 	});
-
-	console.log(sun_query);
-
 }
 
+// 	console.log(sun_query);
 
-// Generate Search
-function do_search()
-{
-	console.log('do search called');
+// }
 
-	// $(".sun-submit").on("click", function(){ - need to figure out how to swap loading bar with page below to make this work...
-		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
-		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
-			$('.page_results').html(data);
-		// alert('ajax_search returned');
-		}); 
-	// });
 
-}
+// // Generate Search
+// function do_search()
+// {
+// 	console.log('do search called');
+// debugger
+// 	// $(".sun-submit").on("click", function(){ - need to figure out how to swap loading bar with page below to make this work...
+// 		$.post('search_results', { "date": "2013-05-06", "query": "Pacific Heights" }, function(data) {
+// 		// $.post('search_results', { "date": "{{ date }}", "query": "{{ query }}" }, function(data) {
+// 			$('.page_results').html(data);
+// 		// alert('ajax_search returned');
+// 		}); 
+// 	// });
+
+// }
 
 // Footer Link Load
 $(function (){
@@ -212,14 +228,12 @@ $(function (){
 });
 
 // Triggers when to run search call
-$(document).ready(weather_ready);
+// $(document).ready(weather_ready);
 
 
 // Jquery search event map load - set as if there is coord then initialize
 $(function() { 
-	if(map_lat && map_long){
-		initialize();
-	};
+	initialize(map_lat, map_long);
 })
 // run spinner
 // function loadSubmit() {
