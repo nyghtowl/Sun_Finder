@@ -196,6 +196,7 @@ $(function (){
 
 });
 
+// Triggers when to run search call
 $(document).ready(search_ready);
 
 // Jquery search event map load - set as if there is coord then initialize
