@@ -7,8 +7,7 @@ TO DO:
         turn off debug
 
 
-    Search - fix passing data so search will work (coords and locations from db for map)
-    Ajax - consolidate index and results_shell
+    Search - unhide second search when first not available and setup search function
 
     Map - Get to load in modal (possibly change to popover if can fix problem)
         Put text and links on map - populate autocomplete based on click
