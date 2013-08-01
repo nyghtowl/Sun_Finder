@@ -3,11 +3,6 @@
 // Confirm load
 console.log("main js");
 
-// Initializes lat and long since map is not ready to load  
-var map_lat = false;
-var map_long = false;
-
-
 // Load map  - currently SF biased
 function initialize(map_lat, map_long) { 
 	if (!map_lat || !map_long) {
@@ -141,7 +136,6 @@ $(function() {
 		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 	});
 
-
 // Weather Search
 $(function(){
   $(".sun-submit").on("click", handleSearch);
@@ -150,7 +144,7 @@ $(function(){
 function handleSearch(e) {
 	var query = $("#sun-query1").val();
 	var date = $(".sun-date").val();
-	e.preventDefault();
+	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
 	$('.page_results').hide();
 	console.log(query);
@@ -191,7 +185,7 @@ $(function (){
 
 
 // Jquery search event map load - set as if there is coord then initialize
-$(function() { 
+$(function(map_lat, map_long) { 
 	initialize(map_lat, map_long);
 })
 // run spinner
