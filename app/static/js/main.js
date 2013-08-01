@@ -81,7 +81,7 @@ console.log("initialize"); // test
 	// Apply MarkerWith Label - add multiple markers on the map
 	function createMarker(position, label) {
 		return new MarkerWithLabel({
-	       position: position,
+	       position: new google.maps.LatLng(position[0],position[1]),
 	       draggable: false,
 	       raiseOnDrag: false,
 	       map: map,
@@ -95,6 +95,7 @@ console.log("initialize"); // test
 	// Create multiple markers
 	var readData = function(positions, labels) { 
 		for (var i = 0; i < positions.length; i++) {
+	    	console.log(positions[i][0]);
 	    	createMarker(positions[i], labels[i]);
 	  	}     
 	 }
@@ -104,13 +105,30 @@ console.log("initialize"); // test
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
 
+	function mark_map(){
+		$.ajax({
+			url:'/map_details',
+			type: "GET",
+			dataType: "json",
+			success: function(data){
+				console.log(data.result.locations);
+				readData(data.result.loc_coords, data.result.locations);
+
+				}
+
+		});
+
+	}
   	// Loads weather layer
   	// weatherLayer.setMap(map);
 
-  	// Adds static neighborhood markers based on lat, long
-    readData(positionCoords, availableTags);
+  	// Add markers based on lat, long
+    // readData(positionCoords, availableTags);
+    mark_map();
 
 }
+
+
 
 // Typeahead - Autocomplete
 $(function() {
