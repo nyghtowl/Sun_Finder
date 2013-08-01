@@ -62,7 +62,7 @@ def login():
     if l_form.validate_on_submit():
         user = User.query.filter(User.email==l_form.email.data).first()
  
-        # if user exists then apply login user functionatlity to generate current_user session
+        # If user exists then apply login user functionatlity to generate current_user session
         if user is not None:
             user_password = user.password
             login_user(user)
@@ -73,7 +73,7 @@ def login():
     return render_template('login.html', l_form=l_form)
 
 @app.route('/logout')
-@login_required # confirms if user_id in session - sends to login view if not
+@login_required # Confirms login
 def logout():
     logout_user()
     flash('You are now logged out')
@@ -93,7 +93,7 @@ def create_login():
             if user_email == cl_form.email.data:
                 flash ('%(email)s already exists. Please login or enter a different email.', email = user_email)
                 return redirect(url_for('login'))
-        #if user doesn't exist, save from data in User object to commit to db
+        # If user doesn't exist, save from data in User object to commit to db
         if user == None:
             new_user = User(id = None,
                         email=form.email.data,
@@ -102,7 +102,7 @@ def create_login():
                         lname=form.lname.data,
                         mobile=form.mobile.data,
                         zipcode=form.zipcode.data,
-                        #don't need to save this - can be assumed since required on form
+                        # FIX - don't need to save this - can be assumed since required on form
                         accept_tos=True,
                         timestamp=time.time())
             db.session.add(new_user)
@@ -114,7 +114,6 @@ def create_login():
 # Search shell
 @app.route('/search', methods=['POST'])
 def search():
-    
     return render_template('result_shell.html')
 
 
@@ -136,7 +135,7 @@ def search_results():
  
     return render_template('search_results.html', result=weather)
  
-# create map view - set this up to test
+# FIX - working to build and pass - mostly handled with JS
 @app.route('/map_view', methods = ['POST'])
 def map_view():
     # generate local neighborhood object
