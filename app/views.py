@@ -163,17 +163,16 @@ def search_results():
     return render_template('search_results.html', result=weather)
  
 # FIX - working to build and pass - mostly handled with JS
-@app.route('/map_details', methods = ['POST'])
+@app.route('/map_details', methods = ['GET'])
 def map_details():
     # generate local neighborhood object
     neighborhoods = Location.query.all()
 
     print 'loc list', [nh.n_hood for nh in neighborhoods]
+    print 'coord', [(nh.lat,nh.lng) for nh in neighborhoods]
 
-    map_markers = json.dump({ 'locations': [nh.n_hood for nh in neighborhoods], 
+    return json.dump({ 'locations': [nh.n_hood for nh in neighborhoods], 
         'coords': [(nh.lat,nh.lng) for nh in neighborhoods] })
-    
-    return map_markers    
 
 @app.route('/autocomplete', methods=['POST'])
 def autocomplete():
