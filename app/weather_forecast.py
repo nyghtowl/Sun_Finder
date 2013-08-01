@@ -1,11 +1,11 @@
 """
-weather_forecast.py -  Weather class to manage weather data
+Weather_forecast 
+
+generated object to pull weather results
 
 """
 from config import FIO_KEY, WUI_KEY
-# use requests to pull information from api requests - alternative is urllib - this is more human
 import requests
-# leverage for reporting time result
 import datetime
 import time
 import moonphase
@@ -13,35 +13,32 @@ from pprint import pprint
 
 class Weather(object):
     def __init__(self, fio_response, wui_response, as_of):
-        # testing
-        # print "X" * 80
         # pprint(fio_response)
-        # print "Y" * 80
         # pprint(wui_response)
 
-        self.lat = fio_response['latitude'] #shortest code to get to it out of results
+        self.lat = fio_response['latitude'] # Shortest code to get to it out of results
         self.lng = fio_response['longitude']
         self.loc_name = None
         self.date = as_of
-        self.print_date = as_of.strftime('%h %d, %Y') # date for html
-        #FIX change revise time based on what is submitted
+        self.print_date = as_of.strftime('%h %d, %Y') # Date for html
+        # FIX change revise time based on what is submitted
         self.time = None  
         self.sun_result = None
         self.moonphase = None
         self.pic = None
         self.days = {}
 
-        # determines if date is current or future to determine what data points to pull
+        # Determine if date is current or future to determine what data points to pull
         if as_of.date() == datetime.date.today():
             self.apply_current(fio_response, wui_response)
         else:
             (fio_fragment, wui_fragment) = self.find_for(fio_response, wui_response, as_of)
             self.apply_for(fio_fragment, wui_fragment)
 
-    #sets up the data points for current date
+    # Sets up the data points for current date
     def apply_current(self, fio_response, wui_response):
-        self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime']) #not in wui
-        self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime']) #not in wui
+        self.fio_sunrise = int(fio_response['daily']['data'][0]['sunriseTime']) # Not in wui
+        self.fio_sunset = int(fio_response['daily']['data'][0]['sunsetTime']) # Not in wui
         self.wui_icon = wui_response['current_observation']['icon'] 
 
         self.tempr_wui_F = wui_response['current_observation']['temp_f']
@@ -58,18 +55,17 @@ class Weather(object):
         self.wind_mph = wui_response['current_observation']['wind_gust_mph'] 
         self.humidity = wui_response['forecast']['simpleforecast']['forecastday'][0]['avehumidity']
         
-        # mapped items that may or may not be used in teh future
+        # mapped items that may or may not be used in the future
         #self.fio_icon = fio_response['hourly']['icon'] #first built off this icon and haven't mapped wui yet
         #self.tempr_wui_str = wui_response['current_observation']['temperature_string']
         #self.feels_like_str = wui_response['current_observation']['feelslike_string']
         #self.precipitation = fio_response['currently']['precipProbability'] #not in wui & disappeared from fio
 
-    #looping through data to pull out the relevant dictionaries of data and passing to apply_for 
+    # Pull out the relevant dictionaries of data and passing to apply_for 
     def find_for(self, fio_response, wui_response, as_of):
         fio_fragment = wui_fragment = None
 
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
-            # import pdb;pdb.set_trace() - way to debug
             if datetime.datetime.fromtimestamp(float(fragment['date']['epoch'])).date() == as_of.date():
                 wui_fragment = fragment
                 break
@@ -79,10 +75,10 @@ class Weather(object):
                 break
         return (fio_fragment, wui_fragment)
 
-    # apply data attributes for future dates
+    # Apply data attributes for future dates
     def apply_for(self, fio_fragment, wui_fragment):
-        self.fio_sunrise = int(fio_fragment['sunriseTime']) #not in wui
-        self.fio_sunset = int(fio_fragment['sunsetTime']) #not in wui
+        self.fio_sunrise = int(fio_fragment['sunriseTime']) # Not in wui
+        self.fio_sunset = int(fio_fragment['sunsetTime']) # Not in wui
         self.wui_icon = wui_fragment['icon'] 
 
         self.tempr_wui_F = float(wui_fragment['high']['fahrenheit'])
@@ -102,7 +98,7 @@ class Weather(object):
 
 
     def grab_all_weather(self, fio_response, wui_response, as_of):
-        # hold multiple days of weather data to display
+        # Hold multiple days of weather data to display
 
         if as_of == datetime.now().date():
             for i in range(4):
@@ -110,48 +106,33 @@ class Weather(object):
                 self.days[i] = find_for(self, fio_response, wui_response, as_of)
 
 
-
-    # self.day0_icon = [0]['icon']
-    # self.day1_icon = wui_response['forecast']['simpleforecast']['forecastday'][1]['icon']
-    # self.day2_icon = wui_response['forecast']['simpleforecast']['forecastday'][2]['icon']
-    # self.day3_icon = wui_response['forecast']['simpleforecast']['forecastday'][3]['icon']
-    # self.day0_htemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['high']['fahrenheit']
-    # self.day0_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][0]['low']['fahrenheit']
-    # self.day1_htemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['high']['fahrenheit']
-    # self.day1_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][1]['low']['fahrenheit']
-    # self.day2_htemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['high']['fahrenheit']
-    # self.day2_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][2]['low']['fahrenheit']
-    # self.day3_htemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['high']['fahrenheit']
-    # self.day3_ltemp = wui_response['forecast']['simpleforecast']['forecastday'][3]['low']['fahrenheit']
-
-
     #FIX Pull out by hour
 
-    # method that can be called before or without initializing the class
+    # Method called before or w/o initializing class to get the weather results
     @staticmethod
     def get_forecast(lat, lon, as_of):
-        # url to pass to Forecast.io
+        # Url to pass to Forecast.io
         fio_url="https://api.forecast.io/forecast/%s/%f,%f"
-        # pull API key from env with FIO_KEY
+        # Pull API key from env with FIO_KEY
         fio_final_url=fio_url%(FIO_KEY, lat,lon)
         print fio_final_url
         fio_response = requests.get(fio_final_url).json()
 
-        # url to pass to WUI
+        # Url to pass to WUI
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
-        # pull API key from env with FIO_KEY
+        # Pull API key from env with FIO_KEY
         wui_final_url=wui_url%(WUI_KEY, lat,lon)
         print wui_final_url
         wui_response = requests.get(wui_final_url).json()
 
-        # generated a dictionary of forecast data points pulling from both weather sources
+        # Generated a dictionary of forecast data points pulling from both weather sources
         return Weather(fio_response, wui_response, as_of)
         
     # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
 
-    # convert icon result to an image if day
+    # Convert icon result to an image if day
     def add_day_pic(self, pic_loc):        
-        # holds weather images for reference
+        # Holds weather images for reference
         weather_pics = {
             "clear-day":("sun", "sun_samp2.jpeg"),
             "clear":("sun", "sun_samp2.jpeg"),
@@ -164,13 +145,13 @@ class Weather(object):
             "partlycloudy":("partly cloudy", "partly_cloudy.png")
             }
 
-        #FIX - confirm the terms for wui_icon
+        # FIX - confirm the terms for wui_icon
 
-        # apply image for conditions at time of request        
+        # Apply image for conditions at time of request        
         if self.wui_icon in weather_pics:
-            # setup to return text for sun result
+            # Setup to return text for sun result
             self.sun_result = weather_pics[self.wui_icon][0]
-            # forces clear day result if the cloud cover is < 20%
+            # Forces clear day result if the cloud cover is < 20%
             # or cloudy if cover is >80%
             if (self.wui_icon == 'mostlycloudy'):
                 if self.cloud_cover < .20:
@@ -204,7 +185,7 @@ class Weather(object):
             print 'Error finding photo for the time of day'            
         print self.pic
 
-    # convert icon result to an moon image if night
+    # Convert icon result to an moon image if night
     def add_night_pic(self, pic_loc):
         night_pics = {
             "First Quarter":"moon_firstquarter.png", 
@@ -226,15 +207,15 @@ class Weather(object):
         else:
             print 'Error finding photo for the time of day'
 
-    # confirms time of day and pulls corresponding image
+    # Confirms time of day and pulls corresponding image
     def apply_pic(self):
         pic_loc = '/static/img/'        
 
-        # pull sunrise and sunset from weather results
+        # Pull sunrise and sunset from weather results
         sunrise = datetime.datetime.fromtimestamp(self.fio_sunrise)
         sunset = datetime.datetime.fromtimestamp(self.fio_sunset)
 
-        #testing
+        # Testing
         print 'apply_pic'
         print 1, type(self.cloud_cover)
         print 2, self.wui_icon
@@ -244,7 +225,7 @@ class Weather(object):
         print 5, sunrise
         print 6, sunset
 
-        # picture assigned based on time of day
+        # Picture assigned based on time of day
         if sunrise < self.date < sunset:
             self.add_day_pic(pic_loc)
         else:
