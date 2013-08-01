@@ -163,8 +163,8 @@ def search_results():
     return render_template('search_results.html', result=weather)
  
 # FIX - working to build and pass - mostly handled with JS
-@app.route('/map_view', methods = ['POST'])
-def map_view():
+@app.route('/map_details', methods = ['POST'])
+def map_details():
     # generate local neighborhood object
     neighborhoods = Location.query.all()
 
@@ -173,23 +173,7 @@ def map_view():
     map_markers = json.dump({ 'locations': [nh.n_hood for nh in neighborhoods], 
         'coords': [(nh.lat,nh.lng) for nh in neighborhoods] })
     
-    return map_markers
-
-@app.route('/about', methods=['POST'])
-def about():  
-    return render_template('about.html')
-
-# Terms of service
-@app.route('/tos', methods=['POST'])
-def tos(): 
-    return render_template('tos.html')
-
-
-# Privacy policy
-@app.route('/privacy', methods=['POST'])
-def privacy():    
-    return render_template('privacy.html')
-    
+    return map_markers    
 
 @app.route('/autocomplete', methods=['POST'])
 def autocomplete():
@@ -211,6 +195,21 @@ def autocomplete():
 
     return json.dumps({ "options": predictions})
 
+
+@app.route('/about', methods=['POST'])
+def about():  
+    return render_template('about.html')
+
+# Terms of service
+@app.route('/tos', methods=['POST'])
+def tos(): 
+    return render_template('tos.html')
+
+
+# Privacy policy
+@app.route('/privacy', methods=['POST'])
+def privacy():    
+    return render_template('privacy.html')
 
 
 # User view with favorites and ability to report on validity of sun
