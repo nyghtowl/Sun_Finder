@@ -12,11 +12,17 @@
 #sun-query1 input[type="neighborhood"] {
   font-size: 16px;
   height: auto;
+  margin-bottom: 15px;
   padding: 7px 9px;
 }
 
-.top-bar {
+/*.top-bar {
   display: none;
+}
+*/
+#top-bar-header{
+  color: #333;
+  text-decoration: none;
 }
 
 .typeahead.dropdown-menu > li {
