@@ -1,0 +1,10 @@
+<!-- 404 error page -->
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1>{{ _('File Not Found') }}</h1>
+<p><a href="{{ url_for('index') }}">{{ _('Back') }}</a></p>
+
+{% endblock %}
