@@ -49,6 +49,17 @@ import json
 def load_user(user_id):
   return User.query.get(int(user_id))
 
+# FIX - build out for user
+# @app.before_request
+# def before_request():
+#     g.user = current_user
+
+#     # Updated database with the last time user seen
+#     if g.user.is_authenticated():
+#         g.user.last_seen = datetime.utcnow()
+#         db.session.add(g.user)
+#         db.session.commit()
+
 @app.errorhandler(404)
 def internal_error(error):
     return render_template('404.html'), 404
@@ -57,7 +68,7 @@ def internal_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
-        
+
 @app.route('/')
 @app.route('/index', methods=['POST'])
 def index():
