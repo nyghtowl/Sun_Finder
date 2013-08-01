@@ -91,7 +91,7 @@
 
             // Map_lat & map_long false if no result - FIX pull jinja
             {% if result.lat %}
-                initialize({{ result.lat }}, {{ result.lng }});
+                initialize({{ result.lat|safe }}, {{ result.lng|safe }});
             {% endif %}
 
 
