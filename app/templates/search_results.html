@@ -89,13 +89,9 @@
             
             console.log('search results')
 
-            // Map_lat & map_long false if no result
+            // Map_lat & map_long false if no result - FIX pull jinja
             {% if result.lat %}
                 initialize({{ result.lat }}, {{ result.lng }});
-                
-            {% else %}
-                map_lat = false;
-                map_long = false;
             {% endif %}
 
 
