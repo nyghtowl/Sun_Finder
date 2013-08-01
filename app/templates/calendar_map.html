@@ -12,7 +12,7 @@
     </div>
 
     <div class="modal-body">
-		<div class="span7" =id="map_canvas"></div>
+		{% include 'map_view.html' %}
     </div>
 
     <div class="modal-footer control-group">
@@ -25,7 +25,12 @@
 <script>
 
 	console.log("calendar_map"); // check load
+
+	// function dom_ready() {
 	
+	// 	initialize(37.7655,-122.4429);
+
+	// }
     // condition to set map_lat & map_long to false if no result
   
 
@@ -57,7 +62,7 @@
 	// 		// 	{% endfor %}
 	// 		// 	];
 
-	// 		// initialize();
+	// 		
 	// 	});
 	// }
 

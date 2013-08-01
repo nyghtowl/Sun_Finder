@@ -95,7 +95,6 @@ console.log("initialize"); // test
 	// Create multiple markers
 	var readData = function(positions, labels) { 
 		for (var i = 0; i < positions.length; i++) {
-	    	console.log(positions[i][0]);
 	    	createMarker(positions[i], labels[i]);
 	  	}     
 	 }
@@ -122,8 +121,7 @@ console.log("initialize"); // test
   	// Loads weather layer
   	// weatherLayer.setMap(map);
 
-  	// Add markers based on lat, long
-    // readData(positionCoords, availableTags);
+
     mark_map();
 
 }
@@ -199,7 +197,7 @@ $(function (){
 });
 
 // Triggers when to run search call
-// $(document).ready(weather_ready);
+// $(document).ready(dom_ready);
 
 // $(function(){
 // 	$('#buid-map').on('click', initialize(37.7655,-122.4429));
