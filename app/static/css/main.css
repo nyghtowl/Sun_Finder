@@ -9,10 +9,9 @@
 /* Search Format
 -------------------------------------------------- */
 
-.my-search input[type="neighborhood"] {
+#sun-query1 input[type="neighborhood"] {
   font-size: 16px;
   height: auto;
-  margin-bottom: 15px;
   padding: 7px 9px;
 }
 
