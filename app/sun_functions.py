@@ -91,7 +91,7 @@ def extract_as_of(date_string):
 # Search results
 def search_results(locations, date, txt_query):
 
-    g_lat, g_lng = None
+    g_lat = g_lng = None
 
     # Format date
     as_of = extract_as_of(date)
