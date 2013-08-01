@@ -183,11 +183,15 @@ $(function (){
 // Triggers when to run search call
 // $(document).ready(weather_ready);
 
+// $(function(){
+// 	$('#buid-map').on('click', initialize(37.7655,-122.4429));
+// });
 
 // Jquery search event map load - set as if there is coord then initialize
 $(function(map_lat, map_long) { 
 	initialize(map_lat, map_long);
-})
+
+});
 // run spinner
 // function loadSubmit() {
 // 	ProgressImage = document.getElementById(’progress_image’);
