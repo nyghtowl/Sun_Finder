@@ -49,6 +49,10 @@ import json
 def load_user(user_id):
   return User.query.get(int(user_id))
 
+@app.errorhandler(404)
+def internal_error(error):
+    return render_template('404.html'), 404
+    
 @app.route('/')
 @app.route('/index', methods=['POST'])
 def index():
