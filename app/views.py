@@ -60,6 +60,13 @@ def load_user(user_id):
 #         db.session.add(g.user)
 #         db.session.commit()
 
+# @app.after_request
+# def after_request(response):
+#     for query in get_debug_queries():
+#         if query.duration >= DATABASE_QUERY_TIMEOUT:
+#             app.logger.warning('SLOW QUERY: %s\nParameters: %s\nDuration: %fs\Context: %s\n') % (query.statement, query.parameters, query.duration, query.context)
+#     return response
+
 @app.errorhandler(404)
 def internal_error(error):
     return render_template('404.html'), 404
