@@ -1,0 +1,11 @@
+<!-- 500 error page -->
+
+{% extends "layout.html" %}
+
+{% blcok content %}
+
+<h1>{{ _('An unexpected error has occurred') }}</h1>
+<p>{{ _('The adminstrator has been notified. Sorry for the inconvenience!) }}</p>
+<p><a href="{{ url_for('index') }}">{{ _('Back') }}</a></p>
+
+{% endblock %}
