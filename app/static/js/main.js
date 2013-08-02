@@ -104,29 +104,60 @@ console.log("initialize"); // test
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
 
-	function mark_map(){
+
+	function mark_map() {
 		$.ajax({
 			url:'/map_details',
 			type: "GET",
+			cache: false,
 			dataType: "json",
 			success: function(data){
 				console.log(data.result.locations);
 				readData(data.result.loc_coords, data.result.locations);
-
 				}
-
 		});
-
 	}
-  	// Loads weather layer
-  	// weatherLayer.setMap(map);
+	
+ //  	// Loads weather layer
+ //  	// weatherLayer.setMap(map);
 
 
     mark_map();
 
+
 }
 
+// Get geolocation to set initial map
+$(function() {
+	var lat = 37.7655;
+	var lng = -122.4429
 
+		if (navigator.geolocation) {
+		    var location_timeout = setTimeout("geolocFail()", 10000);
+
+		    navigator.geolocation.getCurrentPosition(function(position) {
+		        clearTimeout(location_timeout);
+
+		        lat = position.coords.latitude;
+		        lng = position.coords.longitude;
+
+		        console.log(lat + ' ' + lng);
+		        initialize(lat, lng);
+
+		    }, function(error) {
+		        clearTimeout(location_timeout);
+		        geolocFail();
+			    console.log('geo loc not exist');
+		        initialize(lat, lng);
+		    });
+		} else {
+		    // Fallback for no geolocation
+		 	geolocFail();
+		    console.log('geoloc not shared');
+		    initialize(lat, lng);
+		}
+
+});
 
 // Typeahead - Autocomplete
 $(function() {
