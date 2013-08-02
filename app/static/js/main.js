@@ -117,7 +117,7 @@ console.log("initialize"); // test
 				}
 		});
 	}
-	
+
  //  	// Loads weather layer
  //  	// weatherLayer.setMap(map);
 
@@ -126,6 +126,28 @@ console.log("initialize"); // test
 
 
 }
+
+
+// Show or hide searche in top bar
+$(function(){
+    $('.top-bar').hide();
+
+	$(".sun-submit").on("click", function(){
+        if (bar_hide) {
+            $('.top-bar').hide();
+        } else {
+            $('.top-bar').show();
+        }
+    });
+});
+
+
+
+// Jquery search event map load - set as if there is coord then initialize
+$(function(map_lat, map_long) { 
+	initialize(map_lat, map_long);
+
+});
 
 // Get geolocation to set initial map
 $(function() {
@@ -234,11 +256,7 @@ $(function (){
 // 	$('#buid-map').on('click', initialize(37.7655,-122.4429));
 // });
 
-// Jquery search event map load - set as if there is coord then initialize
-$(function(map_lat, map_long) { 
-	initialize(map_lat, map_long);
 
-});
 // run spinner
 // function loadSubmit() {
 // 	ProgressImage = document.getElementById(’progress_image’);

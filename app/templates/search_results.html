@@ -90,9 +90,9 @@
             console.log('search results')
 
             // Map_lat & map_long false if no result - FIX pull jinja
-            // {% if result.lat %}
-            //     initialize({{ result.lat|safe }}, {{ result.lng|safe }});
-            // {% endif %}
+            {% if result.lat %}
+                initialize({{ result.lat|safe }}, {{ result.lng|safe }});
+            {% endif %}
 
 
         </script>

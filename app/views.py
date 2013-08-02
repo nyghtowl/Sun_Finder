@@ -79,7 +79,7 @@ def internal_error(error):
 @app.route('/')
 @app.route('/index', methods=['POST'])
 def index():
-    return render_template('index.html')
+    return render_template('index.html', hide_top_search = 'true')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
