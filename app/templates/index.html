@@ -4,18 +4,7 @@
 
 {% block body %}
 
-    <div class = "row-fluid">
-    	{% include 'top_bar.html' %}
-	</div>
-
-	<div id="spinner" class="ajax_img_pad">
-		<p id="progress" class="text-center">Forecasting in Progress…<br>
-		<img id="progress_image" src="static/img/spiffygif_56x56.gif" class="ajax_img_pad">
-		</p>
-	</div>
-
-
-	<div class="page_results">
+	<div class="page_results" id="index_load">
 		<div class="row-fluid span5 offset7 margin60">
 			<img src="/static/img/sun_samp2.jpeg" width="15%">
 		</div>
@@ -45,9 +34,6 @@
 
 		console.log('index');
 
-		var bar_hide = {{ hide_top_search }};
-
-		function weather_ready(){}
 		
 	</script>
 

@@ -16,10 +16,11 @@
   padding: 7px 9px;
 }
 
-/*.top-bar {
+.top-bar {
   display: none;
 }
-*/
+
+
 #top-bar-header{
   color: #333;
   text-decoration: none;
@@ -91,7 +92,7 @@
 
 /* ajax spinner */
 .ajax_txt_pad{
-    margin-top: 15%;
+  margin-top: 15%;
 }
 
 .ajax_img_pad{

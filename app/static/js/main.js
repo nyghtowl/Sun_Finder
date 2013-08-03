@@ -104,6 +104,8 @@ console.log("initialize"); // test
     	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
   	});
 
+ //  	// Loads weather layer
+ //  	// weatherLayer.setMap(map);
 
 	function mark_map() {
 		$.ajax({
@@ -118,35 +120,36 @@ console.log("initialize"); // test
 		});
 	}
 
- //  	// Loads weather layer
- //  	// weatherLayer.setMap(map);
-
-
     mark_map();
-
 
 }
 
 
-// Show or hide searche in top bar
-$(function(){
-    $('.top-bar').hide();
+// Hide or show top bar search
+// jQuery.fn.exists = function(){return this.length>0;}
 
-	$(".sun-submit").on("click", function(){
-        if (bar_hide) {
-            $('.top-bar').hide();
-        } else {
-            $('.top-bar').show();
-        }
-    });
-});
+// $(function(){
+// 	if ($("#index_load").exists()){
+// 		$('.top-bar').hide();		
+// 	}
+
+// });
+
+// Show or hide search in top bar
+// $(function(){
+//     $('.top-bar').hide();
+
+// 	$(".sun-submit").on("click", function(){
+//             $('.top-bar').show();
+//         }
+//     });
+// });
 
 
 
 // Jquery search event map load - set as if there is coord then initialize
 $(function(map_lat, map_long) { 
 	initialize(map_lat, map_long);
-
 });
 
 // Get geolocation to set initial map
@@ -207,7 +210,8 @@ $(function() {
 
 // Weather Search
 $(function(){
-  $(".sun-submit").on("click", handleSearch);
+	$(".sun-submit").on("click", handleSearch);
+
 });
 
 function handleSearch(e) {
@@ -216,6 +220,7 @@ function handleSearch(e) {
 	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
 	$('.page_results').hide();
+	$('.top-bar').show();
 	console.log(query);
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
@@ -230,18 +235,21 @@ $(function (){
  console.log('in footer link load');  
  
     $('#about_load').on('click', function(e){
+    	$('.top-bar').show();
   		$.post('about', function(data){
   			$('.page_results').html(data);
   		});
   	});
 
 	$('#privacy_load').on('click', function(e){
+		$('.top-bar').show();
 		$.post('privacy', function(data){
   			$('.page_results').html(data);
   		});
 	});
 
 	$('#tos_load').on('click', function(e){
+		$('.top-bar').show();
 		$.post('tos', function(data){
   			$('.page_results').html(data);
   		});
