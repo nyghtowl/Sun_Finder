@@ -2,9 +2,11 @@
 
 {% extends "layout.html" %}
 
-{% block content %}
+{% block body %}
 
-<h1>Oops... File Not Found</h1>
-<p><a href="{{ url_for('index') }}">Home Page</a></p>
+<div class="row-fluid page_results">
+	<h1>Oops... File Not Found</h1>
+	<p><a href="{{ url_for('index') }}">Home Page</a></p>
+</div>
 
 {% endblock %}

@@ -12,7 +12,6 @@ signal(SIGPIPE,SIG_DFL)
 
 # Pull weather api keys
 G_KEY = os.environ.get('G_KEY')
-FIO_KEY = os.environ.get('FIO_KEY')
 WUI_KEY = os.environ.get('WUI_KEY')
 
 SECRET_KEY = os.environ.get('key')

@@ -2,10 +2,14 @@
 
 {% extends "layout.html" %}
 
-{% blcok content %}
+{% block body %}
 
-<h1>An unexpected error has occurred'</h1>
-<p>We are working to resolve it on our end. Sorry for the inconvenience!</p>
-<p><a href="{{ url_for('index') }}">Home Page</a></p>
+<div class="row-fluid page_results">
+
+	<h1>An unexpected error has occurred'</h1>
+	<p>We are working to resolve it on our end. Sorry for the inconvenience!</p>
+	<p><a href="{{ url_for('index') }}">Home Page</a></p>
+
+</div>
 
 {% endblock %}

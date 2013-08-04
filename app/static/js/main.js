@@ -4,13 +4,13 @@
 console.log("main js");
 
 // Load map  - currently SF biased
-function initialize(map_lat, map_long) { 
+function build_map(map_lat, map_long) { 
 	if (!map_lat || !map_long) {
 		return
 	}
     //stops other event listeners from firing on search button
     //event.preventDefault(); 
-console.log("initialize"); // test
+console.log("build_map"); // test
 	
 	//Pulls lat, lng from search result
 	var myLatlng = new google.maps.LatLng(map_lat,map_long);
@@ -135,21 +135,10 @@ console.log("initialize"); // test
 
 // });
 
-// Show or hide search in top bar
-// $(function(){
-//     $('.top-bar').hide();
 
-// 	$(".sun-submit").on("click", function(){
-//             $('.top-bar').show();
-//         }
-//     });
-// });
-
-
-
-// Jquery search event map load - set as if there is coord then initialize
+// Jquery search event map load - set as if there is coord then build_map
 $(function(map_lat, map_long) { 
-	initialize(map_lat, map_long);
+	build_map(map_lat, map_long);
 });
 
 // Get geolocation to set initial map
@@ -167,19 +156,19 @@ $(function() {
 		        lng = position.coords.longitude;
 
 		        console.log(lat + ' ' + lng);
-		        initialize(lat, lng);
+		        build_map(lat, lng);
 
 		    }, function(error) {
 		        clearTimeout(location_timeout);
 		        geolocFail();
 			    console.log('geo loc not exist');
-		        initialize(lat, lng);
+		        build_map(lat, lng);
 		    });
 		} else {
 		    // Fallback for no geolocation
 		 	geolocFail();
 		    console.log('geoloc not shared');
-		    initialize(lat, lng);
+		    build_map(lat, lng);
 		}
 
 });
@@ -261,7 +250,7 @@ $(function (){
 // $(document).ready(dom_ready);
 
 // $(function(){
-// 	$('#buid-map').on('click', initialize(37.7655,-122.4429));
+// 	$('#buid-map').on('click', build_map(37.7655,-122.4429));
 // });
 
 
