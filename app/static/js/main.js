@@ -125,16 +125,6 @@ console.log("build_map"); // test
 }
 
 
-// Hide or show top bar search
-// jQuery.fn.exists = function(){return this.length>0;}
-
-// $(function(){
-// 	if ($("#index_load").exists()){
-// 		$('.top-bar').hide();		
-// 	}
-
-// });
-
 
 // Jquery search event map load - set as if there is coord then build_map
 $(function(map_lat, map_long) { 
@@ -143,6 +133,7 @@ $(function(map_lat, map_long) {
 
 // Get geolocation to set initial map
 $(function() {
+	// Pre-set lat lng to SF
 	var lat = 37.7655;
 	var lng = -122.4429
 
@@ -205,17 +196,26 @@ $(function(){
 
 function handleSearch(e) {
 	var query = $("#sun-query1").val();
+	var query2 = $("#sun-query2").val();
 	var date = $(".sun-date").val();
 	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
 	$('.page_results').hide();
 	$('.top-bar').show();
-	console.log(query);
-	$.post('search_results', { "date": date, "query": query }, function(data) {
-		$('#spinner').hide();
-		$('.page_results').show();
-		$('.page_results').html(data);
-	});
+	console.log(query + '2' + query2);
+	if (query) {
+		$.post('search_results', { "date": date, "query": query }, function(data) {
+			$('#spinner').hide();
+			$('.page_results').show();
+			$('.page_results').html(data);
+		});
+	} else if (query2) {
+		$.post('search_results', { "date": date, "query": query2 }, function(data) {
+			$('#spinner').hide();
+			$('.page_results').show();
+			$('.page_results').html(data);
+		});		
+	}
 }
 
 

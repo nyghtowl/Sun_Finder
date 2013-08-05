@@ -26,6 +26,8 @@ class Weather(object):
         # FIX change revise time based on what is submitted
         self.time = None  
         self.sun_result = None
+        self.sunrise = self.get_sunrise()
+        self.sunset = self.get_sunset()
         self.moonphase = None
         self.pic = None
         self.days = {}
@@ -39,8 +41,6 @@ class Weather(object):
 
     # Sets up the data points for current date
     def apply_current(self, wui_response):
-        self.sunrise = self.get_sunrise()
-        self.sunset = self.get_sunset()
         self.wui_icon = wui_response['current_observation']['icon'] 
         self.tempr_wui_F = wui_response['current_observation']['temp_f']
         self.tempr_wui_C = wui_response['current_observation']['temp_c']
@@ -71,8 +71,6 @@ class Weather(object):
 
     # Apply data attributes for future dates
     def apply_for(self, wui_fragment):
-        self.sunrise = None
-        self.sunset = None
         self.wui_icon = wui_fragment['icon'] 
 
         self.tempr_wui_F = float(wui_fragment['high']['fahrenheit'])
@@ -106,23 +104,27 @@ class Weather(object):
         # Generated a dictionary of forecast data points pulling from both weather sources
         return Weather(wui_response, lat, lng, as_of)
 
+    # Get sunrise and sunset from earthtools
     def get_earthtools(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         self.date_time
         earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
         response_xml = requests.get(earth_final_url)
         return BeautifulSoup(response_xml.content)
-    # def get_location(self):
-    #     home=ephem.Observer()
-    #     home.lat=self.lat
-    #     home.long=self.lng
-    #     home.date=self.date_time
 
-    #     return home        
-        
-    # def get_ephem(self):
-    #     # Left off 30 sec adjustment and elevation
-    #     return ephem.Sun()
+            
+        # params option not working because location pass is lat,lng - is there a fix?
+        # api_params = {
+        #     # holding central location in SF and 
+        #     'query':txt_plus,
+        #     'location':'37.7655, -122.4429',
+        #     'radius':5000,
+        #     'sensor':'false',
+        #     'key':G_KEY
+        # }
+
+        # url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+        # result = requests.get(url,params=api_params)
     
     def get_sunrise(self):
         nextrise=self.get_earthtools()
