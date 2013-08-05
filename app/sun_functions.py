@@ -81,9 +81,8 @@ def extract_as_of(date_string):
         as_of = datetime.combine(as_of_date,as_of_time)
 
     # Fall back to current for bad date
-    # FIX flash an error instead?
     if not validate_date(as_of):
-        print "FAILED date unsupported %s" % as_of
+        flash("FAILED date unsupported %s" % as_of)
         as_of = datetime.now()
 
     return as_of 
@@ -93,7 +92,7 @@ def search_results(locations, date, txt_query):
 
     g_lat = g_lng = None
 
-    # Format date
+    # Format date to datetime
     as_of = extract_as_of(date)
     
     # FIX - search by specif time

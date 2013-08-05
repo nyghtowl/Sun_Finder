@@ -154,6 +154,7 @@ def search_results():
 
     # Search form input
     txt_query = request.form['query']
+    # Captures date format yy-mm-dd as string
     date = request.form['date']
 
     print 'search query', txt_query

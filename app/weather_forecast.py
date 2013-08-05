@@ -5,11 +5,14 @@ generated object to pull weather results
 
 """
 from config import WUI_KEY
-import requests
+from datetime import datetime
 import datetime
-import time
-import moonphase
+from time import strftime
 from pprint import pprint
+import requests
+import moonphase
+import ephem
+
 
 class Weather(object):
     def __init__(self, wui_response, lat, lng, as_of):
@@ -18,7 +21,8 @@ class Weather(object):
         self.lat = lat
         self.lng = lng
         self.loc_name = None
-        self.date = as_of
+        # Datetime format including day and time
+        self.date_time = as_of
         self.print_date = as_of.strftime('%h %d, %Y') # Date for html
         # FIX change revise time based on what is submitted
         self.time = None  
@@ -36,8 +40,8 @@ class Weather(object):
 
     # Sets up the data points for current date
     def apply_current(self, wui_response):
-        self.sunrise = None
-        self.sunset = None
+        self.sunrise = self.get_sunrise()
+        self.sunset = self.get_sunset()
         self.wui_icon = wui_response['current_observation']['icon'] 
         self.tempr_wui_F = wui_response['current_observation']['temp_f']
         self.tempr_wui_C = wui_response['current_observation']['temp_c']
@@ -85,7 +89,7 @@ class Weather(object):
         if as_of == datetime.now().date():
             for i in range(4):
                 as_of += datetime.timedelta(days=1)
-                self.days[i] = find_for(self, fio_response, wui_response, as_of)
+                self.days[i] = find_for(self, wui_response, as_of)
 
 
     #FIX Pull out by hour
@@ -96,17 +100,36 @@ class Weather(object):
         # Url to pass to WUI
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
         # Pull API key from env with FIO_KEY
-        wui_final_url=wui_url%(WUI_KEY, lat,lon)
+        wui_final_url=wui_url%(WUI_KEY, lat, lng)
         print wui_final_url
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
         return Weather(wui_response, lat, lng, as_of)
+
+    def get_location(self):
+        home=ephem.Observer()
+        home.lat=self.lat
+        home.long=self.lng
+
+        return home        
         
-    # FIX - write function to give human results to wind speed - e.g. dress wearing, difficult to walk
+    def get_ephem(self):
+        # Left off 30 sec adjustment and elevation
+        return ephem.Sun()
+    
+    def get_sunrise(self):
+        home=self.get_location()
+        nextrise=home.next_rising(self.get_ephem())
+        return nextrise.datetime()
+     
+    def get_sunset(self):
+        home=self.get_location()
+        nextset=home.next_setting(self.get_ephem())
+        return nextset.datetime() 
 
     # Convert icon result to an image if day
-    def add_day_pic(self, pic_loc):        
+    def add_day_pic(self):        
         # Holds weather images for reference
         weather_pics = {
             "clear-day":("sun", "sun_samp2.jpeg"),
@@ -127,7 +150,7 @@ class Weather(object):
             # Setup to return text for sun result
             self.sun_result = weather_pics[self.wui_icon][0]
         else:
-            print 'Error finding photo for the time of day'            
+            flash('Error finding photo for the time of day')
         print self.pic
 
     # Convert icon result to an moon image if night
@@ -156,23 +179,22 @@ class Weather(object):
     def apply_pic(self):
         pic_loc = '/static/img/'        
 
-        # Pull sunrise and sunset from weather results
-        sunrise = datetime.datetime.fromtimestamp(self.sunrise)
-        sunset = datetime.datetime.fromtimestamp(self.sunset)
+        # Pull sunrise and sunset from weather results - use to pull timestamp
+        # sunrise = datetime.datetime.fromtimestamp(self.sunrise)
+        # sunset = datetime.datetime.fromtimestamp(self.sunset)
 
         # Testing
         print 'apply_pic'
-        print 1, type(self.cloud_cover)
         print 2, self.wui_icon
         print 3, moonphase.main(self.date)
 
-        print 4, self.date
-        print 5, sunrise
-        print 6, sunset
+        print 4, self.date_time
+        print 5, self.sunrise
+        print 6, self.sunset
 
         # Picture assigned based on time of day
-        if sunrise < self.date < sunset:
-            self.add_day_pic(pic_loc)
+        if self.sunrise < self.date_time < self.sunset:
+            self.add_day_pic()
         else:
             print 'it\'s not daytime' #test
 
