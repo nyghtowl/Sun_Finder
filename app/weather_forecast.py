@@ -6,12 +6,11 @@ generated object to pull weather results
 """
 from config import WUI_KEY
 from datetime import datetime
-import datetime
 from time import strftime
 from pprint import pprint
 import requests
 import moonphase
-import ephem
+from BeautifulSoup import BeautifulSoup
 
 
 class Weather(object):
@@ -32,7 +31,7 @@ class Weather(object):
         self.days = {}
 
         # Determine if date is current or future to determine what data points to pull
-        if as_of.date() == datetime.date.today():
+        if as_of.date() == datetime.today().date():
             self.apply_current(wui_response)
         else:
             wui_fragment = self.find_for(wui_response, as_of)
@@ -107,29 +106,36 @@ class Weather(object):
         # Generated a dictionary of forecast data points pulling from both weather sources
         return Weather(wui_response, lat, lng, as_of)
 
-    def get_location(self):
-        home=ephem.Observer()
-        home.lat=self.lat
-        home.long=self.lng
+    def get_earthtools(self):
+        earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
+        self.date_time
+        earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
+        response_xml = requests.get(earth_final_url)
+        return BeautifulSoup(response_xml.content)
+    # def get_location(self):
+    #     home=ephem.Observer()
+    #     home.lat=self.lat
+    #     home.long=self.lng
+    #     home.date=self.date_time
 
-        return home        
+    #     return home        
         
-    def get_ephem(self):
-        # Left off 30 sec adjustment and elevation
-        return ephem.Sun()
+    # def get_ephem(self):
+    #     # Left off 30 sec adjustment and elevation
+    #     return ephem.Sun()
     
     def get_sunrise(self):
-        home=self.get_location()
-        nextrise=home.next_rising(self.get_ephem())
-        return nextrise.datetime()
+        nextrise=self.get_earthtools()
+        sunrise=nextrise.sunrise.string
+        return datetime.strptime(sunrise, '%H:%M:%S') 
      
     def get_sunset(self):
-        home=self.get_location()
-        nextset=home.next_setting(self.get_ephem())
-        return nextset.datetime() 
+        nextset=self.get_earthtools()
+        sunset=nextset.sunset.string
+        return datetime.strptime(sunset, '%H:%M:%S')
 
     # Convert icon result to an image if day
-    def add_day_pic(self):        
+    def add_day_pic(self, pic_loc):        
         # Holds weather images for reference
         weather_pics = {
             "clear-day":("sun", "sun_samp2.jpeg"),
@@ -149,6 +155,7 @@ class Weather(object):
         if self.wui_icon in weather_pics:
             # Setup to return text for sun result
             self.sun_result = weather_pics[self.wui_icon][0]
+            self.pic = pic_loc + weather_pics[self.wui_icon][1]
         else:
             flash('Error finding photo for the time of day')
         print self.pic
@@ -166,7 +173,7 @@ class Weather(object):
             "Waxing Gibbous":"moon_waxinggibbous.png"
             }
 
-        moon = moonphase.main(self.date)
+        moon = moonphase.main(self.date_time)
         print 'add_night, %s' % moon
 
         if moon in night_pics:
@@ -186,15 +193,16 @@ class Weather(object):
         # Testing
         print 'apply_pic'
         print 2, self.wui_icon
-        print 3, moonphase.main(self.date)
+        print 3, moonphase.main(self.date_time)
 
-        print 4, self.date_time
-        print 5, self.sunrise
-        print 6, self.sunset
+        print 4, self.date_time.time()
+        print 5, self.sunrise.time()
+        print 6, self.sunset.time()
+        print 7, self.sunrise.time()< self.date_time.time() < self.sunset.time()
 
         # Picture assigned based on time of day
-        if self.sunrise < self.date_time < self.sunset:
-            self.add_day_pic()
+        if self.sunrise.time() < self.date_time.time() < self.sunset.time():
+            self.add_day_pic(pic_loc)
         else:
             print 'it\'s not daytime' #test
 
