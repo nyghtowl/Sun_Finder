@@ -3,6 +3,26 @@
 // Confirm load
 console.log("main js");
 
+// Load search bar
+$(function(){
+	console.log('check for index');
+	if ($("#index_form_load")){
+		console.log('index found');
+	 	// $("#index_form_load").load('sun_index_form.html'); 
+		$.get('sun_index_form', function(data) {
+	  		$('#index_form_load').html(data);
+		});
+		indexLoadMap();
+	} else if ($("#index_form_load") === null) {
+		console.log('not index');
+	 	// $("#index_form_load").load('sun_index_form.html'); 
+		$.post('sun_top_form', function(data) {
+	  		$('#top_form_load').html(data);
+		});
+	}	
+
+});
+
 // Load map  - currently SF biased
 function buildMap(map_lat, map_long) { 
 	// Pre-set lat lng to SF if not provided
@@ -145,33 +165,14 @@ function indexLoadMap(){
 	}
 }
 
-
-$(function(){
-	console.log('check for index');
-	if ($("#index_form_load")){
-		console.log('index found');
-	 	// $("#index_form_load").load('sun_index_form.html'); 
-		$.get('sun_index_form', function(data) {
-	  		$('#index_form_load').html(data);
-		});
-	// } else {
-	// 	console.log('not index');
-	//  	// $("#index_form_load").load('sun_index_form.html'); 
-	// 	$.get('sun_top_form', function(data) {
-	//   		$('#top_form_load').html(data);
-	// 	});
-	}	
-});
-
-$(document).ready(indexLoadMap);
-
+// $(document).ready(indexLoadMap);
 
 // Typeahead - Autocomplete
-$(function() {
+function typeahead() {
 	console.log("typeahead"); //test
 
 	$("#sun_query").typeahead({
-	    minLength: 2,
+	    minLength: 1,
 	    source: function (query, process) {
 	        return $.post(
 	            '/autocomplete', 
@@ -179,16 +180,16 @@ $(function() {
 	            function (data) {
 	            	var data = JSON.parse(data)
 	                return process(data.options);
-	            });
+	        });
 	    }
 	});
-
-});
+}
 
 // Datepicker
-$(function() {
+function datepicker() {
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-});
+}
+
 
 // Weather Search
 function handleSearch(e) {
@@ -211,12 +212,16 @@ function handleSearch(e) {
 
 }
 
-$(function(){
-	$(".sun_submit").on("click", handleSearch);
+$(window).load(function(){
+
+	$(function(){
+		$(".sun_submit").on("click", handleSearch);
+
+	});
+	typeahead();
+	datepicker();
 
 });
-
-
 
 // Footer Link Load
 $(function (){
