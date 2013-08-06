@@ -1,15 +1,11 @@
 /* Main CSS File for Sun Finder */
 
 
-/* put the class name that bootstrap uses below as shown and then put the new style you want to use to overwrite it - put the main as the last css file in the list in layout for it to over-ride the other stides*/
-.img-circle{
-	
-}
 
 /* Search Format
 -------------------------------------------------- */
 
-#sun-query1 input[type="neighborhood"] {
+#sun_query_index input[type="neighborhood"] {
   font-size: 16px;
   height: auto;
   margin-bottom: 15px;
@@ -29,35 +25,21 @@
   text-align: left;
 }
 
-/* gives margin for index page elements */
-.margin60 {
-  margin-top: 60px;
-
+/* ajax spinner */
+.ajax_txt_pad{
+  margin-top: 15%;
 }
 
-/* defines css for map */
-#map_canvas_search {
-  width: 90%;
-  height: 400px;
-  background-color: #CCC;
-  text-align:center;
+.ajax_img_pad{
+  padding-top:5%;
 }
 
-#map_canvas_results{
-  width: 90%;
-  height: 400px;
-  background-color: #CCC;
-  text-align:center;
-  
+#spinner {
+  display: none;
 }
 
-/* helps center content for dl setup of temperatures on main results page*/
-.tempr_block {
-  width: 300px;
-  margin: 0 auto;
-}
 
-/* formats placeholder in search bar */
+/* Formats placeholder in search bar */
 ::-webkit-input-placeholder {
     color: grey;
     font-style: italic;
@@ -72,8 +54,22 @@
     font-style: italic;
 }
 
-/* map label */
+/* Map
+-------------------------------------------------- */
+#map_canvas_search {
+  width: 100%;
+  height: 400px;
+  background-color: #CCC;
+}
 
+#map_canvas_results{
+  width: 90%;
+  height: 400px;
+  background-color: #CCC;
+  
+}
+
+/* Map label */
  .labels {
    color: solid black;
    font-family: "Lucida Grande", "Arial", sans-serif;
@@ -84,6 +80,26 @@
    border: 0px;
    white-space: wrap;
  }
+
+/* Results
+-------------------------------------------------- */
+/* Gives margin for index page elements */
+.margin60 {
+  margin-top: 60px;
+
+}
+
+/* Size of the weather img */
+.img-circle{
+  width:50%;
+}
+
+/* Dl content center for temperature */
+.tempr_block {
+  width: 300px;
+  margin: auto;
+}
+
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -97,19 +113,6 @@
 .ui-timepicker-rtl dl { text-align: right; }
 .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
-
-/* ajax spinner */
-.ajax_txt_pad{
-  margin-top: 15%;
-}
-
-.ajax_img_pad{
-  padding-top:5%;
-}
-
-#spinner {
-  display: none;
-}
 	
 /* Sticky footer styles
 -------------------------------------------------- */

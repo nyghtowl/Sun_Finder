@@ -149,7 +149,7 @@ $(document).ready(indexReady);
 $(function() {
 	console.log("typeahead"); //test
 
-	$("#sun-query-index, #sun-query-index").typeahead({
+	$("#sun_query_index, #sun_query_top").typeahead({
 	    minLength: 2,
 	    source: function (query, process) {
 	        return $.post(
@@ -166,8 +166,8 @@ $(function() {
 
 // Datepicker
 $(function() {
-		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-	});
+	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+});
 
 // Weather Search
 $(function(){
@@ -176,10 +176,10 @@ $(function(){
 });
 
 function handleSearch(e) {
-	if ($("#sun-query-index").val()) {
-		var query = $("#sun-query-index").val();	
-	} else if ($("#sun-query-top").val()) {
-		var query = $("#sun-query-top").val();
+	if ($("#sun_query_index").val()) {
+		var query = $("#sun_query_index").val();	
+	} else if ($("#sun_query_top").val()) {
+		var query = $("#sun_query_top").val();
 	}
 	var date = $(".sun-date").val();
 	e.preventDefault(); //Prevents default form value call
@@ -193,10 +193,6 @@ function handleSearch(e) {
 		$('.page_results').show();
 		$('.page_results').html(data);
 
-		$(function(map_lat, map_long) {
-			buildMap(map_lat, map_long);
-
-		});
 	});
 
 }
