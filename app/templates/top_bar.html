@@ -1,19 +1,11 @@
 <!-- Top Bar -->
 <div class="ui-widget">
-    <div class="row-fluid">
-        <div class="offset1 top-bar">  
-            <a href="{{url_for('index')}}" id="sun_finder_title"><h3> Sun Finder </h3></a>
-        </div>
+    <div class="row-fluid" id="sun_header_link">
+
     </div>
 
     <div class="row-fluid">    
-        <div class="span5 offset1">
-            <form action="" method= "POST" class="form-inline form-search top-bar">
-                <!-- Search input -->
-                <p><input type="text" name="query" class="input-medium" placeholder="enter neighborhood" autocomplete="off" id="sun_query_top" data-provide="typeahead">
-                {% include 'search_submit.html' %}</p>
-                {% include 'calendar_map.html' %}
-            </form>
+        <div class="span5 offset1" id="top_form_load">
         </div>
 
         <div class="span4 offset2">

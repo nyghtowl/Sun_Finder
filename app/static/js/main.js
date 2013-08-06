@@ -8,7 +8,7 @@ function buildMap(map_lat, map_long) {
 	// Pre-set lat lng to SF if not provided
 	if (!map_lat || !map_long) {
 		map_lat = 37.7655;
-		map_lng = -122.4429
+		map_long = -122.4429;
 	}
     //stops other event listeners from firing on search button
     //event.preventDefault(); 	
@@ -24,9 +24,9 @@ function buildMap(map_lat, map_long) {
 	}
 	
 	// Establishes Google maps
-	var map = new google.maps.Map($("#map_canvas_search")[0], map_options)
+	var map = new google.maps.Map($('#map_canvas_search')[0], map_options)
 	
-	// Map style - move to css?
+	// Map style
 	map.set('styles', [
 	  {
 	    featureType: 'all',
@@ -116,6 +116,9 @@ function weatherOverlay(map){
 
 // Build map index initializer
 function indexLoadMap(){
+	console.log('index load map');
+	var map_canvas = document.getElementById('map_canvas_search');
+
 	if (navigator.geolocation) {
 	    var location_timeout = setTimeout("geolocFail()", 10000);
 
@@ -131,25 +134,43 @@ function indexLoadMap(){
 	        clearTimeout(location_timeout);
 	        geolocFail();
 		    console.log('geo loc not exist');
-		    buildMap(lat, lng);
+		    buildMap();
 		});
 
 	} else {
 	    // Fallback for no geolocation
 	 	geolocFail();
 	    console.log('geoloc not shared');
-	    buildMap(lat, lng);
+	    buildMap();
 	}
 }
 
-$(document).ready(indexReady);
+
+$(function(){
+	console.log('check for index');
+	if ($("#index_form_load")){
+		console.log('index found');
+	 	// $("#index_form_load").load('sun_index_form.html'); 
+		$.get('sun_index_form', function(data) {
+	  		$('#index_form_load').html(data);
+		});
+	// } else {
+	// 	console.log('not index');
+	//  	// $("#index_form_load").load('sun_index_form.html'); 
+	// 	$.get('sun_top_form', function(data) {
+	//   		$('#top_form_load').html(data);
+	// 	});
+	}	
+});
+
+$(document).ready(indexLoadMap);
 
 
 // Typeahead - Autocomplete
 $(function() {
 	console.log("typeahead"); //test
 
-	$("#sun_query_index, #sun_query_top").typeahead({
+	$("#sun_query").typeahead({
 	    minLength: 2,
 	    source: function (query, process) {
 	        return $.post(
@@ -170,17 +191,10 @@ $(function() {
 });
 
 // Weather Search
-$(function(){
-	$(".sun-submit").on("click", handleSearch);
-
-});
-
 function handleSearch(e) {
-	if ($("#sun_query_index").val()) {
-		var query = $("#sun_query_index").val();	
-	} else if ($("#sun_query_top").val()) {
-		var query = $("#sun_query_top").val();
-	}
+
+	var query = $("#sun_query").val();	
+
 	var date = $(".sun-date").val();
 	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
@@ -189,13 +203,18 @@ function handleSearch(e) {
 	console.log(query);
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
-		$("#sun-query2").val('');
+		$("#sun-query_top").val('');
 		$('.page_results').show();
 		$('.page_results').html(data);
 
 	});
 
 }
+
+$(function(){
+	$(".sun_submit").on("click", handleSearch);
+
+});
 
 
 

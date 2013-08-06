@@ -211,6 +211,10 @@ def privacy():
     return render_template('privacy.html')
 
 
+@app.route('/sun_index_form', methods=['GET'])
+def sun_index_form():    
+    return render_template('sun_index_form.html')
+
 # User view with favorites and ability to report on validity of sun
 # @app.route('/user/<fname>')
 # @login_required # Restricts page access without login

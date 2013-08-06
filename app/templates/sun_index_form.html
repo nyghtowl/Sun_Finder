@@ -1,0 +1,17 @@
+<div>
+	<form action="" method="POST" class="form-search centered" >
+		<div class="row-fluid">
+			<div class="text-center">
+				<!-- Search input -->
+				<p>{% include 'search.html' %}</p>
+			</div>
+		</div>
+			<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
+		<div class="row-fluid">
+			<div class="text-center">
+				{% include 'calendar_map.html' %}
+				{% include 'search_submit.html' %}
+			</div>
+		</div>
+	</form>
+</div>

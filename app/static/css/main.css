@@ -12,10 +12,6 @@
   padding: 7px 9px;
 }
 
-.top-bar {
-  display: inline;
-}
-
 #sun_finder_title{
   color: #333;
   text-decoration: none;
@@ -63,7 +59,7 @@
 }
 
 #map_canvas_results{
-  width: 90%;
+  width: 80%;
   height: 400px;
   background-color: #CCC;
   
