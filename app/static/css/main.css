@@ -17,11 +17,10 @@
 }
 
 .top-bar {
-  display: none;
+  display: inline;
 }
 
-
-#top-bar-header{
+#sun_finder_title{
   color: #333;
   text-decoration: none;
 }
@@ -37,10 +36,19 @@
 }
 
 /* defines css for map */
-#map_canvas {
-  width: 100%;
+#map_canvas_search {
+  width: 90%;
   height: 400px;
   background-color: #CCC;
+  text-align:center;
+}
+
+#map_canvas_results{
+  width: 90%;
+  height: 400px;
+  background-color: #CCC;
+  text-align:center;
+  
 }
 
 /* helps center content for dl setup of temperatures on main results page*/

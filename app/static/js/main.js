@@ -4,17 +4,18 @@
 console.log("main js");
 
 // Load map  - currently SF biased
-function build_map(map_lat, map_long) { 
+function buildMap(map_lat, map_long) { 
+	// Pre-set lat lng to SF if not provided
 	if (!map_lat || !map_long) {
-		return
+		map_lat = 37.7655;
+		map_lng = -122.4429
 	}
     //stops other event listeners from firing on search button
-    //event.preventDefault(); 
-console.log("build_map"); // test
+    //event.preventDefault(); 	
+	console.log("build_map"); // test
 	
 	//Pulls lat, lng from search result
 	var myLatlng = new google.maps.LatLng(map_lat,map_long);
-	var map_canvas = document.getElementById('map_canvas');
 	var map_options = {
 	  // center: new google.maps.LatLng(37.7655,-122.4429),
 	  center: myLatlng,
@@ -23,7 +24,7 @@ console.log("build_map"); // test
 	}
 	
 	// Establishes Google maps
-	var map = new google.maps.Map(map_canvas, map_options)
+	var map = new google.maps.Map($("#map_canvas_search")[0], map_options)
 	
 	// Map style - move to css?
 	map.set('styles', [
@@ -44,6 +45,15 @@ console.log("build_map"); // test
 	  }
 	]);
 
+	singleMapMark(map);
+    mutipleMapMarks(map, myLatlng);
+
+  	// weatherOverlay(map); - not detailed enough but similar concept
+
+}
+
+
+function singleMapMark(map, myLatlng){
 	// Search result marker - custom img and marker variable
 	var img_map = {
 		scaledSize: new google.maps.Size(20, 25),
@@ -51,124 +61,95 @@ console.log("build_map"); // test
 		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
 	};
 
-
 	var marker = new google.maps.Marker({
 	    position: myLatlng,
+	    draggable: false,
+    	raiseOnDrag: false,
 		map: map,
 		icon: img_map,
 		title: "Search Result"
 	});
+}
 
-	// var homeLatLng = new google.maps.LatLng(37.7627, -122.4352);
-
-	// var marker1 = new MarkerWithLabel({
- //       position: new google.maps.LatLng(37.7627, -122.4352),
- //       draggable: false,
- //       raiseOnDrag: false,
- //       map: map,
- //       labelContent: "Mission",
- //       labelAnchor: new google.maps.Point(22, 0),
- //       labelClass: "labels", // connects to CSS class label
- //       labelStyle: {opacity: 1}
- //    });
-
-	// puts a comment box over the marker
-    // var iw1 = new google.maps.InfoWindow({
-    //    content: "Home For Sale"
-    // });
-
-
-	// Apply MarkerWith Label - add multiple markers on the map
-	function createMarker(position, label) {
-		return new MarkerWithLabel({
-	       position: new google.maps.LatLng(position[0],position[1]),
-	       draggable: false,
-	       raiseOnDrag: false,
-	       map: map,
-	       labelContent: label,
-	       labelAnchor: new google.maps.Point(22, 0),
-	       labelClass: "labels", // Connects to CSS class label
-	       labelStyle: {opacity: 1}
-    	});
-	}
-
-	// Create multiple markers
-	var readData = function(positions, labels) { 
-		for (var i = 0; i < positions.length; i++) {
-	    	createMarker(positions[i], labels[i]);
-	  	}     
-	 }
-
-	// Google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
-	var weatherLayer = new google.maps.weather.WeatherLayer({
-    	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
-  	});
-
- //  	// Loads weather layer
- //  	// weatherLayer.setMap(map);
-
-	function mark_map() {
-		$.ajax({
-			url:'/map_details',
-			type: "GET",
-			cache: false,
-			dataType: "json",
-			success: function(data){
-				console.log(data.result.locations);
-				readData(data.result.loc_coords, data.result.locations);
-				}
-		});
-	}
-
-    mark_map();
-
+// MarkerWith Label - add multiple markers on the map
+function createMarker(position, label, map) {
+	return new MarkerWithLabel({
+       position: new google.maps.LatLng(position[0],position[1]),
+       draggable: false,
+       raiseOnDrag: false,
+       map: map,
+       labelContent: label,
+       labelAnchor: new google.maps.Point(22, 0),
+       labelClass: "labels", // Connects to CSS class label
+       labelStyle: {opacity: 1}
+	});
 }
 
 
+function readData(positions, labels, map) { 
+	for (var i = 0; i < positions.length; i++) {
+    	createMarker(positions[i], labels[i], map);
+  	}     
+ }
 
-// Jquery search event map load - set as if there is coord then build_map
-$(function(map_lat, map_long) { 
-	build_map(map_lat, map_long);
-});
+function mutipleMapMarks(map) {
+	$.ajax({
+		url:'/map_details',
+		type: "GET",
+		cache: false,
+		dataType: "json",
+		success: function(data){
+			readData(data.result.loc_coords, data.result.locations,map);
+			}
+	});
+}
 
-// Get geolocation to set initial map
-$(function() {
-	// Pre-set lat lng to SF
-	var lat = 37.7655;
-	var lng = -122.4429
+// Add Google automatic weather overlay - not detailed enough
+function weatherOverlay(map){
+	// Google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
+	var weatherLayer = new google.maps.weather.WeatherLayer({
+    	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
+      	});
+	weatherLayer.setMap(map);
+}
 
-		if (navigator.geolocation) {
-		    var location_timeout = setTimeout("geolocFail()", 10000);
 
-		    navigator.geolocation.getCurrentPosition(function(position) {
-		        clearTimeout(location_timeout);
+// Build map index initializer
+function indexLoadMap(){
+	if (navigator.geolocation) {
+	    var location_timeout = setTimeout("geolocFail()", 10000);
 
-		        lat = position.coords.latitude;
-		        lng = position.coords.longitude;
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	        clearTimeout(location_timeout);
 
-		        console.log(lat + ' ' + lng);
-		        build_map(lat, lng);
+	        lat = position.coords.latitude;
+	        lng = position.coords.longitude;
 
-		    }, function(error) {
-		        clearTimeout(location_timeout);
-		        geolocFail();
-			    console.log('geo loc not exist');
-		        build_map(lat, lng);
-		    });
-		} else {
-		    // Fallback for no geolocation
-		 	geolocFail();
-		    console.log('geoloc not shared');
-		    build_map(lat, lng);
-		}
+	        console.log(lat + ' ' + lng);
+	        buildMap(lat, lng);
+	    }, function(error) {
+	        clearTimeout(location_timeout);
+	        geolocFail();
+		    console.log('geo loc not exist');
+		    buildMap(lat, lng);
+		});
 
-});
+	} else {
+	    // Fallback for no geolocation
+	 	geolocFail();
+	    console.log('geoloc not shared');
+	    buildMap(lat, lng);
+	}
+}
+
+$(document).ready(indexReady);
+
 
 // Typeahead - Autocomplete
 $(function() {
 	console.log("typeahead"); //test
 
-	$("#sun-query1, #sun-query2").typeahead({
+	$("#sun-query-index, #sun-query-index").typeahead({
 	    minLength: 2,
 	    source: function (query, process) {
 	        return $.post(
@@ -195,10 +176,10 @@ $(function(){
 });
 
 function handleSearch(e) {
-	if ($("#sun-query1").val()) {
-		var query = $("#sun-query1").val();	
-	} else if ($("#sun-query2").val()) {
-		var query = $("#sun-query2").val();
+	if ($("#sun-query-index").val()) {
+		var query = $("#sun-query-index").val();	
+	} else if ($("#sun-query-top").val()) {
+		var query = $("#sun-query-top").val();
 	}
 	var date = $(".sun-date").val();
 	e.preventDefault(); //Prevents default form value call
@@ -211,8 +192,15 @@ function handleSearch(e) {
 		$("#sun-query2").val('');
 		$('.page_results').show();
 		$('.page_results').html(data);
+
+		$(function(map_lat, map_long) {
+			buildMap(map_lat, map_long);
+
+		});
 	});
+
 }
+
 
 
 // Footer Link Load
@@ -242,8 +230,6 @@ $(function (){
 
 });
 
-// Triggers when to run search call
-// $(document).ready(dom_ready);
 
 // $(function(){
 // 	$('#buid-map').on('click', build_map(37.7655,-122.4429));

@@ -17,7 +17,7 @@
 			<div class="row-fluid">
 				<div class="text-center">
 					<!-- Search input -->
-					<p><input type="text" name="query" placeholder="enter neighborhood" autocomplete="off" id="sun-query1" data-provide="typeahead"></p>
+					<p><input type="text" name="query" placeholder="enter neighborhood" autocomplete="off" id="sun-query-index" data-provide="typeahead"></p>
 				</div>
 			</div>
 				<!-- FIX add a validation of dates that can be chosen and return msg to request new date-->
@@ -34,6 +34,11 @@
 
 		console.log('index');
 
+
+
+		function indexReady(){
+			indexLoadMap();
+		}
 		
 	</script>
 

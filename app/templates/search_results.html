@@ -77,7 +77,7 @@
             </div>
             <div class="accordion-inner span8">
                 <h5>Map View</h5>
-                {% include 'map_view.html' %}
+                <div class="span7" id="map_canvas_results"></div>
             </div>
         </div>
     </div>
@@ -89,7 +89,7 @@
 
     // Map_lat & map_long false if no result - FIX pull jinja
     {% if result.lat %}
-        build_map({{ result.lat|safe }}, {{ result.lng|safe }});
+        buildMap({{ result.lat|safe }}, {{ result.lng|safe }});
     {% endif %}
 
 
