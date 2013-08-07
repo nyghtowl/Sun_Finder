@@ -189,6 +189,17 @@ function datepicker() {
 }
 
 
+function loadTopSearch(){
+	$.get('sun_top_form', function(data) {
+		$('#top_form_load').html(data);
+	if (lastSearchLocation) {
+		buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
+	}	  		
+		typeahead("#sun_query")
+	});
+
+}
+
 // Weather Search
 function handleSearch(e) {
 
@@ -205,14 +216,8 @@ function handleSearch(e) {
 		// $("#sun-query_top").val('');
 		$('.page_results').show();
 		$('.page_results').html(data);
-		$.get('sun_top_form', function(data) {
-	  		$('#top_form_load').html(data);
-			if (lastSearchLocation) {
-				buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
-			}	  		
-	  		typeahead("#sun_query")
+		loadTopSearch();
 		});
-	});
 
 }
 
@@ -229,26 +234,34 @@ $(window).load(function(){
 
 });
 
-// Footer Link Load
+// Link Load
 $(function (){
- console.log('in footer link load');  
+ console.log('in link load');  
+
+	$('#create_account_load').on('click', function(e){
+		loadTopSearch();
+		$.post('create_login', function(data){
+  			$('.page_results').html(data);
+  		});
+	});
+
  
     $('#about_load').on('click', function(e){
-    	$('.top-bar').show();
+    	loadTopSearch();
   		$.post('about', function(data){
   			$('.page_results').html(data);
   		});
   	});
 
 	$('#privacy_load').on('click', function(e){
-		$('.top-bar').show();
+		loadTopSearch();
 		$.post('privacy', function(data){
   			$('.page_results').html(data);
   		});
 	});
 
 	$('#tos_load').on('click', function(e){
-		$('.top-bar').show();
+		loadTopSearch();
 		$.post('tos', function(data){
   			$('.page_results').html(data);
   		});
