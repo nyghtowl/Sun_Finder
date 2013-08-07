@@ -5,23 +5,23 @@ console.log("main js");
 
 // Load search bar
 $(function(){
-	console.log('check for index');
-	if ($("#index_form_load")){
-		console.log('index found');
-	 	// $("#index_form_load").load('sun_index_form.html'); 
-		$.get('sun_index_form', function(data) {
-	  		$('#index_form_load').html(data);
-		});
-		indexLoadMap();
-	} else if ($("#index_form_load") === null) {
-		console.log('not index');
-	 	// $("#index_form_load").load('sun_index_form.html'); 
-		$.post('sun_top_form', function(data) {
-	  		$('#top_form_load').html(data);
-		});
-	}	
-
-});
+	// $( ".page_results" ).on('load', function() {
+		// console.log('check for index');
+		// if ($("#index_form_load")){
+			console.log('index found');
+		 	// $("#index_form_load").load('sun_index_form.html'); 
+			$.get('sun_index_form', function(data) {
+		  		$('#index_form_load').html(data);
+			});
+			indexLoadMap();
+		// } else 	if ($("#index_form_load") === null) {
+	// 	console.log('not index');
+	// 	$.get('sun_top_form', function(data) {
+	//   		$('#top_form_load').html(data);
+	// 	});
+	// }	
+	// });
+	});
 
 // Load map  - currently SF biased
 function buildMap(map_lat, map_long) { 
@@ -211,6 +211,8 @@ function handleSearch(e) {
 	});
 
 }
+
+
 
 $(window).load(function(){
 
