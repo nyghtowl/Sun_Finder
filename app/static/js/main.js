@@ -14,17 +14,16 @@ $(function(){
 		  		$('#index_form_load').html(data);
 			});
 			indexLoadMap();
-		// } else 	if ($("#index_form_load") === null) {
+		// } else 	if !($("#index_form_load")) {
 	// 	console.log('not index');
-	// 	$.get('sun_top_form', function(data) {
-	//   		$('#top_form_load').html(data);
-	// 	});
+
 	// }	
 	// });
 	});
 
 // Load map  - currently SF biased
-function buildMap(map_lat, map_long) { 
+function buildMap(container, map_lat, map_long) { 
+
 	// Pre-set lat lng to SF if not provided
 	if (!map_lat || !map_long) {
 		map_lat = 37.7655;
@@ -44,7 +43,7 @@ function buildMap(map_lat, map_long) {
 	}
 	
 	// Establishes Google maps
-	var map = new google.maps.Map($('#map_canvas_search')[0], map_options)
+	var map = new google.maps.Map(container, map_options)
 	
 	// Map style
 	map.set('styles', [
@@ -137,8 +136,6 @@ function weatherOverlay(map){
 // Build map index initializer
 function indexLoadMap(){
 	console.log('index load map');
-	var map_canvas = document.getElementById('map_canvas_search');
-
 	if (navigator.geolocation) {
 	    var location_timeout = setTimeout("geolocFail()", 10000);
 
@@ -149,29 +146,30 @@ function indexLoadMap(){
 	        lng = position.coords.longitude;
 
 	        console.log(lat + ' ' + lng);
-	        buildMap(lat, lng);
+
+	        buildMap($('#map_canvas_search')[0], lat, lng);
 	    }, function(error) {
 	        clearTimeout(location_timeout);
 	        geolocFail();
 		    console.log('geo loc not exist');
-		    buildMap();
+		    buildMap($('#map_canvas_search')[0]);
 		});
 
 	} else {
 	    // Fallback for no geolocation
 	 	geolocFail();
 	    console.log('geoloc not shared');
-	    buildMap();
+	    buildMap($('#map_canvas_search')[0]);
 	}
 }
 
 // $(document).ready(indexLoadMap);
 
 // Typeahead - Autocomplete
-function typeahead() {
+function typeahead(selector) {
 	console.log("typeahead"); //test
 
-	$("#sun_query").typeahead({
+	$(selector).typeahead({
 	    minLength: 1,
 	    source: function (query, process) {
 	        return $.post(
@@ -204,10 +202,16 @@ function handleSearch(e) {
 	console.log(query);
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
-		$("#sun-query_top").val('');
+		// $("#sun-query_top").val('');
 		$('.page_results').show();
 		$('.page_results').html(data);
-
+		$.get('sun_top_form', function(data) {
+	  		$('#top_form_load').html(data);
+			if (lastSearchLocation) {
+				buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
+			}	  		
+	  		typeahead("#sun_query")
+		});
 	});
 
 }
@@ -220,7 +224,7 @@ $(window).load(function(){
 		$(".sun_submit").on("click", handleSearch);
 
 	});
-	typeahead();
+	typeahead("#sun_query");
 	datepicker();
 
 });

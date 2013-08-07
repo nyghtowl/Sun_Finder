@@ -77,7 +77,7 @@
             </div>
             <div class="accordion-inner span8">
                 <h5>Map View</h5>
-               <div class="span7" id="map_canvas_search"></div>
+               <div class="span7" id="map_canvas_results"></div>
             </div>
         </div>
     </div>
@@ -86,10 +86,13 @@
 <script type="text/javascript">
     
     console.log('search results')
-
+    lastSearchLocation = {
+        lat: {{ result.lat }},
+        lng: {{ result.lng }}
+    }
     // Map_lat & map_long false if no result - FIX pull jinja
     {% if result.lat %}
-        buildMap({{ result.lat|safe }},{{ result.lng|safe }});
+        buildMap($("#map_canvas_results")[0], {{ result.lat|safe }},{{ result.lng|safe }});
     {% endif %}
 
 
