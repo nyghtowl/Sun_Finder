@@ -1,41 +1,36 @@
 <!-- Login -->
 
-{% extends "layout.html" %}
 
-{% block body %}
+<div class="row-fluid page_results">
+    <h3 class="form-signin-heading text-center"> Sun Finder Login </h3>
+    {% include 'flash.html' %}
 
-    <div class="row-fluid page_results">
-        <h3 class="form-signin-heading text-center"> Sun Finder Login </h3>
-        {% include 'flash.html' %}
+    <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal">
+        {{l_form.hidden_tag()}}
+        
+    <!-- For loop generate form with wtform object -->
+        {% for field in l_form %}
+            {% if field.short_name != "csrf_token" %}
+                <div class="control-group">
+                    <!-- WTForms do not need to be escaped -->
+                    <label class="control-label">{{field.label}}</label>
+                        <div class="controls">
+                        <!-- Placeholder for inline -->
+                            {{ field(size=30) }}
+                            <!-- Error -->
+                            {% for error in field.errors %}
+                                <span style = "color: red;">[{{error}}]</span>
+                            {% endfor %}
 
-        <form action="{{ url_for('login') }}" method="POST" name="login" class="form-horizontal">
-            {{l_form.hidden_tag()}}
-            
-        <!-- For loop generate form with wtform object -->
-            {% for field in l_form %}
-                {% if field.short_name != "csrf_token" %}
-                    <div class="control-group">
-                        <!-- WTForms do not need to be escaped -->
-                        <label class="control-label">{{field.label}}</label>
-                            <div class="controls">
-                            <!-- Placeholder for inline -->
-                                {{ field(size=30) }}
-                                <!-- Error -->
-                                {% for error in field.errors %}
-                                    <span style = "color: red;">[{{error}}]</span>
-                                {% endfor %}
-
-                            </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-            <div class="control-group">
-                <div class="controls">
-                    <button type="submit", value="Login" class="btn">Login</button>
+                        </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            {% endif %}
+        {% endfor %}
 
-{% endblock %}
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit", value="Login" class="btn">Login</button>
+            </div>
+        </div>
+    </form>
+</div>

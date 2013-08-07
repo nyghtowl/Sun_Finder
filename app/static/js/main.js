@@ -245,6 +245,12 @@ $(function (){
   		});
 	});
 
+	$('#login_load').on('click', function(e){
+		loadTopSearch();
+		$.post('login', function(data){
+  			$('.page_results').html(data);
+  		});
+	});
  
     $('#about_load').on('click', function(e){
     	loadTopSearch();
