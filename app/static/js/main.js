@@ -148,35 +148,16 @@ function indexLoadMap(){
 
 // $(document).ready(indexLoadMap);
 
-// Load search bar
-$(function(){
-	// $( ".page_results" ).on('load', function() {
-		// console.log('check for index');
-	if ($("#index_form_load")){
-		console.log('index found');
-		$.get('form_index_partial', function(data) {
-	  		$('#index_form_load').html(data);
-			typeahead();
-			datepicker();
-		});
-	indexLoadMap();
 
-
-		// } else 	if !($("#index_form_load")) {
-	// 	console.log('not index');
-
-	}	
-	// });
-	});
 
 function loadTopSearch(){
 	$('#sun_finder_title').show();
 	$.get('form_top_partial', function(data) {
 		$('#top_form_load').html(data);
 	
-	if (lastSearchLocation) {
-		buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
-	}	  		
+	// if (lastSearchLocation) {
+	// 	buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
+	// }	  		
 		typeahead();
 	});
 
@@ -188,7 +169,7 @@ function handleSearch(e) {
 	var query = $("#sun_query").val();	
 
 	var date = $(".sun-date").val();
-	// e.preventDefault(); //Prevents default form value call
+	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
 	$('.page_results').hide();
 	$('.top-bar').show();
@@ -230,6 +211,26 @@ function datepicker() {
 	console.log("datepicker"); //test
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 }
+
+// Load search bar
+$(function(){
+	// $( ".page_results" ).on('load', function() {
+		// console.log('check for index');
+	if (document.getElementById('index_form_load')){
+		console.log('index load');
+		$.get('form_index_partial', function(data) {
+	  		$('#index_form_load').html(data);
+			typeahead();
+			datepicker();
+		});
+		indexLoadMap();
+	// } else 	if !($("#index_form_load")) {
+	}else{
+		console.log('not index');
+		loadTopSearch();
+	}	
+
+});
 
 // Pushing this down for index load to work - need to review for more optimal solution
 // $(window).load(function(){
