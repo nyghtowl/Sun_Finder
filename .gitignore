@@ -35,4 +35,4 @@ pip-log.txt
 #DB Migrations
 db_repository
 *.dump
-pg_dump
+pg_dump.*
