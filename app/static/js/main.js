@@ -190,8 +190,13 @@ function datepicker() {
 
 
 function loadTopSearch(){
+	$.get('sun_header_load', function(data) {
+		$('#sun_header').html(data);
+	});
+
 	$.get('sun_top_form', function(data) {
 		$('#top_form_load').html(data);
+	
 	if (lastSearchLocation) {
 		buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
 	}	  		
