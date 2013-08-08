@@ -205,13 +205,13 @@ def privacy():
     return render_template('privacy.html')
 
 # Search form load
-@app.route('/sun_index_form', methods=['GET'])
-def sun_index_form():    
-    return render_template('sun_index_form.html')
+@app.route('/form_index_partial', methods=['GET'])
+def form_index_partial():    
+    return render_template('form_index_partial.html')
 
-@app.route('/sun_top_form', methods=['GET'])
-def sun_top_form():    
-    return render_template('sun_top_form.html')
+@app.route('/form_top_partial', methods=['GET'])
+def form_top_partial():    
+    return render_template('form_top_partial.html')
 
 
 

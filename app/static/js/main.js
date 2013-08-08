@@ -3,23 +3,6 @@
 // Confirm load
 console.log("main js");
 
-// Load search bar
-$(function(){
-	// $( ".page_results" ).on('load', function() {
-		// console.log('check for index');
-		// if ($("#index_form_load")){
-			console.log('index found');
-		 	// $("#index_form_load").load('sun_index_form.html'); 
-			$.get('sun_index_form', function(data) {
-		  		$('#index_form_load').html(data);
-			});
-			indexLoadMap();
-		// } else 	if !($("#index_form_load")) {
-	// 	console.log('not index');
-
-	// }	
-	// });
-	});
 
 // Load map  - currently SF biased
 function buildMap(container, map_lat, map_long) { 
@@ -165,33 +148,26 @@ function indexLoadMap(){
 
 // $(document).ready(indexLoadMap);
 
-// Typeahead - Autocomplete
-function typeahead(selector) {
-	console.log("typeahead"); //test
+// Load search bar
+$(function(){
+	// $( ".page_results" ).on('load', function() {
+		// console.log('check for index');
+		// if ($("#index_form_load")){
+			console.log('index found');
+			$.get('form_index_partial', function(data) {
+		  		$('#index_form_load').html(data);
+			});
+			indexLoadMap();
+		// } else 	if !($("#index_form_load")) {
+	// 	console.log('not index');
 
-	$(selector).typeahead({
-	    minLength: 1,
-	    source: function (query, process) {
-	        return $.post(
-	            '/autocomplete', 
-	            { msg: query }, 
-	            function (data) {
-	            	var data = JSON.parse(data)
-	                return process(data.options);
-	        });
-	    }
+	// }	
+	// });
 	});
-}
-
-// Datepicker
-function datepicker() {
-	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-}
-
 
 function loadTopSearch(){
 	$('#sun_finder_title').show();
-	$.get('sun_top_form', function(data) {
+	$.get('form_top_partial', function(data) {
 		$('#top_form_load').html(data);
 	
 	if (lastSearchLocation) {
@@ -227,11 +203,35 @@ $(function(){
 
 });
 
+// Typeahead - Autocomplete
+function typeahead(selector) {
+	console.log("typeahead"); //test
+
+	$(selector).typeahead({
+	    minLength: 1,
+	    source: function (query, process) {
+	        return $.post(
+	            '/autocomplete', 
+	            { msg: query }, 
+	            function (data) {
+	            	var data = JSON.parse(data)
+	                return process(data.options);
+	        });
+	    }
+	});
+}
+
+// Datepicker
+function datepicker() {
+	console.log("datepicker"); //test
+	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+}
+
 // Pushing this down for index load to work - need to review for more optimal solution
-$(window).load(function(){
-	typeahead("#sun_query");
-	datepicker();
-});
+// $(window).load(function(){
+// 	typeahead("#sun_query");
+// 	datepicker();
+// });
 
 
 // $(function(){
