@@ -146,22 +146,6 @@ function indexLoadMap(){
 	}
 }
 
-// $(document).ready(indexLoadMap);
-
-
-
-function loadTopSearch(){
-	$('#sun_finder_title').show();
-	$.get('form_top_partial', function(data) {
-		$('#top_form_load').html(data);
-	
-	// if (lastSearchLocation) {
-	// 	buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
-	// }	  		
-		typeahead();
-	});
-
-}
 
 // Weather Search
 function handleSearch(e) {
@@ -227,7 +211,16 @@ $(function(){
 	// } else 	if !($("#index_form_load")) {
 	}else{
 		console.log('not index');
-		loadTopSearch();
+		$('#sun_finder_title').show();
+		$.get('form_top_partial', function(data) {
+			$('#top_form_load').html(data);
+	
+	// if (lastSearchLocation) {
+	// 	buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
+	// }	  		
+			typeahead();
+			datepicker();
+		});	
 	}	
 
 });
