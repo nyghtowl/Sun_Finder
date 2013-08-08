@@ -1,9 +1,8 @@
 <!-- Edit User -->
-{% extends 'layout.html' %}
 
-{% block content %}
-<h1>Edit Your Profile</h1>
+<div  class="row-fluid page_results" id="create_account_load">
 {% include 'flash.html' %}
+<h1>Edit Your Profile</h1>
 <div class="well">
 	<form class="form-horizontal" action="" method="post" name="edit">
 		{{ form.hidden_tag() }}
@@ -24,4 +23,4 @@
 			</div>
 		</div>
 	</form>
-{% endblock %}
+</div>
