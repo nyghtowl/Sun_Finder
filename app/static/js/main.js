@@ -152,16 +152,20 @@ function indexLoadMap(){
 $(function(){
 	// $( ".page_results" ).on('load', function() {
 		// console.log('check for index');
-		// if ($("#index_form_load")){
-			console.log('index found');
-			$.get('form_index_partial', function(data) {
-		  		$('#index_form_load').html(data);
-			});
-			indexLoadMap();
+	if ($("#index_form_load")){
+		console.log('index found');
+		$.get('form_index_partial', function(data) {
+	  		$('#index_form_load').html(data);
+			typeahead();
+			datepicker();
+		});
+	indexLoadMap();
+
+
 		// } else 	if !($("#index_form_load")) {
 	// 	console.log('not index');
 
-	// }	
+	}	
 	// });
 	});
 
@@ -173,7 +177,7 @@ function loadTopSearch(){
 	if (lastSearchLocation) {
 		buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
 	}	  		
-		typeahead("#sun_query")
+		typeahead();
 	});
 
 }
@@ -204,10 +208,10 @@ $(function(){
 });
 
 // Typeahead - Autocomplete
-function typeahead(selector) {
+function typeahead() {
 	console.log("typeahead"); //test
 
-	$(selector).typeahead({
+	$("#sun_query").typeahead({
 	    minLength: 1,
 	    source: function (query, process) {
 	        return $.post(
