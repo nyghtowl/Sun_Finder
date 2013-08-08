@@ -3,7 +3,7 @@
 <!-- Layout -->
 <html lang="en">
 	
-	{% include "header.html" %}
+	{% include "header_partial.html" %}
 	
 	<body>
 
@@ -12,8 +12,8 @@
 		<div id="wrap"> 
 
 			<!-- Top Bar page area --> 
-			{% include 'top_bar.html' %}
-
+			{% include 'top_bar_partial.html' %}
+		    {% include 'flash_partial.html' %}
 			<!-- Search spinner -->
 			<div id="spinner" class="ajax_img_pad">
 				<p id="progress" class="text-center">Forecasting in Progress…<br>
@@ -28,7 +28,7 @@
 			<div id="push"></div>
 		</div>
 
-		{% include "footer.html" %}
+		{% include "footer_partial.html" %}
 
 		<!-- JQuery load -->
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
