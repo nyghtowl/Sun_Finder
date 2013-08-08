@@ -233,27 +233,6 @@ $(window).load(function(){
 	datepicker();
 });
 
-// Link Load
-$(function (){
- console.log('in link load');  
-
-	$('#create_account_load').on('click', function(e){
-		loadTopSearch();
-		$.post('create_login', function(data){
-  			$('.page_results').html(data);
-  		});
-	});
-
-	$('#login_load').on('click', function(e){
-		loadTopSearch();
-		$.post('login', function(data){
-  			$('.page_results').html(data);
-  		});
-	});
- 
-
-});
-
 
 // $(function(){
 // 	$('#buid-map').on('click', build_map(37.7655,-122.4429));
