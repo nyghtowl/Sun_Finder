@@ -119,11 +119,12 @@ function weatherOverlay(map){
 // Build map index initializer
 function indexLoadMap(){
 	console.log('index load map');
+
+	lat = 37.7888;
+	lng = -122.4037;
 	if (navigator.geolocation) {
-	    var location_timeout = setTimeout("geolocFail()", 10000);
 
 	    navigator.geolocation.getCurrentPosition(function(position) {
-	        clearTimeout(location_timeout);
 
 	        lat = position.coords.latitude;
 	        lng = position.coords.longitude;
@@ -132,44 +133,37 @@ function indexLoadMap(){
 
 	        buildMap($('#map_canvas_search')[0], lat, lng);
 	    }, function(error) {
-	        clearTimeout(location_timeout);
-	        geolocFail();
 		    console.log('geo loc not exist');
-		    buildMap($('#map_canvas_search')[0]);
+	        buildMap($('#map_canvas_search')[0], lat, lng);
 		});
 
 	} else {
 	    // Fallback for no geolocation
-	 	geolocFail();
 	    console.log('geoloc not shared');
-	    buildMap($('#map_canvas_search')[0]);
+	    buildMap($('#map_canvas_search')[0], lat, lng);
 	}
 }
 
 
 // Weather Search
 function handleSearch(e) {
-
+	console.log('handle search');
 	var query = $("#sun_query").val();	
+	var date = $("#sun_date").val();
 
-	var date = $(".sun-date").val();
-	e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
-	$('.page_results').hide();
-	$('.top-bar').show();
+	// $('.page_results').hide();
+	// e.preventDefault;
 	console.log(query);
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
-		$('.page_results').show();
+		// $('.page_results').show();
 		$('.page_results').html(data);
-		loadTopSearch();
-		});
-
+	});
 }
 
 $(function(){
-	$("#sun_submit").on("click", handleSearch);
-
+	$(".sun_submit").on("click", handleSearch);
 });
 
 // Typeahead - Autocomplete
@@ -196,6 +190,7 @@ function datepicker() {
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 }
 
+
 // Load search bar
 $(function(){
 	// $( ".page_results" ).on('load', function() {
@@ -215,9 +210,9 @@ $(function(){
 		$.get('form_top_partial', function(data) {
 			$('#top_form_load').html(data);
 	
-	// if (lastSearchLocation) {
-	// 	buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
-	// }	  		
+			if (lastSearchLocation) {
+				buildMap($("#map_canvas_search")[0], lastSearchLocation.lat, lastSearchLocation.lng);
+			}	  		
 			typeahead();
 			datepicker();
 		});	

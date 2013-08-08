@@ -71,7 +71,7 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 @app.route('/')
-@app.route('/index', methods=['POST'])
+@app.route('/index', methods=['POST', 'GET'])
 def index():
     return render_template('index.html')
 
@@ -133,9 +133,9 @@ def create_login():
     return render_template('create_login.html', cl_form=cl_form)
 
 # Search shell
-# @app.route('/search', methods=['POST'])
-# def search():
-#     return render_template('result_shell.html')
+@app.route('/search', methods=['POST'])
+def search():
+    return render_template('result_shell.html')
 
 
 # Ajax spinner replacement
