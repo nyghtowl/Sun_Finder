@@ -189,18 +189,18 @@ def autocomplete():
     return json.dumps({ "options": predictions})
 
 
-@app.route('/about', methods=['POST'])
+@app.route('/about')
 def about():  
     return render_template('about.html')
 
 # Terms of service
-@app.route('/tos', methods=['POST'])
+@app.route('/tos')
 def tos(): 
     return render_template('tos.html')
 
 
 # Privacy policy
-@app.route('/privacy', methods=['POST'])
+@app.route('/privacy')
 def privacy():    
     return render_template('privacy.html')
 

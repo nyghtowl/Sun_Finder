@@ -251,26 +251,6 @@ $(function (){
   		});
 	});
  
-    $('#about_load').on('click', function(e){
-    	loadTopSearch();
-  		$.post('about', function(data){
-  			$('.page_results').html(data);
-  		});
-  	});
-
-	$('#privacy_load').on('click', function(e){
-		loadTopSearch();
-		$.post('privacy', function(data){
-  			$('.page_results').html(data);
-  		});
-	});
-
-	$('#tos_load').on('click', function(e){
-		loadTopSearch();
-		$.post('tos', function(data){
-  			$('.page_results').html(data);
-  		});
-	});
 
 });
 
