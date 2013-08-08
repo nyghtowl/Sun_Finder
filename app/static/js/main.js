@@ -208,14 +208,13 @@ function handleSearch(e) {
 	var query = $("#sun_query").val();	
 
 	var date = $(".sun-date").val();
-	e.preventDefault(); //Prevents default form value call
+	// e.preventDefault(); //Prevents default form value call
 	$('#spinner').show();
 	$('.page_results').hide();
 	$('.top-bar').show();
 	console.log(query);
 	$.post('search_results', { "date": date, "query": query }, function(data) {
 		$('#spinner').hide();
-		// $("#sun-query_top").val('');
 		$('.page_results').show();
 		$('.page_results').html(data);
 		loadTopSearch();
@@ -223,17 +222,15 @@ function handleSearch(e) {
 
 }
 
+$(function(){
+	$("#sun_submit").on("click", handleSearch);
 
+});
 
+// Pushing this down for index load to work - need to review for more optimal solution
 $(window).load(function(){
-
-	$(function(){
-		$(".sun_submit").on("click", handleSearch);
-
-	});
 	typeahead("#sun_query");
 	datepicker();
-
 });
 
 // Link Load
