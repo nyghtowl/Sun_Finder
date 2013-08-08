@@ -15,6 +15,11 @@
 #sun_finder_title{
   color: #333;
   text-decoration: none;
+  display: none;
+}
+
+#top_buffer{
+  color:white;
 }
 
 .typeahead.dropdown-menu > li {

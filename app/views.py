@@ -2,24 +2,18 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
-    Go Live: 
-        change secret key 
-        turn off debug
+    Change setup of static assets for postgres
 
-
-    Search - unhide second search when first not available and setup search function
-
-    Map - Get to load in modal (possibly change to popover if can fix problem)
+    Map - Possibly change to popover if can fix problem
         Put text and links on map - populate autocomplete based on click
         Change what labels show based on the zoom level of map
 
+    Add TDD
 
     Weather Data - change returned data to populate page through jason & remove fui
 
     Date - add a couple additional data points for date
         setup ability to choose time
-
-    flash messages - setup so it will load after page loads
 
     run linter
 
@@ -210,7 +204,7 @@ def tos():
 def privacy():    
     return render_template('privacy.html')
 
-
+# Search form load
 @app.route('/sun_index_form', methods=['GET'])
 def sun_index_form():    
     return render_template('sun_index_form.html')
@@ -220,9 +214,6 @@ def sun_top_form():
     return render_template('sun_top_form.html')
 
 
-@app.route('/sun_header_load', methods=['GET'])
-def sun_header_load():    
-    return render_template('sun_header.html')
 
 # User view with favorites and ability to report on validity of sun
 # @app.route('/user/<fname>')

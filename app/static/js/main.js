@@ -190,10 +190,7 @@ function datepicker() {
 
 
 function loadTopSearch(){
-	$.get('sun_header_load', function(data) {
-		$('#sun_header').html(data);
-	});
-
+	$('#sun_finder_title').show();
 	$.get('sun_top_form', function(data) {
 		$('#top_form_load').html(data);
 	
