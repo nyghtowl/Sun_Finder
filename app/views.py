@@ -219,6 +219,11 @@ def sun_index_form():
 def sun_top_form():    
     return render_template('sun_top_form.html')
 
+
+@app.route('/sun_header_load', methods=['GET'])
+def sun_header_load():    
+    return render_template('sun_header.html')
+
 # User view with favorites and ability to report on validity of sun
 # @app.route('/user/<fname>')
 # @login_required # Restricts page access without login
