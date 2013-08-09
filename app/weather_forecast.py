@@ -64,7 +64,7 @@ class Weather(object):
         wui_fragment = None
 
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
-            if datetime.datetime.fromtimestamp(float(fragment['date']['epoch'])).date() == as_of.date():
+            if datetime.fromtimestamp(float(fragment['date']['epoch'])).date() == as_of.date():
                 wui_fragment = fragment
                 break
         return (wui_fragment)

@@ -146,22 +146,22 @@ function indexLoadMap(){
 
 
 // Weather Search
-function handleSearch(e) {
-	console.log('handle search');
-	// var query = $("#sun_query").val();	
-	// var date = $("#sun_date").val();
+// function handleSearch(e) {
+// 	console.log('handle search');
+// 	// var query = $("#sun_query").val();	
+// 	// var date = $("#sun_date").val();
 
-	// $('#spinner').show();
-	// $('.page_results').hide();
-	// e.preventDefault;
-	// console.log(query);
-	// $.post('search_results_partial', { "date": date, "query": query }, function(data) {
-	$.post('search_results_partial', function(data){
-		// $('#spinner').hide();
-		// $('.page_results').show();
-		$('.page_results').html(data);
-	});
-}
+// 	// $('#spinner').show();
+// 	// $('.page_results').hide();
+// 	// e.preventDefault;
+// 	// console.log(query);
+// 	// $.post('search_results_partial', { "date": date, "query": query }, function(data) {
+// 	$.post('search_results_partial', function(data){
+// 		// $('#spinner').hide();
+// 		// $('.page_results').show();
+// 		$('.page_results').html(data);
+// 	});
+// }
 
 // $(function(){
 // 	$(".sun_submit").on("click", handleSearch);

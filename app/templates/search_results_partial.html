@@ -1,7 +1,11 @@
 <!-- Search Result  -->
 
+{% extends "layout.html" %}
+
+{% block body %}
+
 <div class="row-fluid page_results">
-{% include 'flash.html' %}
+{% include 'flash_partial.html' %}
 
     <!-- Day results -->
     {% if result.sun_result %}                
@@ -97,3 +101,5 @@
 
 
 </script>
+
+{% endblock %}
