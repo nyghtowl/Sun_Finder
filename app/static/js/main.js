@@ -148,23 +148,26 @@ function indexLoadMap(){
 // Weather Search
 function handleSearch(e) {
 	console.log('handle search');
-	var query = $("#sun_query").val();	
-	var date = $("#sun_date").val();
+	// var query = $("#sun_query").val();	
+	// var date = $("#sun_date").val();
 
-	$('#spinner').show();
+	// $('#spinner').show();
 	// $('.page_results').hide();
 	// e.preventDefault;
-	console.log(query);
-	$.post('search_results', { "date": date, "query": query }, function(data) {
-		$('#spinner').hide();
+	// console.log(query);
+	// $.post('search_results_partial', { "date": date, "query": query }, function(data) {
+	$.post('search_results_partial', function(data){
+		// $('#spinner').hide();
 		// $('.page_results').show();
 		$('.page_results').html(data);
 	});
 }
 
-$(function(){
-	$(".sun_submit").on("click", handleSearch);
-});
+// $(function(){
+// 	$(".sun_submit").on("click", handleSearch);
+// });
+
+$(document).ready(resultsLoad);
 
 // Typeahead - Autocomplete
 function typeahead() {
@@ -219,6 +222,8 @@ $(function(){
 	}	
 
 });
+
+
 
 // Pushing this down for index load to work - need to review for more optimal solution
 // $(window).load(function(){

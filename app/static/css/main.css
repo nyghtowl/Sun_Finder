@@ -35,10 +35,10 @@
   padding-top:5%;
 }
 
-#spinner {
+/*#spinner {
   display: none;
 }
-
+*/
 
 /* Formats placeholder in search bar */
 ::-webkit-input-placeholder {

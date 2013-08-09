@@ -139,8 +139,8 @@ def search():
 
 
 # Ajax spinner replacement
-@app.route("/search_results", methods = ['POST'])
-def search_results():
+@app.route("/search_results_partial", methods = ['POST'])
+def search_results_partial():
     print 'in weather results'
     # Local neighborhood object
     neighborhoods = Location.query.all()
@@ -155,7 +155,7 @@ def search_results():
 
     weather = sun_functions.search_results(neighborhoods, date, txt_query)
  
-    return render_template('search_results.html', result=weather)
+    return render_template('search_results_partial.html', result=weather)
  
 # FIX - working to build and pass - mostly handled with JS
 @app.route('/map_details', methods = ['GET'])
