@@ -1,5 +1,22 @@
 <!-- Search Result  -->
 
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Spinner --> 
+
+<div id="search_result_target" class="row-fluid">
+        <!-- Search spinner -->
+    <div id="spinner" class="ajax_img_pad">
+        <p id="progress" class="text-center">Forecasting in Progress…<br>
+        <img id="progress_image" src="static/img/spiffygif_56x56.gif" class="ajax_img_pad">
+        </p>
+    </div>
+</div>
+
+
+<!-- Results -->
 <div class="row-fluid page_results">
 {% include 'flash.html' %}
 
