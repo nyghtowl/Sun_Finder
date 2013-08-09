@@ -88,17 +88,18 @@
 </div>
 
 <script type="text/javascript">
-    
-    console.log('search results')
-    lastSearchLocation = {
-        lat: {{ result.lat }},
-        lng: {{ result.lng }}
-    }
-    // Map_lat & map_long false if no result - FIX pull jinja
-    {% if result.lat %}
-        buildMap($("#map_canvas_results")[0], {{ result.lat|safe }},{{ result.lng|safe }});
-    {% endif %}
+    function resultsLoad(){
 
+        console.log('search results')
+        lastSearchLocation = {
+            lat: {{ result.lat }},
+            lng: {{ result.lng }}
+        }
+        // Map_lat & map_long false if no result - FIX pull jinja
+        {% if result.lat %}
+            buildMap($("#map_canvas_results")[0], {{ result.lat|safe }},{{ result.lng|safe }});
+        {% endif %}
+    }
 
 </script>
 

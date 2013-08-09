@@ -135,7 +135,11 @@ def create_login():
 # Search shell
 @app.route('/search', methods=['POST'])
 def search():
-    return render_template('result_shell.html')
+    # Search form input
+    txt_query = request.form['query']
+    # Captures date format yy-mm-dd as string
+    date = request.form['date']
+    return render_template('result_shell.html', date=date, query=txt_query)
 
 
 # Ajax spinner replacement

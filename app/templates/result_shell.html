@@ -14,8 +14,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="page_results row-fluid">
-	</div>
+
 
 	<!-- Results -->
 	<div class="row-fluid page_results">
@@ -23,6 +22,16 @@
 	
 	<script>
 	    console.log("result_shell"); // check load
+
+	    function handleSearch(){
+	    	var query = "{{ query }}";	
+			var date = "{{ date }}";
+	    	
+	    	$.post('search_results_partial', { "date": date, "query": query }, function(data){
+				$('#search_results_target').html(data);
+
+	    	});
+	    }
 
 	    function resultsLoad(){
 	    	handleSearch();
