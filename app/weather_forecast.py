@@ -110,6 +110,7 @@ class Weather(object):
         self.date_time
         earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
         response_xml = requests.get(earth_final_url)
+        print response_xml
         return BeautifulSoup(response_xml.content)
 
             
