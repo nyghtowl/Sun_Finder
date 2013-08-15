@@ -1,9 +1,10 @@
 <!-- Top Form -->
 <div>
-	<form class="form-inline form-search">
+	<form action="{{url_for('search')}}" method="POST" class="form-inline form-search">
 	    <!-- Search input -->
 	    <p>{% include 'search_partial.html' %}
 	    {% include 'search_submit_partial.html' %}</p>
 	    {% include 'calendar_map_partial.html' %}
 	</form>
 </div>
+

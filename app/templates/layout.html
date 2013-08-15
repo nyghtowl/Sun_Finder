@@ -11,22 +11,20 @@
 		<!-- Wrap sets the the body apart from the footer -->
 		<div id="wrap"> 
 
+			<!-- Search spinner -->
+			<div id="spinner" class="ajax_img_pad">
+				<p id="progress" class="text-center">Forecasting in Progress…<br>
+				<img id="progress_image" src="static/img/spiffygif_56x56.gif" class="ajax_img_pad">
+				</p>
+			</div>
+
+
 			<!-- Top Bar page area --> 
 			{% include 'top_bar_partial.html' %}
 		    {% include 'flash_partial.html' %}
 
-			<!-- Populates search result page --> 
 
-			<div id="search_result_target" class="row-fluid">
-					<!-- Search spinner -->
-				<div id="spinner" class="ajax_img_pad">
-					<p id="progress" class="text-center">Forecasting in Progress…<br>
-					<img id="progress_image" src="static/img/spiffygif_56x56.gif" class="ajax_img_pad">
-					</p>
-				</div>
-			</div>
-
-			<div class="container-fluid ui-widget" id="hide_for_spinner">
+			<div class="container-fluid ui-widget">
 				{% block body %} {% endblock %}
 			</div>
 			<!-- Push moves the footer below -->
@@ -52,7 +50,7 @@
 			console.log("layout"); // check load
 
 			lastSearchLocation = '';
-
+			
 			
 		</script>
 	</body>

@@ -17,19 +17,19 @@ function buildMap(container, map_lat, map_long) {
 	console.log("build_map"); // test
 	
 	//Pulls lat, lng from search result
-	var myLatlng = new google.maps.LatLng(map_lat,map_long);
-	var map_options = {
-	  // center: new google.maps.LatLng(37.7655,-122.4429),
-	  center: myLatlng,
-	  zoom: 13,
-	  mapTypeId: google.maps.MapTypeId.ROADMAP
-	}
+	// var myLatlng = new google.maps.LatLng(map_lat,map_long);
+	// var map_options = {
+	//   // center: new google.maps.LatLng(37.7655,-122.4429),
+	//   center: myLatlng,
+	//   zoom: 13,
+	//   mapTypeId: google.maps.MapTypeId.ROADMAP
+	// }
 	
 	// Establishes Google maps
-	var map = new google.maps.Map(container, map_options)
+	// var map = new google.maps.Map(container, map_options)
 	
 
-	new GMaps({
+	var map = new GMaps({
 	  div: container,
 	  lat: map_lat,
 	  lng: map_long,
@@ -55,11 +55,41 @@ function buildMap(container, map_lat, map_long) {
 	//   }
 	// ]);
 
-	singleMapMark(map);
-    mutipleMapMarks(map, myLatlng);
+	singleMapMark2(map, map_lat, map_long);
+	// singleMapMark(map, myLatlng);
+ //    mutipleMapMarks(map, myLatlng);
 
 }
 
+function singleMapMark2(map, map_lat, map_long){
+	map.addMarker({
+		lat: map_lat,
+		lng: map_long,
+		title: 'Search Result',
+		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
+
+	  	click: function(e) {
+	    	alert('Sun Search Location');
+	  }
+	});
+}
+
+function geoLocate(map){
+	GMaps.geolocate({
+	  success: function(position) {
+	    map.setCenter(position.coords.latitude, position.coords.longitude);
+	  },
+	  error: function(error) {
+	    alert('Geolocation failed');
+	  },
+	  not_supported: function() {
+	    alert("Your browser does not support geolocation");
+	  },
+	  always: function() {
+	    alert("Done!");
+	  }
+	});
+}
 
 function singleMapMark(map, myLatlng){
 	// Search result marker - custom img and marker variable
@@ -143,25 +173,39 @@ function indexLoadMap(){
 
 
 // Weather Search
-function handleSearch(e) {
-	console.log('handle search');
-	var query = $("#sun_query").val();	
-	var date = $("#sun_date").val();
+// function handleSearch(e) {
+// 	console.log('handle search');
+// 	var query = $("#sun_query").val();	
+// 	var date = $("#sun_date").val();
 
-	$('#spinner').show();
-	$('#hide_for_spinner').hide();
-	// e.preventDefault;
-	console.log(query);
-	$.post('search_results_partial', { "date": date, "query": query }, function(data) {
-	// $.post('search_results_partial', function(data){
-		$('#spinner').hide();
-		$('#hide_for_spinner').show();
-		$('.page_results').html(data);
-	});
-}
+// 	$('#spinner').show();
+// 	$('#hide_for_spinner').hide();
+// 	// e.preventDefault;
+// 	console.log(query);
+// 	$.post('search_results_partial', { "date": date, "query": query }, function(data) {
+// 	// $.post('search_results_partial', function(data){
+// 		$('#spinner').hide();
+// 		$('#hide_for_spinner').show();
+// 		$('.page_results').html(data);
+// 	});
+// }
+
+// function handleSearch(e) {
+// 	$.ajax({
+// 		type: "POST",
+// 		url:'/search_results_partial',
+// 		data: { "date": date, "query": query },
+// 		cache: false,
+// 		processData: false,
+// 		dataType: "html"
+// 	}).done(function(html){
+// 		$('.page_results').append(html);
+// 	});
+
+// }
 
 
-// $(document).ready(resultsLoad);
+$(document).ready(resultsLoad);
 
 // Typeahead - Autocomplete
 function typeahead() {
@@ -213,37 +257,4 @@ $(function(){
 	}	
 
 });
-
-
-$(".sun_submit").on("click", handleSearch);
-
-
-
-// $(function(){
-// 	$('#buid-map').on('click', build_map(37.7655,-122.4429));
-// });
-
-
-// run spinner
-// function loadSubmit() {
-// 	ProgressImage = document.getElementById(’progress_image’);
-// 	document.getElementById(”progress”).style.visibility = “visible”;
-// 	setTimeout(”ProgressImage.src = ProgressImage.src”,100);
-// 	return true;
-// }
-
-// FIX - jquery to run the spinner and post the results page
-// $.ajax({
-//   type: "POST",
-//   url: url,
-//   data: data,
-//   success: success,
-//   dataType: dataType
-// });
-
-// $.post('ajax/test.html', function(data) {
-//   $('.result').html(data);
-// });
-
-
 

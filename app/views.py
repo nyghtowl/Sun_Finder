@@ -71,7 +71,7 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET'])
+@app.route('/index')
 def index():
     return render_template('index.html')
 
@@ -135,17 +135,6 @@ def create_login():
 # Search shell
 @app.route('/search', methods=['POST'])
 def search():
-    # Search form input
-    txt_query = request.form['query']
-    # Captures date format yy-mm-dd as string
-    date = request.form['date']
-    return render_template('result_shell.html', date=date, query=txt_query)
-
-
-# Ajax spinner replacement
-@app.route("/search_results_partial", methods = ['POST'])
-def search_results_partial():
-    print 'in weather results'
     # Local neighborhood object
     neighborhoods = Location.query.all()
     print 'search neighborhood', neighborhoods
