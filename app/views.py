@@ -70,8 +70,8 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-@app.route('/', methods=['POST', 'GET'])
-@app.route('/index', methods=['POST', 'GET'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET'])
 def index():
     return render_template('index.html')
 

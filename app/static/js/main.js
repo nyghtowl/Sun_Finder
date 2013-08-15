@@ -28,24 +28,32 @@ function buildMap(container, map_lat, map_long) {
 	// Establishes Google maps
 	var map = new google.maps.Map(container, map_options)
 	
-	// Map style
-	map.set('styles', [
-	  {
-	    featureType: 'all',
-	    elementType: 'all',
-	    stylers: [
-	      { weight: 0.6 },
-	      { lightness: -12 }
-	    ]
-	  },
-	  {
-	    featureType: 'all',
-	    elementType: 'labels',
-	    stylers: [
-	      { visibility: 'off' }
-	    ]
-	  }
-	]);
+
+	new GMaps({
+	  div: container,
+	  lat: map_lat,
+	  lng: map_long,
+	  zoom: 13
+	});
+
+	// // Map style
+	// map.set('styles', [
+	//   {
+	//     featureType: 'all',
+	//     elementType: 'all',
+	//     stylers: [
+	//       { weight: 0.6 },
+	//       { lightness: -12 }
+	//     ]
+	//   },
+	//   {
+	//     featureType: 'all',
+	//     elementType: 'labels',
+	//     stylers: [
+	//       { visibility: 'off' }
+	//     ]
+	//   }
+	// ]);
 
 	singleMapMark(map);
     mutipleMapMarks(map, myLatlng);
@@ -206,9 +214,8 @@ $(function(){
 
 });
 
-$(function(){
-	$(".sun_submit").on("click", handleSearch);
-});
+
+$(".sun_submit").on("click", handleSearch);
 
 
 
