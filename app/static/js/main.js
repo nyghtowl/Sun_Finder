@@ -50,8 +50,6 @@ function buildMap(container, map_lat, map_long) {
 	singleMapMark(map);
     mutipleMapMarks(map, myLatlng);
 
-  	// weatherOverlay(map); - not detailed enough but similar concept
-
 }
 
 
@@ -104,15 +102,6 @@ function mutipleMapMarks(map) {
 			readData(data.result.loc_coords, data.result.locations,map);
 			}
 	});
-}
-
-// Add Google automatic weather overlay - not detailed enough
-function weatherOverlay(map){
-	// Google automatic map layer from weather.com - doesn't provide as much detail for neighborhood but good example
-	var weatherLayer = new google.maps.weather.WeatherLayer({
-    	temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT
-      	});
-	weatherLayer.setMap(map);
 }
 
 
@@ -196,8 +185,6 @@ function datepicker() {
 
 // Load search bar
 $(function(){
-	// $( ".page_results" ).on('load', function() {
-		// console.log('check for index');
 	if (document.getElementById('index_form_load')){
 		console.log('index load');
 		$.get('form_index_partial', function(data) {
@@ -206,7 +193,6 @@ $(function(){
 			datepicker();
 		});
 		indexLoadMap();
-	// } else 	if !($("#index_form_load")) {
 	}else{
 		console.log('not index');
 		$('#sun_finder_title').show();
@@ -224,12 +210,6 @@ $(function(){
 });
 
 
-
-// Pushing this down for index load to work - need to review for more optimal solution
-// $(window).load(function(){
-// 	typeahead("#sun_query");
-// 	datepicker();
-// });
 
 
 // $(function(){
