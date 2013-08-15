@@ -13,85 +13,93 @@ function buildMap(container, map_lat, map_long) {
 		map_long = -122.4429;
 	}
     //stops other event listeners from firing on search button
-    //event.preventDefault(); 	
 	console.log("build_map"); // test
 	
 	//Pulls lat, lng from search result
-	// var myLatlng = new google.maps.LatLng(map_lat,map_long);
-	// var map_options = {
-	//   // center: new google.maps.LatLng(37.7655,-122.4429),
-	//   center: myLatlng,
-	//   zoom: 13,
-	//   mapTypeId: google.maps.MapTypeId.ROADMAP
-	// }
+	var myLatLng = new google.maps.LatLng(map_lat,map_long);
+	var map_options = {
+	  // center: new google.maps.LatLng(37.7655,-122.4429),
+	  center: myLatLng,
+	  zoom: 13,
+	  mapTypeId: google.maps.MapTypeId.ROADMAP
+	}
 	
 	// Establishes Google maps
-	// var map = new google.maps.Map(container, map_options)
+	var map = new google.maps.Map(container, map_options)
 	
 
-	var map = new GMaps({
-	  div: container,
-	  lat: map_lat,
-	  lng: map_long,
-	  zoom: 13
-	});
+	// var map = new GMaps({
+	//   div: container,
+	//   lat: map_lat,
+	//   lng: map_long,
+	//   zoom: 13
+	// });
 
-	// // Map style
-	// map.set('styles', [
-	//   {
-	//     featureType: 'all',
-	//     elementType: 'all',
-	//     stylers: [
-	//       { weight: 0.6 },
-	//       { lightness: -12 }
-	//     ]
-	//   },
-	//   {
-	//     featureType: 'all',
-	//     elementType: 'labels',
-	//     stylers: [
-	//       { visibility: 'off' }
-	//     ]
-	//   }
-	// ]);
-
-	singleMapMark2(map, map_lat, map_long);
-	// singleMapMark(map, myLatlng);
- //    mutipleMapMarks(map, myLatlng);
-
-}
-
-function singleMapMark2(map, map_lat, map_long){
-	map.addMarker({
-		lat: map_lat,
-		lng: map_long,
-		title: 'Search Result',
-		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
-
-	  	click: function(e) {
-	    	alert('Sun Search Location');
+	// Map style
+	map.set('styles', [
+	  {
+	    featureType: 'all',
+	    elementType: 'all',
+	    stylers: [
+	      { weight: 0.6 },
+	      { lightness: -12 }
+	    ]
+	  },
+	  {
+	    featureType: 'all',
+	    elementType: 'labels',
+	    stylers: [
+	      { visibility: 'off' }
+	    ]
 	  }
-	});
+	]);
+
+	// singleMapMark2(map, map_lat, map_long);
+	// drawOverlay(map, map_lat, map_long)
+	singleMapMark(map, myLatLng);
+    mutipleMapMarks(map);
+
 }
 
-function geoLocate(map){
-	GMaps.geolocate({
-	  success: function(position) {
-	    map.setCenter(position.coords.latitude, position.coords.longitude);
-	  },
-	  error: function(error) {
-	    alert('Geolocation failed');
-	  },
-	  not_supported: function() {
-	    alert("Your browser does not support geolocation");
-	  },
-	  always: function() {
-	    alert("Done!");
-	  }
-	});
-}
+// function singleMapMark2(map, map_lat, map_long){
+// 	map.addMarker({
+// 		lat: map_lat,
+// 		lng: map_long,
+// 		title: 'Search Result',
+// 		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
 
-function singleMapMark(map, myLatlng){
+// 	  	click: function(e) {
+// 	    	alert('Sun Search Location');
+// 	  }
+// 	});
+// }
+
+// function drawOverlay(map, map_lat, map_long){
+// 	map.drawOverlay({
+// 	lat: map_lat,
+// 	lng: map_long,
+// 	content: '<a href="http://nyghtowl.io">Mission</a>'
+// });
+// }
+
+// function geoLocate(map){
+// 	GMaps.geolocate({
+// 	  success: function(position) {
+// 	    map.setCenter(position.coords.latitude, position.coords.longitude);
+// 	  },
+// 	  error: function(error) {
+// 	    alert('Geolocation failed');
+// 	  },
+// 	  not_supported: function() {
+// 	    alert("Your browser does not support geolocation");
+// 	  },
+// 	  always: function() {
+// 	    alert("Done!");
+// 	  }
+// 	});
+// }
+
+function singleMapMark(map, myLatLng){
 	// Search result marker - custom img and marker variable
 	var img_map = {
 		scaledSize: new google.maps.Size(20, 25),
@@ -100,7 +108,7 @@ function singleMapMark(map, myLatlng){
 	};
 
 	var marker = new google.maps.Marker({
-	    position: myLatlng,
+	    position: myLatLng,
 	    draggable: false,
     	raiseOnDrag: false,
 		map: map,
