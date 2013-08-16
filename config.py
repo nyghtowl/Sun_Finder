@@ -8,8 +8,6 @@ from signal import signal, SIGPIPE, SIG_DFL
 signal(SIGPIPE,SIG_DFL) 
 
 
-# Move functions out of model that run model into config
-
 # Pull weather api keys
 G_KEY = os.environ.get('G_KEY')
 WUI_KEY = os.environ.get('WUI_KEY')
@@ -19,6 +17,7 @@ SECRET_KEY = os.environ.get('key')
 CSRF_ENABLED = True
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+s3_basedir = 'http://s3.amazonaws.com/sunfinder/'
 
 # Code to setup a postgres database
 if os.environ.get('DATABASE_URL') is None:
