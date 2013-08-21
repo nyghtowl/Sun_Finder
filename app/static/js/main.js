@@ -242,13 +242,19 @@ function datepicker() {
 
 // Load search bar
 $(function(){
+	// incompatible w/ single-page w/o re-connecting:
+	//   $('.sun_submit').on('click', function() { $("#spinner").show() });
+
+	//delegating so compatible w/ single-page.
+	$(document).on('click', '.sun_submit', function() { 
+		$('#container').hide();
+		$("#spinner").show()
+	});
+
 	if (document.getElementById('index_form_load')){
 		console.log('index load');
-		$.get('form_index_partial', function(data) {
-	  		$('#index_form_load').html(data);
-			typeahead();
-			datepicker();
-		});
+		typeahead();
+		datepicker();
 		indexLoadMap();
 	}else{
 		console.log('not index');

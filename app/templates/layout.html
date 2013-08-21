@@ -11,6 +11,10 @@
 		<!-- Wrap sets the the body apart from the footer -->
 		<div id="wrap"> 
 
+
+			<!-- Top Bar page area --> 
+			{% include 'top_bar_partial.html' %}
+		    {% include 'flash_partial.html' %}
 			<!-- Search spinner -->
 			<div id="spinner" class="ajax_img_pad">
 				<p id="progress" class="text-center">Forecasting in Progress…<br>
@@ -18,13 +22,7 @@
 				</p>
 			</div>
 
-
-			<!-- Top Bar page area --> 
-			{% include 'top_bar_partial.html' %}
-		    {% include 'flash_partial.html' %}
-
-
-			<div class="container-fluid ui-widget">
+			<div class="container-fluid ui-widget" id="container">
 				{% block body %} {% endblock %}
 			</div>
 			<!-- Push moves the footer below -->
