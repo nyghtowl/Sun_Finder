@@ -161,6 +161,7 @@ def map_details():
 
     return json.dumps({'result': {'locations': [nh.n_hood for nh in neighborhoods], 'loc_coords': [[nh.lat,nh.lng] for nh in neighborhoods] }})
 
+
 @app.route('/autocomplete', methods=['POST'])
 def autocomplete():
     txt_so_far = None

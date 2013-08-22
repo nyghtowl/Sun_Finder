@@ -3,10 +3,23 @@
     <title>Sun Finder</title>
     <meta name = "viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <!-- Responsive layout -->
+    <link rel="stylesheet" href="http://s3.amazonaws.com/sunfinder/css/bootstrap-responsive.min.css" media="screen" type="text/css">
+<!--     <link rel="stylesheet" href="../static/css/bootstrap-responsive.min.css" media="screen" type="text/css"> -->
     <!-- CSS -->
+    <link href="http://s3.amazonaws.com/sunfinder/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css">
+<!--     <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen" type="text/css"> -->
+    <link rel="stylesheet" href="http://s3.amazonaws.com/sunfinder/css/main.css" media="screen" type="text/css">
+<!--     <link rel="stylesheet" href="../static/css/main.css" media="screen" type="text/css">
+ -->    <!-- Datepicker jquery format -->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 	
-    <!-- Typically load afterwards but partial pages need to reference --> 
+    <!-- Typically load afterwards but partial pages need to reference -->
+<<<<<<< HEAD
+    <link rel="icon" type="image/ico" href="http://s3.amazonaws.com/sunfinder/imgs/favicon.ico"/>    
+<!-- 	<link rel="icon" type="image/ico" href="../static/img/favicon.ico"/>
+ -->
+=======
+    
 	<link rel="icon" type="image/ico" href="static/img/favicon.ico"/>
 
     <!-- JQuery load -->
