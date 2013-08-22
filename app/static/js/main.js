@@ -179,25 +179,6 @@ function indexLoadMap(){
 	}
 }
 
-
-// Weather Search
-// function handleSearch(e) {
-// 	console.log('handle search');
-// 	var query = $("#sun_query").val();	
-// 	var date = $("#sun_date").val();
-
-// 	$('#spinner').show();
-// 	$('#hide_for_spinner').hide();
-// 	// e.preventDefault;
-// 	console.log(query);
-// 	$.post('search_results_partial', { "date": date, "query": query }, function(data) {
-// 	// $.post('search_results_partial', function(data){
-// 		$('#spinner').hide();
-// 		$('#hide_for_spinner').show();
-// 		$('.page_results').html(data);
-// 	});
-// }
-
 // function handleSearch(e) {
 // 	$.ajax({
 // 		type: "POST",
@@ -212,8 +193,6 @@ function indexLoadMap(){
 
 // }
 
-
-// $(document).ready(resultsLoad);
 
 // Typeahead - Autocomplete
 function typeahead() {
@@ -239,36 +218,19 @@ function datepicker() {
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 }
 
-function attachMapPopoverHandler(){
-	console.log('inside funct for build map', $('#build_map').length);
-
-	$('#build_map').popover({
-		title: 'Map View',
-		placement: 'top',
-		content: function(){
-			var map_tag = '<div class=map_canvas_search></div>'
-			return 'hello world';
-		}
-	});
-}
 
 // Load search bar
 $(function(){
-	// incompatible w/ single-page w/o re-connecting:
-	//   $('.sun_submit').on('click', function() { $("#spinner").show() });
-	
 
-	//delegating so compatible w/ single-page.
-	$(document).on('click', '.sun_submit', function() { 
+	$('.sun_submit').on('click', function() { 
 		$('#container').hide();
-		$("#spinner").show()
+		$("#spinner").show() 
 	});
 
 	if (document.getElementById('index_form_load')){
 		console.log('index load');
 		typeahead();
 		datepicker();
-		attachMapPopoverHandler();
 		indexLoadMap();
 	}else{
 		console.log('not index');
@@ -281,7 +243,6 @@ $(function(){
 			}	  		
 			typeahead();
 			datepicker();
-			attachMapPopoverHandler();
 		});	
 	}	
 
