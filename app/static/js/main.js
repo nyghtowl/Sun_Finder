@@ -213,7 +213,7 @@ function indexLoadMap(){
 // }
 
 
-$(document).ready(resultsLoad);
+// $(document).ready(resultsLoad);
 
 // Typeahead - Autocomplete
 function typeahead() {
@@ -239,11 +239,24 @@ function datepicker() {
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 }
 
+function attachMapPopoverHandler(){
+	console.log('inside funct for build map', $('#build_map').length);
+
+	$('#build_map').popover({
+		title: 'Map View',
+		placement: 'top',
+		content: function(){
+			var map_tag = '<div class=map_canvas_search></div>'
+			return 'hello world';
+		}
+	});
+}
 
 // Load search bar
 $(function(){
 	// incompatible w/ single-page w/o re-connecting:
 	//   $('.sun_submit').on('click', function() { $("#spinner").show() });
+	
 
 	//delegating so compatible w/ single-page.
 	$(document).on('click', '.sun_submit', function() { 
@@ -255,6 +268,7 @@ $(function(){
 		console.log('index load');
 		typeahead();
 		datepicker();
+		attachMapPopoverHandler();
 		indexLoadMap();
 	}else{
 		console.log('not index');
@@ -267,6 +281,7 @@ $(function(){
 			}	  		
 			typeahead();
 			datepicker();
+			attachMapPopoverHandler();
 		});	
 	}	
 
