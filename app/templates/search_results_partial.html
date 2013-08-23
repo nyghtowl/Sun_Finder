@@ -90,15 +90,13 @@
 <script type="text/javascript">
     function resultsLoad(){
 
-        console.log('search results')
         lastSearchLocation = {
             lat: {{ result.lat }},
             lng: {{ result.lng }}
         }
-        // Map_lat & map_long false if no result - FIX pull jinja
-        {% if result.lat %}
-            buildMap($("#map_canvas_results")[0], {{ result.lat|safe }},{{ result.lng|safe }});
-        {% endif %}
+
+        console.log('search results'+ lastSearchLocation.lat);
+
     }
 
 </script>
