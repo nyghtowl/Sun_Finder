@@ -5,9 +5,8 @@ console.log("main js");
 
 
 // Load map  - currently SF biased
-function buildMap(map_lat, map_long) { 
+function buildMap(container, map_lat, map_long) { 
 
-	console.log("build map");
 	// Pre-set lat lng to SF if not provided
 	if (!map_lat || !map_long) {
 		map_lat = 37.7655;
@@ -16,7 +15,7 @@ function buildMap(map_lat, map_long) {
     //stops other event listeners from firing on search button
 	console.log("build_map" + map_lat); // test
 	
-	//Pulls lat, lng from search result
+	// //Pulls lat, lng from search result
 	// var myLatLng = new google.maps.LatLng(map_lat,map_long);
 	// var map_options = {
 	//   // center: new google.maps.LatLng(37.7655,-122.4429),
@@ -25,12 +24,12 @@ function buildMap(map_lat, map_long) {
 	//   mapTypeId: google.maps.MapTypeId.ROADMAP
 	// }
 	
-	// Establishes Google maps
+	// // Establishes Google maps
 	// var map = new google.maps.Map(container, map_options)
 	
 
 	var map = new GMaps({
-	  div: '#map_canvas_search',
+	  div: container,
 	  lat: map_lat,
 	  lng: map_long,
 	  zoom: 13
@@ -55,10 +54,10 @@ function buildMap(map_lat, map_long) {
 	  }
 	]);
 
-	// singleMapMark2(map, map_lat, map_long);
-	// drawOverlay(map, map_lat, map_long)
+	singleMapMark2(map, map_lat, map_long);
+	// drawOverlay(map, map_lat, map_long);
 	// singleMapMark(map, myLatLng);
- //    mutipleMapMarks(map);
+    // mutipleMapMarks(map);
 
 }
 
@@ -67,11 +66,10 @@ function singleMapMark2(map, map_lat, map_long){
 		lat: map_lat,
 		lng: map_long,
 		title: 'Search Result',
-		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
-
+		icon: "http://maps.gstatic.com/mapfiles/icon_green.png",
 	  	click: function(e) {
-	    	alert('Sun Search Location');
-	  }
+	  		var marker_link = $("<a href='http://nyghtowl.io'>Mission</a>").append();
+	  	}
 	});
 }
 
@@ -79,26 +77,29 @@ function drawOverlay(map, map_lat, map_long){
 	map.drawOverlay({
 	lat: map_lat,
 	lng: map_long,
-	content: '<a href="http://nyghtowl.io">Mission</a>'
-});
-}
-
-function geoLocate(map){
-	GMaps.geolocate({
-	  success: function(position) {
-	    map.setCenter(position.coords.latitude, position.coords.longitude);
-	  },
-	  error: function(error) {
-	    alert('Geolocation failed');
-	  },
-	  not_supported: function() {
-	    alert("Your browser does not support geolocation");
-	  },
-	  always: function() {
-	    alert("Done!");
-	  }
+	content: '<div class="overlay"><a href="http://nyghtowl.io">Mission</a></div>',
+	click: function(e){
+		alert("Click map");
+		}
 	});
 }
+
+// function geoLocate(map){
+// 	GMaps.geolocate({
+// 	  success: function(position) {
+// 	    map.setCenter(position.coords.latitude, position.coords.longitude);
+// 	  },
+// 	  error: function(error) {
+// 	    alert('Geolocation failed');
+// 	  },
+// 	  not_supported: function() {
+// 	    alert("Your browser does not support geolocation");
+// 	  },
+// 	  always: function() {
+// 	    alert("Done!");
+// 	  }
+// 	});
+// }
 
 function singleMapMark(map, myLatLng){
 	// Search result marker - custom img and marker variable
@@ -156,43 +157,47 @@ function mutipleMapMarks(map) {
 function indexLoadMap(){
 	console.log('index load map');
 
-	lat = 37.7888;
-	lng = -122.4037;
-	if (navigator.geolocation) {
+	// lat = 37.7888;
+	// lng = -122.4037;
+	// if (navigator.geolocation) {
 
-	    navigator.geolocation.getCurrentPosition(function(position) {
+	//     navigator.geolocation.getCurrentPosition(function(position) {
 
+	//         lat = position.coords.latitude;
+	//         lng = position.coords.longitude;
+
+	//         console.log(lat + ' ' + lng);
+
+	//     }, function(error) {
+	// 	    console.log('geo loc not exist');
+	//         buildMap('#map_canvas_search', lat, lng);
+	// 	});
+
+	// } else {
+	//     // Fallback for no geolocation
+	//     console.log('geoloc not shared');
+	//     buildMap('#map_canvas_search', lat, lng);
+	// }
+
+	GMaps.geolocate({
+	  success: function(position) {
 	        lat = position.coords.latitude;
 	        lng = position.coords.longitude;
-
 	        console.log(lat + ' ' + lng);
-
-	        buildMap(lat, lng);
-	    }, function(error) {
-		    console.log('geo loc not exist');
-	        buildMap(lat, lng);
-		});
-
-	} else {
-	    // Fallback for no geolocation
-	    console.log('geoloc not shared');
-	    buildMap(lat, lng);
-	}
+	        buildMap('#map_canvas_search', lat, lng);
+	  },
+	  error: function(error) {
+	    alert('Geolocation failed');
+	  },
+	  not_supported: function() {
+	    alert("Your browser does not support geolocation");
+	  },
+	  always: function() {
+	    alert("Done!");
+	  }
+	});
 }
 
-// function handleSearch(e) {
-// 	$.ajax({
-// 		type: "POST",
-// 		url:'/search_results_partial',
-// 		data: { "date": date, "query": query },
-// 		cache: false,
-// 		processData: false,
-// 		dataType: "html"
-// 	}).done(function(html){
-// 		$('.page_results').append(html);
-// 	});
-
-// }
 
 
 // Typeahead - Autocomplete
@@ -236,12 +241,13 @@ $(function(){
 	}else{
 		console.log('not index');
 		$('#sun_finder_title').show();
+		resultsLoad();
 		$.get('form_top_partial', function(data) {
 			$('#top_form_load').html(data);
-			alert(lastSearchLocation.lat);	
 			if (lastSearchLocation) {
-				buildMap(lastSearchLocation.lat, lastSearchLocation.lng);
-			}	  		
+				buildMap('#map_canvas_search', lastSearchLocation.lat, lastSearchLocation.lng);
+				buildMap('#map_canvas_results', lastSearchLocation.lat, lastSearchLocation.lng);
+			}
 			typeahead();
 			datepicker();
 		});	
