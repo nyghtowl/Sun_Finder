@@ -195,14 +195,6 @@ def tos():
 def privacy():    
     return render_template('privacy.html')
 
-# Search form load
-@app.route('/form_index_partial', methods=['GET'])
-def form_index_partial():    
-    return render_template('form_index_partial.html')
-
-@app.route('/form_top_partial', methods=['GET'])
-def form_top_partial():    
-    return render_template('form_top_partial.html')
 
 
 
