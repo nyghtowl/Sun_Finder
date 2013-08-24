@@ -158,6 +158,7 @@ function datepicker() {
 	$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
 }
 
+function resultsLoad(){}
 
 // Load search bar
 $(function(){
