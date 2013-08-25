@@ -57,7 +57,7 @@ function singleMapMark(map, myLatLng){
 	var img_map = {
 		scaledSize: new google.maps.Size(20, 25),
 		size: new google.maps.Size(25, 32),
-		url: "http://maps.gstatic.com/mapfiles/icon_green.png",
+		url: "https://maps.gstatic.com/mapfiles/icon_green.png",
 	};
 
 	var marker = new google.maps.Marker({
