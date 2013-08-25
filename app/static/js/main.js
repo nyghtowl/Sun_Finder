@@ -93,7 +93,7 @@ function readData(positions, labels, map) {
 
 function mutipleMapMarks(map) {
 	$.ajax({
-		url:'/map_details',
+		url:'map_details',
 		type: "GET",
 		cache: false,
 		dataType: "json",
