@@ -177,15 +177,20 @@ $(function(){
 		console.log('not index');
 		$('#sun_finder_title').show();
 		resultsLoad();
-		$.get('form_top_partial', function(data) {
-			$('#top_form_load').html(data);
-			if (lastSearchLocation) {
-				buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
-				buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
-			}
-			typeahead();
-			datepicker();
-		});	
+		$.ajax({
+			url: "form_top_partial",
+			success: function(data) { 
+				$('#top_form_load').append(data); 
+				if (lastSearchLocation) {
+					buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
+					buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
+				}
+			},
+			dataType: 'html'
+		});
+
+		typeahead();
+		datepicker();
 	}	
 
 });
