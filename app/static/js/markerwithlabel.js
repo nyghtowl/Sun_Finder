@@ -553,7 +553,7 @@ function MarkerWithLabel(opt_options) {
 // added img marker customization to change the image from red to black and make it∂¡
 var img_marker = {
   scaledSize:new google.maps.Size(5, 10),
-  url:"http://labs.google.com/ridefinder/images/mm_20_black.png"
+  url:"https://labs.google.com/ridefinder/images/mm_20_black.png"
 }; 
 
 // MarkerWithLabel inherits from <code>Marker</code>:
