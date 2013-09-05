@@ -96,6 +96,11 @@ def search_results(locations, date, txt_query):
     as_of = extract_as_of(date)
     
     # FIX - search by specif time
+    # Pull time from client
+    # If date entered on client, only take auto time capture other take all
+    # Convert returned data to utc and combine data and time if entered separately
+    # Pass date and time through the function to determine image to show
+    # Return date time to page results
 
     # Use local db for coordinates if query matches local db
     for location in locations:
