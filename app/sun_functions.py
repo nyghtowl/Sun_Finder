@@ -4,12 +4,14 @@ Sun Functions
 """
 
 from app import db as db_session
+from flask import flash
 from config import G_KEY
 from models import Location, User
 import requests # Alt to urllib
 import weather_forecast
 import re # Regex
 from datetime import datetime, timedelta
+from dateutil import parser
 
 
 def get_coord(txt_query, as_of):
@@ -70,30 +72,36 @@ def validate_date(as_of):
     return True
 
 # Generate valid as_of date to create weather object
-def extract_as_of(date_string):
-    if not(date_string):
-        as_of = datetime.now()
+def extract_as_of(manual_date_str, auto_date_str):
+    # auto_date_str example format: Thu Sep 05 2013 21:47:00 GMT-0700 (PDT)
+    auto_date = parser.parse(auto_date_str, ignoretz=True)
+    print 101, auto_date.date()
+
+    if not(manual_date_str):
+        as_of = auto_date
+
     else:
         # Adds automatically generated time to entered date
         # FIX - allow to change if allowing time choice
-        as_of_date = datetime.strptime(date_string, "%Y-%m-%d")
-        as_of_time = datetime.now().time() # Applies a auto time to the date picked / not timepicker
+        as_of_date = datetime.strptime(manual_date_str, "%Y-%m-%d")
+        as_of_time = auto_date.time() # Applies a auto time to the date picked / not timepicker
         as_of = datetime.combine(as_of_date,as_of_time)
+        print 102, as_of
 
     # Fall back to current for bad date
     if not validate_date(as_of):
-        flash("FAILED date unsupported %s" % as_of)
-        as_of = datetime.now()
+        flash("FAILED: date unsupported %s" % as_of)
+        as_of = auto_date
 
     return as_of 
 
 # Search results
-def search_results(locations, date, txt_query):
+def search_results(locations, manual_date, auto_date, txt_query):
 
     g_lat = g_lng = None
 
     # Format date to datetime
-    as_of = extract_as_of(date)
+    as_of = extract_as_of(manual_date, auto_date)
     
     # FIX - search by specif time
     # Pull time from client

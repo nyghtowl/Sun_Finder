@@ -162,7 +162,8 @@ function resultsLoad(){}
 
 // Load search bar
 $(function(){
-
+	var today_date = Date();
+	
 	$('.sun_submit').on('click', function() { 
 		$('#layout_body_container').hide();
 		$("#spinner").show() 
@@ -170,9 +171,15 @@ $(function(){
 
 	if (document.getElementById('index_form_load')){
 		console.log('index load');
+		var current_date = Date();
+
+		$('#index_date').val(today_date);
+		console.log($('#index_date').val());
+
 		typeahead();
 		datepicker();
 		indexLoadMap();
+
 	}else{
 		console.log('not index');
 		$('#sun_finder_title').show();
@@ -187,6 +194,10 @@ $(function(){
 				}		
 				typeahead();
 				datepicker();
+
+				$('#top_date').val(today_date);
+				console.log($('#top_date').val());
+
 			},
 			dataType: 'html'
 		});

@@ -137,16 +137,20 @@ def create_login():
 def search():
     # Local neighborhood object
     neighborhoods = Location.query.all()
-    print 'search neighborhood', neighborhoods
+    print 'search neighborhood'
 
     # Search form input
     txt_query = request.form['query']
     # Captures date format yy-mm-dd as string
-    date = request.form['date']
+    manual_date = request.form['date']
+
+    auto_date = request.form['current_date']
+
+    print 100, auto_date
 
     print 'search query', txt_query
 
-    weather = sun_functions.search_results(neighborhoods, date, txt_query)
+    weather = sun_functions.search_results(neighborhoods, manual_date, auto_date, txt_query)
  
     return render_template('search_results_partial.html', result=weather)
  

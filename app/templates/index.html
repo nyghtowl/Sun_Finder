@@ -15,8 +15,8 @@
 			<h1 class="text-center"> Sun Finder </h1>
 		</div>
 		<div class="row-fluid">
-			<div>
-				<form action="{{url_for('search')}}" method="POST" class="form-search centered" id="index_form_load">
+			<div id="index_form_load">
+				<form action="{{url_for('search')}}" method="POST" class="form-search centered" >
 					<div class="row-fluid">
 						<div class="text-center">
 							<!-- Search input -->
@@ -29,6 +29,9 @@
 							{% include 'calendar_map_partial.html' %}
 							{% include 'search_submit_partial.html' %}
 						</div>
+					</div>
+					<div hidden="true">
+					<input id="index_date" name="current_date" ></input>
 					</div>
 				</form>
 			</div>
