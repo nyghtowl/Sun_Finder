@@ -184,13 +184,13 @@ $(function(){
 				if (lastSearchLocation) {
 					buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
 					buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
-				}
+				}		
+				typeahead();
+				datepicker();
 			},
 			dataType: 'html'
 		});
 
-		typeahead();
-		datepicker();
 	}	
 
 });
