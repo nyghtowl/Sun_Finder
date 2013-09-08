@@ -3,8 +3,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% include 'flash.html' %}
-	<div class="well well-large" style="height: 140px;">
+	<div class="row-fluid">
 		<div class="pull-right">
 			<img src="{{ user.avatar(128) }}" class="img-polaroid">
 		</div>
@@ -12,9 +11,11 @@
 		{% if user.last_seen %}
 			<p><em>Last seen on: {{ user.last_seen }}</em></p>
 		{% endif %}
-
-		</p>
+		<p>Nothing to see here yet.</p>
 	</div>
 
+<script>
+        console.log("user"); // check load
+</script>
 
 {% endblock %}
