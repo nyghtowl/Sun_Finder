@@ -29,4 +29,6 @@ else:
 # Stores migrate data files
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
+# Threashold for slow loading (in seconds)
+DATABASE_QUERY_TIMEOUT = 0.5
 

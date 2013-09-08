@@ -17,6 +17,7 @@ class LoginForm(Form):
   email = TextField('Email', validators = [Required(), v.Email()])
   # utilize passwordfield out of wt form
   password = PasswordField('Password', validators = [Required()])
+  remember_me = BooleanField('Remember Me', default = False)
   
 #generates create account form. Note the names in quotes are labels that can be created
 class CreateLogin(Form):
@@ -28,9 +29,9 @@ class CreateLogin(Form):
                     v.Length(max=15,
                     message='Mobile exceeds length')])
     zipcode = IntegerField('Zipcode', validators = 
-                    [Optional(strip_whitespace=True)]) 
-                    #v.NumberRange(max=9, 
-                    #message='Zipcode exceeds length')])
+                    [Optional(strip_whitespace=True), 
+                    v.NumberRange(max=9, 
+                    message='Zipcode exceeds length')])
     email = TextField('Email',validators = [Required(),
                     v.Email(),
                     v.EqualTo('confirm_email',
@@ -41,6 +42,4 @@ class CreateLogin(Form):
                     v.EqualTo('confirm_password',
                     message = 'Passwords must match')])
     confirm_password = PasswordField('Repeat Password')
-    accept_tos = BooleanField('Accept Terms of Service', validators = [Required()]) 
-        # FIX - figure out syntax message = 'I accept the TOS'])
-    
+    remember_me = BooleanField('Remember Me', default = False)

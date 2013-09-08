@@ -49,7 +49,7 @@ class User(db.Model):
 
     # Testing purposes
     def __repr__(self):
-        return '<User %r' % (self.name)
+        return '<User %r>' % (self.name)
 
 class Location(db.Model):
     __tablename__="location"

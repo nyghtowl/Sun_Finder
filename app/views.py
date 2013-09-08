@@ -4,7 +4,7 @@ Sun Finder View -- Flask based sun search tool
 TO DO: 
     Change setup of static assets for postgres
 
-    Map - Possibly change to popover if can fix problem
+    Map -
         Put text and links on map - populate autocomplete based on click
         Change what labels show based on the zoom level of map
 
@@ -29,10 +29,13 @@ TO DO:
 """
 
 from flask import render_template, flash, redirect, session, url_for, request, jsonify, g
-from app import db, app, login_manager
+from flask.ext.sqlalchemy import get_debug_queries
 from flask.ext.login import login_user, logout_user, current_user, login_required
+from app import db, app, login_manager
 from models import Location, User
+from datetime import datetime
 from forms import LoginForm, CreateLogin
+from config import DATABASE_QUERY_TIMEOUT
 
 import sun_functions
 import weather_forecast
@@ -43,23 +46,22 @@ import json
 def load_user(user_id):
   return User.query.get(int(user_id))
 
-# FIX - build out for user
-# @app.before_request
-# def before_request():
-#     g.user = current_user
+@app.before_request
+def before_request():
+    g.user = current_user
 
-#     # Updated database with the last time user seen
-#     if g.user.is_authenticated():
-#         g.user.last_seen = datetime.utcnow()
-#         db.session.add(g.user)
-#         db.session.commit()
+    # Updated database with the last time user seen
+    if g.user.is_authenticated():
+        g.user.last_seen = datetime.utcnow()
+        db.session.add(g.user)
+        db.session.commit()
 
-# @app.after_request
-# def after_request(response):
-#     for query in get_debug_queries():
-#         if query.duration >= DATABASE_QUERY_TIMEOUT:
-#             app.logger.warning('SLOW QUERY: %s\nParameters: %s\nDuration: %fs\Context: %s\n') % (query.statement, query.parameters, query.duration, query.context)
-#     return response
+@app.after_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= DATABASE_QUERY_TIMEOUT:
+            app.logger.warning('SLOW QUERY: %s\nParameters: %s\nDuration: %fs\Context: %s\n') % (query.statement, query.parameters, query.duration, query.context)
+    return response
 
 @app.errorhandler(404)
 def internal_error(error):
@@ -77,18 +79,25 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('user'))
+
     l_form = LoginForm()
 
     # Validate login
     if l_form.validate_on_submit():
+        session['remember_me'] = l_form.remember_me.data
         user = User.query.filter(User.email==l_form.email.data).first()
  
         # If user exists then apply login user functionatlity to generate current_user session
         if user is not None:
             user_password = user.password
-            login_user(user)
+            if 'remember_me' in session:
+                remember_me = session['remember_me']
+                session.pop('remember_me', None)
+            login_user(user, remember=remember_me)
             flash('Logged in successfully.')
-            return redirect(url_for('search'))
+            return redirect(url_for('index'))
         else:
             flash('Your email or password are incorrect. Please login again.')
     return render_template('login.html', l_form=l_form)
@@ -207,16 +216,16 @@ def form_top_partial():
 
 
 # User view with favorites and ability to report on validity of sun
-# @app.route('/user/<fname>')
-# @login_required # Restricts page access without login
-# def user(fname):
-#     user = User.query.filter_by(User.fname = fname).first()
+@app.route('/user/<fname>')
+@login_required # Restricts page access without login
+def user(fname):
+    user = User.query.filter(User.fname == fname).first()
 
-#     if user == None:
-#         flash('User %(fname)s not found.', fname = fname))
-#         return redirect(url_for('index'))
-#     return render_template("user.html", 
-#         user = user)
+    if user == None:
+        flash('User %(fname)s not found.', fname = fname)
+        return redirect(url_for('index'))
+    return render_template("user.html", 
+        user = user)
 
 # @app.route('/edit', methods = ['GET', 'POST'])
 # @login_required

@@ -1,0 +1,20 @@
+<!-- User Page -->
+
+{% extends "layout.html" %}
+
+{% block content %}
+{% include 'flash.html' %}
+	<div class="well well-large" style="height: 140px;">
+		<div class="pull-right">
+			<img src="{{ user.avatar(128) }}" class="img-polaroid">
+		</div>
+		<h1>{{ user.fname }}</h1>
+		{% if user.last_seen %}
+			<p><em>Last seen on: {{ user.last_seen }}</em></p>
+		{% endif %}
+
+		</p>
+	</div>
+
+
+{% endblock %}
