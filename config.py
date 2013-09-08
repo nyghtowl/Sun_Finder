@@ -14,7 +14,8 @@ WUI_KEY = os.environ.get('WUI_KEY')
 
 SECRET_KEY = os.environ.get('key')
 
-CSRF_ENABLED = True
+WTF_CSRF_ENABLED = True
+WTF_CSRF_SECRET_KEY = os.environ.get('key') 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 s3_basedir = 'http://s3.amazonaws.com/sunfinder/'
@@ -31,4 +32,7 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 # Threashold for slow loading (in seconds)
 DATABASE_QUERY_TIMEOUT = 0.5
+
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 

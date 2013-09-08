@@ -2,7 +2,8 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
-    Change setup of static assets for postgres
+    Store passwords as encrypted
+    Setup SSL
 
     Map -
         Put text and links on map - populate autocomplete based on click
@@ -96,17 +97,17 @@ def login():
                 remember_me = session['remember_me']
                 session.pop('remember_me', None)
             login_user(user, remember=remember_me)
-            flash('Logged in successfully.')
+            flash('Logged in successfully.',category="success")
             return redirect(url_for('index'))
         else:
-            flash('Your email or password are incorrect. Please login again.')
+            flash('Your email or password are incorrect. Please login again.', category="error")
     return render_template('login.html', l_form=l_form)
 
 @app.route('/logout')
 @login_required # Confirms login
 def logout():
     logout_user()
-    flash('You are now logged out')
+    flash('You are now logged out', category="success")
     return redirect(url_for('index'))
 
 
@@ -121,7 +122,7 @@ def create_login():
         if user != None:
             user_email = user.email
             if user_email == cl_form.email.data:
-                flash ('%(email)s already exists. Please login or enter a different email.', email = user_email)
+                flash ('%(email)s already exists. Please login or enter a different email.', email = user_email, category="warning")
                 return redirect(url_for('login'))
         # If user doesn't exist, save from data in User object to commit to db
         if user == None:
@@ -137,7 +138,7 @@ def create_login():
                         timestamp=time.time())
             db.session.add(new_user)
             db.session.commit()
-            flash('Account creation successful. Please login to your account.')
+            flash('Account creation successful. Please login to your account.', category="success")
             return redirect(url_for('index'))
     return render_template('create_login.html', cl_form=cl_form)
 
@@ -222,7 +223,7 @@ def user(fname):
     user = User.query.filter(User.fname == fname).first()
 
     if user == None:
-        flash('User %(fname)s not found.', fname = fname)
+        flash('User %(fname)s not found.', fname = fname, category="error")
         return redirect(url_for('index'))
     return render_template("user.html", 
         user = user)

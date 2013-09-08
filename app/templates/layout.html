@@ -34,7 +34,7 @@
 			            <a href="{{url_for('login')}}" id="login_load" role="button" class="btn btn-warning">Login</a>
 			            {% endif %}
 			            {% if g.user.is_authenticated() %}
-			            <a href="{{url_for('user', fname=g.user.fname)}}" id="create_account_load">Your Account</a> 
+			            <a href="{{url_for('user', fname=g.user.fname)}}" id="create_account_load">{{ g.user.fname }}'s Account</a> 
 			            <a href="{{url_for('logout')}}" role="button" class="btn btn-warning">Logout</a>
 			            {% endif %}	              
 			        </div>

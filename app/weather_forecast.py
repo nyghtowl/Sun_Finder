@@ -164,7 +164,7 @@ class Weather(object):
             self.sun_result = weather_pics[self.wui_icon][0]
             self.pic = pic_loc + weather_pics[self.wui_icon][1]
         else:
-            flash('Error finding photo for the time of day')
+            flash('No photo found to match conditions.', category="info")
         print self.pic
 
     # Convert icon result to an moon image if night

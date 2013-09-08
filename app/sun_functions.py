@@ -58,9 +58,8 @@ def get_coord(txt_query, as_of):
     if g_lat:
         return weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of)
     else:
+        flash("%s not found. Please try your search again." % (txt_query, as_of), category="error")
         return None
-
-        #FIX flash a message to try search again if coord_result is not valid
 
 
 # Validate the date chosen for search has data results
@@ -90,7 +89,7 @@ def extract_as_of(manual_date_str, auto_date_str):
 
     # Fall back to current for bad date
     if not validate_date(as_of):
-        flash("FAILED: date unsupported %s" % as_of)
+        flash("FAILED: %s date unsupported, today's date used instead." % as_of, category="error")
         as_of = auto_date
 
     return as_of 
@@ -129,6 +128,4 @@ def search_results(locations, manual_date, auto_date, txt_query):
     # Return forecast result
     return forecast_result
 
-
-    #FIX flash a message to try search again if coord_result is not valid
 

@@ -6,7 +6,7 @@ Apply WTF using classes to setup content db
 """
 
 #import from flask wt forms
-from flask.ext.wtf import Form, HiddenField, DateTimeField, BooleanField, TextField, IntegerField, PasswordField
+from flask.ext.wtf import Form, HiddenField, DateTimeField, BooleanField, TextField, IntegerField, PasswordField, RecaptchaField
 from flask.ext.wtf import Required, Optional, Length
 from wtforms import validators as v
 #import sun_model?
@@ -43,3 +43,4 @@ class CreateLogin(Form):
                     message = 'Passwords must match')])
     confirm_password = PasswordField('Repeat Password')
     remember_me = BooleanField('Remember Me', default = False)
+    recaptcha = RecaptchaField('Person Test')
