@@ -36,6 +36,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import db, app, login_manager
 from models import Location, User
 from datetime import datetime
+import time
 from forms import LoginForm, CreateLogin
 from config import DATABASE_QUERY_TIMEOUT
 
@@ -93,15 +94,18 @@ def login():
  
         # If user exists then apply login user functionatlity to generate current_user session
         if user is not None:
-            user_password = user.password
-            if 'remember_me' in session:
-                remember_me = session['remember_me']
-                session.pop('remember_me', None)
-            login_user(user, remember=remember_me)
-            flash('Logged in successfully.',category="success")
-            return redirect(url_for('index'))
+            submitted_pwd = l_form.password.data
+            if user.check_password(submitted_pwd):
+                if 'remember_me' in session:
+                    remember_me = session['remember_me']
+                    session.pop('remember_me', None)
+                login_user(user, remember=remember_me)
+                flash('Logged in successfully.',category="success")
+                return redirect(url_for('index'))
+            else:
+                flash('Your password is incorrect. Please login again.', category="error")
         else:
-            flash('Your email or password are incorrect. Please login again.', category="error")
+            flash('Your email is incorrect or does not exist. Please login again.', category="error")
     return render_template('login.html', l_form=l_form)
 
 @app.route('/logout')
@@ -128,12 +132,12 @@ def create_login():
         # If user doesn't exist, save from data in User object to commit to db
         if user == None:
             new_user = User(id = None,
-                        email=form.email.data,
-                        password=form.password.data,
-                        fname=form.fname.data,
-                        lname=form.lname.data,
-                        mobile=form.mobile.data,
-                        zipcode=form.zipcode.data,
+                        email=cl_form.email.data,
+                        password=User.set_password(cl_form.password.data),
+                        fname=cl_form.fname.data,
+                        lname=cl_form.lname.data,
+                        mobile=cl_form.mobile.data,
+                        zipcode=cl_form.zipcode.data,
                         # FIX - don't need to save this - can be assumed since required on form
                         accept_tos=True,
                         timestamp=time.time())
@@ -144,7 +148,7 @@ def create_login():
     return render_template('create_login.html', cl_form=cl_form)
 
 # Search shell
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST', 'GET'])
 def search():
     # Local neighborhood object
     neighborhoods = Location.query.all()

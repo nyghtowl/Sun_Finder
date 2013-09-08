@@ -29,18 +29,18 @@ class CreateLogin(Form):
                     v.Length(max=15,
                     message='Mobile exceeds length')])
     zipcode = IntegerField('Zipcode', validators = 
-                    [Optional(strip_whitespace=True), 
-                    v.NumberRange(max=9, 
-                    message='Zipcode exceeds length')])
+                    [Optional(strip_whitespace=True)])
+                    # v.NumberRange(max=9, 
+                    # message='Zipcode exceeds length')])
     email = TextField('Email',validators = [Required(),
                     v.Email(),
                     v.EqualTo('confirm_email',
                     message = "Emails must match")])
-    confirm_email = TextField('Repeat Email')
-    password = PasswordField('First Password',
+    confirm_email = TextField('Confirm Email')
+    password = PasswordField('Password',
                     validators = [Required(),
                     v.EqualTo('confirm_password',
                     message = 'Passwords must match')])
-    confirm_password = PasswordField('Repeat Password')
+    confirm_password = PasswordField('Confirm Password')
     remember_me = BooleanField('Remember Me', default = False)
     recaptcha = RecaptchaField('Person Test')
