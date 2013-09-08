@@ -5,6 +5,7 @@ Models
 from app import db
 # Secure hash
 from hashlib import md5
+from werkzeug.security import generate_password_hash, check_password_hash
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -15,7 +16,7 @@ class User(db.Model):
     # Creates user db.columns, nullable = False means its required
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
+    password = set_password(db.Column(db.String(64), nullable=False))
     fname = db.Column(db.String(64), nullable=False)
     lname = db.Column(db.String(64), nullable=True)
     mobile = db.Column(db.String(15), nullable=True)
@@ -42,6 +43,13 @@ class User(db.Model):
     # Generate unique id for user 
     def get_id(self):
         return unicode(self.id)
+
+    #Salt password
+    def set_password(self, password):
+        self.pw_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pw_hash, password)
 
     # Gravatar field
     def avatar(self, size):

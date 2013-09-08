@@ -3,6 +3,7 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     Store passwords as encrypted
+    Update database structure 
     Setup SSL
 
     Map -
