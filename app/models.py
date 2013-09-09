@@ -21,10 +21,13 @@ class User(db.Model):
     lname = db.Column(db.String(64), nullable=True)
     mobile = db.Column(db.String(15), nullable=True)
     zipcode = db.Column(db.Integer, nullable=True)
+    role = db.Column(db.SmallInteger, default=ROLE_USER)
+    bio = db.Column(db.String(140))
     # Accept terms of service
     accept_tos = db.Column(db.Boolean, unique=False, default=True)
     # Track when the user created the account
-    timestamp = db.Column(db.String(64), nullable=False)
+    date_created = db.Column(db.String(64), nullable=False)
+    last_seen = db.Column(db.DateTime)
    
     # Flask-login methods
 

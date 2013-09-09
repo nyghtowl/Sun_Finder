@@ -34,7 +34,7 @@ from flask import render_template, flash, redirect, session, url_for, request, j
 from flask.ext.sqlalchemy import get_debug_queries
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import db, app, login_manager
-from models import Location, User
+from models import Location, User, ROLE_USER
 from datetime import datetime
 import time
 from forms import LoginForm, CreateLogin
@@ -140,12 +140,29 @@ def create_login():
                         zipcode=cl_form.zipcode.data,
                         # FIX - don't need to save this - can be assumed since required on form
                         accept_tos=True,
-                        timestamp=time.time())
+                        date_created=time.time()
+                        role=ROLE_USER)
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.', category="success")
         return redirect(url_for('user', user=new_user))
     return render_template('create_login.html', cl_form=cl_form)
+
+# @app.route('/edit', methods = ['GET', 'POST'])
+# @login_required
+# def edit():
+#     form = EditForm(g.user.nickname)
+#     if form.validate_on_submit():
+#         g.user.nickname = form.fname.data
+#         g.user.about_me = form.about_me.data
+#         db.session.add(g.user)
+#         db.session.commit()
+#         flash(gettext('Your changes have been saved.'))
+#         return redirect(url_for('edit'))
+#     elif request.method != "POST":
+#         form.nickname.data = g.user.nickname
+#         form.about_me.data = g.user.about_me
+#     return render_template('edit.html', form = form)
 
 # Search shell
 @app.route('/search', methods=['POST', 'GET'])
@@ -234,18 +251,3 @@ def user(fname):
     return render_template("user.html", 
         user=user)
 
-# @app.route('/edit', methods = ['GET', 'POST'])
-# @login_required
-# def edit():
-#     form = EditForm(g.user.nickname)
-#     if form.validate_on_submit():
-#         g.user.nickname = form.fname.data
-#         g.user.about_me = form.about_me.data
-#         db.session.add(g.user)
-#         db.session.commit()
-#         flash(gettext('Your changes have been saved.'))
-#         return redirect(url_for('edit'))
-#     elif request.method != "POST":
-#         form.nickname.data = g.user.nickname
-#         form.about_me.data = g.user.about_me
-#     return render_template('edit.html', form = form)
