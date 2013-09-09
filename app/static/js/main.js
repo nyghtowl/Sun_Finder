@@ -1,6 +1,6 @@
 // Main Javascript file for Sun Finder
 
-(function() {
+// (function() {
 	// Confirm load
 	console.log("main js");
 
@@ -210,4 +210,4 @@
 
 	});
 
-})();
+// })();

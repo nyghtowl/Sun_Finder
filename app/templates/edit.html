@@ -1,0 +1,34 @@
+<!-- Edit User -->
+
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div  class="row-fluid">
+
+<h3 class="orm-signin-heading text-center">Edit Your Profile</h3>
+<div class="row-fluid">
+	<div class="well">
+		<form class="form-horizontal" action="" method="post" name="edit">
+			{{ form.hidden_tag() }}
+			<div class="control-group">
+			<label class="control-label" for="fname">First Name:</label>	
+				<div class="controls">
+					{{ form.fname(maxlength = 64, class = "span4") }}
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" for="bio">Bio:</label>	
+				<div class="controls">
+					{{ form.bio(maxlength = 140, class = "span4") }}
+				</div>
+			</div>
+			<div class="contorl-group">
+				<div class="controls">
+					<input class="btn" type="submit" value="Save Changes"> 
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

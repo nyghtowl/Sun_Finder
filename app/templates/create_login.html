@@ -7,10 +7,10 @@
 <div  class="row-fluid page_results" id="create_account_load">
     <h3 class="orm-signin-heading text-center">Sun Finder Create Account</h3>
     <form action="{{ url_for('create_login') }}" method="POST" name="create_login" class="form-horizontal">
-        {{cl_form.hidden_tag()}}
+        {{ form.hidden_tag() }}
 
         <!-- For loop generate form with wtform object -->
-        {% for field in cl_form %}
+        {% for field in form %}
             {% if field.short_name != "csrf_token" %}
                 <div class="control-group">
                     <!-- WTForms do not need to be escaped -->

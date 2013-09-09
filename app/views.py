@@ -2,20 +2,21 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
-    Store passwords as encrypted
     Update database structure 
     Setup SSL
+    Add Oauth
 
+    Lock down format of mobile to enable Twillio
     Map -
+
         Put text and links on map - populate autocomplete based on click
         Change what labels show based on the zoom level of map
 
     Add TDD
 
-    Weather Data - change returned data to populate page through jason & remove fui
+    Weather Data - change returned data to populate page through json 
 
-    Date - add a couple additional data points for date
-        setup ability to choose time
+    Date/Time - setup ability to choose time
 
     run linter
 
@@ -37,7 +38,7 @@ from app import db, app, login_manager
 from models import Location, User, ROLE_USER
 from datetime import datetime
 import time
-from forms import LoginForm, CreateLogin
+from forms import LoginForm, CreateLogin, EditForm
 from config import DATABASE_QUERY_TIMEOUT
 
 import sun_functions
@@ -127,7 +128,7 @@ def create_login():
         if user != None:
             user_email = user.email
             if user_email == cl_form.email.data:
-                flash ('%(email)s already exists. Please login or enter a different email.', email = user_email, category="warning")
+                flash ('Email already exists. Please login or enter a different email.', category="warning")
                 return redirect(url_for('login'))
         # If user doesn't exist, save from data in User object to commit to db
         if user == None:
@@ -140,29 +141,29 @@ def create_login():
                         zipcode=cl_form.zipcode.data,
                         # FIX - don't need to save this - can be assumed since required on form
                         accept_tos=True,
-                        date_created=time.time()
+                        date_created=time.time(),
                         role=ROLE_USER)
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.', category="success")
-        return redirect(url_for('user', user=new_user))
-    return render_template('create_login.html', cl_form=cl_form)
+        return redirect(url_for('index'))
+    return render_template('create_login.html', form=cl_form)
 
-# @app.route('/edit', methods = ['GET', 'POST'])
-# @login_required
-# def edit():
-#     form = EditForm(g.user.nickname)
-#     if form.validate_on_submit():
-#         g.user.nickname = form.fname.data
-#         g.user.about_me = form.about_me.data
-#         db.session.add(g.user)
-#         db.session.commit()
-#         flash(gettext('Your changes have been saved.'))
-#         return redirect(url_for('edit'))
-#     elif request.method != "POST":
-#         form.nickname.data = g.user.nickname
-#         form.about_me.data = g.user.about_me
-#     return render_template('edit.html', form = form)
+@app.route('/edit', methods = ['GET', 'POST'])
+@login_required
+def edit():
+    e_form = EditForm()
+    if e_form.validate_on_submit():
+        g.user.fname = e_form.fname.data
+        g.user.bio = e_form.bio.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash('Your changes have been saved.', category="success")
+        return redirect(url_for('user', user=g.user))
+    elif request.method != "POST":
+        e_form.fname.data = g.user.fname
+        e_form.bio.data = g.user.bio
+    return render_template('edit.html', form=e_form)
 
 # Search shell
 @app.route('/search', methods=['POST', 'GET'])
