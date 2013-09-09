@@ -144,7 +144,7 @@ def create_login():
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.', category="success")
-            return redirect(url_for('user', user=new_user))
+        return redirect(url_for('user', user=new_user))
     return render_template('create_login.html', cl_form=cl_form)
 
 # Search shell
