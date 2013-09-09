@@ -185,8 +185,10 @@ $(function(){
 		$('#sun_finder_title').show();
 		resultsLoad();
 		$.ajax({
+			type: "GET",
 			url: "form_top_partial",
 			success: function(data) { 
+				$('#layout_body_container').show();
 				$('#top_form_load').append(data); 
 				if (lastSearchLocation) {
 					buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);

@@ -83,7 +83,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('user'))
+        return redirect(url_for('user', user=g.user))
 
     l_form = LoginForm()
 
@@ -144,7 +144,7 @@ def create_login():
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.', category="success")
-            return redirect(url_for('index'))
+            return redirect(url_for('user', user=new_user))
     return render_template('create_login.html', cl_form=cl_form)
 
 # Search shell
@@ -216,6 +216,7 @@ def privacy():
 
 # Search form load
 @app.route('/form_top_partial', methods=['GET'])
+@app.route('/user/form_top_partial', methods=['GET'])
 def form_top_partial():    
     return render_template('form_top_partial.html')
 
@@ -228,10 +229,10 @@ def user(fname):
     user = User.query.filter(User.fname == fname).first()
 
     if user == None:
-        flash('User %(fname)s not found.', fname = fname, category="error")
+        flash('User %(fname)s not found.', fname=fname, category="error")
         return redirect(url_for('index'))
     return render_template("user.html", 
-        user = user)
+        user=user)
 
 # @app.route('/edit', methods = ['GET', 'POST'])
 # @login_required

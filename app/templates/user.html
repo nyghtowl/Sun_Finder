@@ -3,15 +3,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
+	<h1>{{ user.fname }}</h1>
+	<p>Nothing to see here yet.</p>
 	<div class="row-fluid">
 		<div class="pull-right">
 			<img src="{{ user.avatar(128) }}" class="img-polaroid">
 		</div>
-		<h1>{{ user.fname }}</h1>
+
 		{% if user.last_seen %}
 			<p><em>Last seen on: {{ user.last_seen }}</em></p>
 		{% endif %}
-		<p>Nothing to see here yet.</p>
 	</div>
 
 <script>
