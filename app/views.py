@@ -2,13 +2,13 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
-    Update database structure 
+    Migrate database structure - Alembic?
     Setup SSL
     Add Oauth
 
     Lock down format of mobile to enable Twillio
-    Map -
 
+    Map -
         Put text and links on map - populate autocomplete based on click
         Change what labels show based on the zoom level of map
 
@@ -42,7 +42,6 @@ from forms import LoginForm, CreateLogin, EditForm
 from config import DATABASE_QUERY_TIMEOUT
 
 import sun_functions
-import weather_forecast
 import json 
 
 # User load callback - populates current user
@@ -168,22 +167,21 @@ def edit():
 # Search shell
 @app.route('/search', methods=['POST', 'GET'])
 def search():
-    # Local neighborhood object
-    neighborhoods = Location.query.all()
-    print 'search neighborhood'
-
     # Search form input
-    txt_query = request.form['query']
-    # Captures date format yy-mm-dd as string
-    manual_date = request.form['date']
-
-    auto_date = request.form['current_date']
-
-    print 100, auto_date
-
+    txt_query = str(request.form['query'])
     print 'search query', txt_query
 
-    weather = sun_functions.search_results(neighborhoods, manual_date, auto_date, txt_query)
+    # Captures user-entered date format yy-mm-dd as string
+    manual_date = request.form['date']
+    # Captures client side, today's date as string: Thu Sep 05 2013 21:47:00 GMT-0700 (PDT)
+    auto_date = request.form['current_date']
+    print 'today date', auto_date
+
+    # Get weather data
+    weather = sun_functions.search_results(txt_query, manual_date, auto_date)
+
+    if not weather:
+        flash("%s not found. Please try your search again." % txt_query, category="error")
  
     return render_template('search_results_partial.html', result=weather)
  
