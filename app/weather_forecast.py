@@ -33,7 +33,7 @@ class Weather(object):
         self.days = {}
 
         # Determine if date is current or future to determine what data points to pull
-        if as_of.date() == datetime.today().date():
+        if as_of.date() == datetime.now().date():
             self.apply_current(wui_response)
         else:
             wui_fragment = self.find_for(wui_response, as_of)
