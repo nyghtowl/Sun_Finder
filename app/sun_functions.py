@@ -11,7 +11,7 @@ import requests # Alt to urllib
 import weather_forecast
 import re # Regex
 from datetime import datetime, timedelta
-from dateutil import parser
+import dateutil.parser
 
 
 def get_coord(txt_query, as_of):
@@ -73,7 +73,7 @@ def validate_date(as_of):
 # Generate valid as_of date to create weather object
 def extract_as_of(manual_date_str, auto_date_str):
     # auto_date_str example format: Thu Sep 05 2013 21:47:00 GMT-0700 (PDT)
-    auto_date = parser.parse(auto_date_str, ignoretz=True)
+    auto_date = dateutil.parser.parse(auto_date_str, ignoretz=True)
     print 101, auto_date.date()
 
     if not(manual_date_str):
