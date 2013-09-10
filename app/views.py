@@ -171,11 +171,10 @@ def search():
     txt_query = str(request.form['query'])
     print 'search query', txt_query
 
-    # Captures user-entered date format yy-mm-dd as string
+    # Captures user-entered date format mm-dd-yy as string
     manual_date = request.form['date']
     # Captures client side, today's date as string: Thu Sep 05 2013 21:47:00 GMT-0700 (PDT)
     auto_date = request.form['current_date']
-    print 'today date', auto_date
 
     # Get weather data
     weather = sun_functions.search_results(txt_query, manual_date, auto_date)

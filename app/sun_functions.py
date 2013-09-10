@@ -43,18 +43,9 @@ def google_places_coord(txt_query, as_of):
         return None
 
 
-# Validate date
-def validate_date(as_of, auto_date):
-    if as_of.date() < auto_date.date():
-        return False
-    if as_of.date() > (datetime.now() + timedelta(days=7)).date():
-        return False
-    return True
-
 # Generate valid as_of date to create weather object
 def extract_as_of(manual_date_str, auto_date_str):
     auto_date = dateutil.parser.parse(auto_date_str, ignoretz=True)
-    print 101, auto_date.date()
 
     if not(manual_date_str):
         as_of = auto_date
@@ -62,16 +53,12 @@ def extract_as_of(manual_date_str, auto_date_str):
     else:
         # Adds automatically generated time to entered date
         # FIX - allow to change if allowing time choice
-        as_of_date = datetime.strptime(manual_date_str, "%Y-%m-%d")
+        as_of_date = datetime.strptime(manual_date_str, "%m-%d-%Y")
         # Applies auto time to the date picked / not timepicker
         as_of_time = auto_date.time() 
         as_of = datetime.combine(as_of_date,as_of_time)
-        print 102, as_of
 
-    # Fall back to today's date if outside range
-    if not validate_date(as_of, auto_date):
-        flash("FAILED: %s date unsupported, today's date used instead." % as_of, category="error")
-        as_of = auto_date
+    print 'as of', as_of
 
     return (as_of, auto_date)
 

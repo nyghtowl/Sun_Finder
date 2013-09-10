@@ -71,12 +71,14 @@ class Weather(object):
             print 103, wui_datetime.date()
             if wui_datetime.date() == as_of.date():
                 wui_fragment = fragment
+                print 104, wui_fragment
                 break
         return (wui_fragment)
 
     # Apply data attributes for future dates
     def apply_for(self, wui_fragment):
         self.wui_icon = wui_fragment['icon'] 
+# looping through list to find day and then icon in dictionary
 
         self.tempr_wui_F = float(wui_fragment['high']['fahrenheit'])
         self.tempr_wui_C = float(wui_fragment['high']['celsius'])
@@ -89,7 +91,7 @@ class Weather(object):
     # Hold multiple days of weather data to display
     def grab_all_weather(self, wui_response, as_of):
         if as_of == datetime.now().date():
-            for i in range(4):
+            for i in range(3):
                 as_of += datetime.timedelta(days=1)
                 self.days[i] = find_for(self, wui_response, as_of)
 

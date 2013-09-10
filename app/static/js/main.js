@@ -156,7 +156,10 @@
 	// Datepicker
 	function datepicker() {
 		console.log("datepicker"); //test
-		$( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+		$( ".datepicker" ).datepicker({dateFormat: "mm-dd-yy",
+			minDate: "0d",
+			maxDate: "+3d"
+		});
 	}
 
 	function resultsLoad(){}
