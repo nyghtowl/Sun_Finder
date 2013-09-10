@@ -11,7 +11,7 @@ from pprint import pprint
 import requests
 import moonphase
 from BeautifulSoup import BeautifulSoup
-from dateutil import parser
+import dateutil.parser
 
 class Weather(object):
     def __init__(self, wui_response, lat, lng, as_of):
@@ -66,7 +66,7 @@ class Weather(object):
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
             wui_date = datetime.fromtimestamp(float(fragment['date']['epoch'])).date() 
             date_str = wui_date.strftime('%Y-%b-%d')
-            wui_datetime = parser.parse(date_str)
+            wui_datetime = dateutil.parser.parse(date_str)
             print 103, wui_datetime.date()
             if wui_datetime.date() == as_of.date():
                 wui_fragment = fragment
