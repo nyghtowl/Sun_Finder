@@ -14,7 +14,7 @@ from BeautifulSoup import BeautifulSoup
 import dateutil.parser
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, as_of):
+    def __init__(self, wui_response, lat, lng, as_of, today_dt):
         # pprint(wui_response)
 
         self.lat = lat
@@ -32,9 +32,9 @@ class Weather(object):
         self.pic = None
         self.days = {}
 
-        # Determine if date is current or future to determine what data points to pull
-        print 207, as_of.date(), datetime.now().date()
-        if as_of.date() == datetime.now().date():
+        # Determine if date is current or future to idenfity which data points to extract
+        print 207, as_of.date(), today_dt.date()
+        if as_of.date() == today_dt.date():
             self.apply_current(wui_response)
         else:
             wui_fragment = self.find_for(wui_response, as_of)
@@ -98,7 +98,7 @@ class Weather(object):
 
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
-    def get_forecast(lat, lng, as_of):
+    def get_forecast(lat, lng, as_of, today_dt):
         # Url to pass to WUI
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
         # Pull API key from env with FIO_KEY
@@ -107,7 +107,7 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(wui_response, lat, lng, as_of)
+        return Weather(wui_response, lat, lng, as_of, today_dt)
 
     # Get sunrise and sunset from earthtools
     def get_earthtools(self):

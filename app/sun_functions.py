@@ -63,8 +63,8 @@ def get_coord(txt_query, as_of):
 
 
 # Validate the date chosen for search has data results
-def validate_date(as_of):
-    if as_of.date() < datetime.now().date():
+def validate_date(as_of, auto_date):
+    if as_of.date() < auto_date.date():
         return False
     if as_of.date() > (datetime.now() + timedelta(days=7)).date():
         return False
@@ -88,11 +88,11 @@ def extract_as_of(manual_date_str, auto_date_str):
         print 102, as_of
 
     # Fall back to current for bad date
-    if not validate_date(as_of):
+    if not validate_date(as_of, auto_date):
         flash("FAILED: %s date unsupported, today's date used instead." % as_of, category="error")
         as_of = auto_date
 
-    return as_of 
+    return (as_of, auto_date)
 
 # Search results
 def search_results(locations, manual_date, auto_date, txt_query):
@@ -100,7 +100,7 @@ def search_results(locations, manual_date, auto_date, txt_query):
     g_lat = g_lng = None
 
     # Format date to datetime
-    as_of = extract_as_of(manual_date, auto_date)
+    as_of, today_dt = extract_as_of(manual_date, auto_date)
     
     # FIX - search by specif time
     # Pull time from client
@@ -116,7 +116,7 @@ def search_results(locations, manual_date, auto_date, txt_query):
             g_lng = location.lng
             loc_name = location.n_hood
     if g_lat:
-        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of)
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, today_dt)
         forecast_result.add_name(loc_name) # Applies neighborhood name if from local db
     # Use Google Places for coordinates if no query match to local db
     else:
