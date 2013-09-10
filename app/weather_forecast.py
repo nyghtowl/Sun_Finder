@@ -33,6 +33,7 @@ class Weather(object):
         self.days = {}
 
         # Determine if date is current or future to determine what data points to pull
+        print 207, as_of.date(), datetime.now().date()
         if as_of.date() == datetime.now().date():
             self.apply_current(wui_response)
         else:
