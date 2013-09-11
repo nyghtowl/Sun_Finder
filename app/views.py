@@ -2,6 +2,9 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
+    Pull client side info into server without creating a tag
+    Seed & Migrate database?
+
     Migrate database structure - Alembic?
     Setup SSL
     Add Oauth
@@ -121,7 +124,7 @@ def create_login():
     cl_form = CreateLogin()
 
     if cl_form.validate_on_submit():
-
+        session['remember_me'] = cl_form.remember_me.data
         user = User.query.filter(User.email==cl_form.email.data).first()
 
         if user != None:
@@ -145,6 +148,10 @@ def create_login():
             db.session.add(new_user)
             db.session.commit()
             flash('Account creation successful. Please login to your account.', category="success")
+            if 'remember_me' in session:
+                    remember_me = session['remember_me']
+                    session.pop('remember_me', None)
+            login_user(new_user, remember=remember_me)
         return redirect(url_for('index'))
     return render_template('create_login.html', form=cl_form)
 

@@ -166,7 +166,7 @@
 
 	// Load search bar
 	$(function(){
-		var today_date = Date();
+		var today_date = new Date();
 		
 		$('.sun_submit').on('click', function() { 
 			$('#layout_body_container').hide();
