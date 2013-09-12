@@ -1,6 +1,6 @@
 // Main Javascript file for Sun Finder
 
-// (function() {
+(function() {
 	// Confirm load
 	console.log("main js");
 
@@ -162,7 +162,6 @@
 		});
 	}
 
-	function resultsLoad(){}
 
 	// Load search bar
 	$(function(){
@@ -188,7 +187,11 @@
 		}else{
 			console.log('not index');
 			$('#sun_finder_title').show();
-			resultsLoad();
+			
+			if (typeof resultsLoad !== 'undefined') {
+				resultsLoad();
+			}
+			
 			$.ajax({
 				type: "GET",
 				url: "form_top_partial",
@@ -196,6 +199,7 @@
 					$('#layout_body_container').show();
 					$('#top_form_load').append(data); 
 					if (lastSearchLocation) {
+						console.log('hellooooooo');
 						buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
 						buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
 					}		
@@ -213,4 +217,4 @@
 
 	});
 
-// })();
+})();

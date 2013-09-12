@@ -1,6 +1,13 @@
 /* Main CSS File for Sun Finder */
 
-
+/* testing some things */
+.modal.hide {
+  display: block;
+  visibility: hidden;
+}
+.modal.fade.in {
+  visibility: visible;
+}
 
 /* Search Format
 -------------------------------------------------- */
