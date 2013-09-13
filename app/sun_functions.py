@@ -30,7 +30,6 @@ def google_places_coord(txt_query, as_of):
 
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
     result = requests.get(url,params=api_params)
-    
     # Extract lat & lng
     place_result = result.json()
     result_path = place_result['results'][0]['geometry']['location'] 

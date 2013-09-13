@@ -101,8 +101,11 @@ class Weather(object):
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
     def get_forecast(lat, lng, as_of, today_dt):
+
         # Url to pass to WUI
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
+
+
         # Pull API key from env with FIO_KEY
         wui_final_url=wui_url%(WUI_KEY, lat, lng)
         print wui_final_url
@@ -114,25 +117,11 @@ class Weather(object):
     # Get sunrise and sunset from earthtools
     def get_earthtools(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
-        self.date_time
         earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
         response_xml = requests.get(earth_final_url)
         print response_xml
         return BeautifulSoup(response_xml.content)
 
-            
-        # params option not working because location pass is lat,lng - is there a fix?
-        # api_params = {
-        #     # holding central location in SF and 
-        #     'query':txt_plus,
-        #     'location':'37.7655, -122.4429',
-        #     'radius':5000,
-        #     'sensor':'false',
-        #     'key':G_KEY
-        # }
-
-        # url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
-        # result = requests.get(url,params=api_params)
     
     def get_sunrise(self):
         nextrise=self.get_earthtools()

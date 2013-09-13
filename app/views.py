@@ -3,13 +3,15 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     Pull client side info into server without creating a tag
+    Get timezone and current time based on location searched
+    
     Seed & Migrate database?
 
     Migrate database structure - Alembic?
     Setup SSL
     Add Oauth
 
-    Lock down format of mobile to enable Twillio
+    Lock down format of user mobile info to enable Twillio
 
     Map -
         Put text and links on map - populate autocomplete based on click
