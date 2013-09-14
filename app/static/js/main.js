@@ -58,7 +58,7 @@
         var weatherMarker = new google.maps.Marker({
 			position: myLatLng,
 			map: map,
-			icon: weatherImg,
+			// icon: weatherImg,
 			title: "Something"
 		});
         
