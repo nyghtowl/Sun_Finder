@@ -70,6 +70,7 @@ class Location(db.Model):
     lat = db.Column(db.Float) # don't set a limit on size of db.float - apply to when output
     lng = db.Column(db.Float)
     rad = db.Column(db.Integer)
+    zoomlevel = db.Column(db.Integer)
     n_hood = db.Column(db.String(128))
 
     # FIX - figure out how to create a function out of comparing query txt to list of neighborhoods and return lat & lng
