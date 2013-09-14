@@ -18,6 +18,7 @@
 		
 		//Pulls lat, lng from search result
 		var myLatLng = new google.maps.LatLng(map_lat,map_long);
+
 		var map_options = {
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
 		  center: myLatLng,
@@ -47,15 +48,28 @@
 		  }
 		]);
 
-		singleMapMark(map, myLatLng);
+		var weatherImg = {
+			url:'static/img/partly_cloudy_small.png',
+			origin: new google.maps.Point(0,0),
+			// size: new google.maps.Size(20, 32),
+			anchor: new google.maps.Point(20,32)
+		};
+
+        var weatherMarker = new google.maps.Marker({
+			position: myLatLng,
+			map: map,
+			icon: weatherImg,
+			title: "Something"
+		});
+        
+		// singleMapMark(map, myLatLng);
 	    mutipleMapMarks(map);
 
 	}
 
-
 	function singleMapMark(map, myLatLng){
 		// Search result marker - custom img and marker variable
-		var img_map = {
+		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
 			url: "https://maps.gstatic.com/mapfiles/icon_green.png",
@@ -66,7 +80,7 @@
 		    draggable: false,
 	    	raiseOnDrag: false,
 			map: map,
-			icon: img_map,
+			icon: markerImg,
 			title: "Search Result"
 		});
 	}
@@ -85,10 +99,18 @@
 		});
 	}
 
+// function addWeatherInfo(position, icon, temp, map){
+	// return new google.maps.Marker({
+	// 		position: position[0], position[1]
+	// 		map: map,
+	// 		icon: icon
+	// 	});
+// }
 
 	function readData(positions, labels, map) { 
 		for (var i = 0; i < positions.length; i++) {
 	    	createMarker(positions[i], labels[i], map);
+	    	//addWeatherInfo(positions[i], icons[i], temps[i], map) Have function to add icon and temp
 	  	}     
 	 }
 
@@ -100,6 +122,7 @@
 			dataType: "json",
 			success: function(data){
 				readData(data.result.loc_coords, data.result.locations,map);
+				// take data of current weather icon and temp from cache for list of locations
 				}
 		});
 	}
