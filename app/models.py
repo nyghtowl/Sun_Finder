@@ -82,3 +82,4 @@ class Location(db.Model):
     # Testing purposes
     def __repr__(self):
         return '<Location %r' % (self.n_hood)
+
