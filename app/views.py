@@ -186,7 +186,7 @@ def search():
     auto_date = request.form['current_date']
 
     # Get weather data
-    weather = sun_functions.search_results(txt_query, manual_date, auto_date)
+    weather = sun_functions.search_results(txt_query, manual_date)
 
     if not weather:
         flash("%s not found. Please try your search again." % txt_query, category="error")
