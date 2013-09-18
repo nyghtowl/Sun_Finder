@@ -6,14 +6,15 @@ Author: Sean B. Palmer, inamidst.com
 Cf. http://en.wikipedia.org/wiki/Lunar_phase#Lunar_phase_calculation
 """
 
-import math, decimal, datetime
+import math, decimal, datetime, pytz
 dec = decimal.Decimal
 
-def position(now=None): 
-   if now is None: 
-      now = datetime.datetime.now()
+def position(as_of, local_tz): 
 
-   diff = now - datetime.datetime(2001, 1, 1)
+   standard_date = datetime.datetime(2001, 1, 1)
+   as_of_notz = as_of.replace(tzinfo=None)
+   # diff = as_of.date() - standard_date.date())
+   diff = as_of_notz.date() - standard_date.date()
    days = dec(diff.days) + (dec(diff.seconds) / dec(86400))
    lunations = dec("0.20439731") + (days * dec("0.03386319269"))
 
@@ -33,8 +34,8 @@ def phase(pos):
       7: "Waning Crescent"
    }[int(index) & 7]
 
-def main(as_of=None): 
-   pos = position(as_of)
+def main(as_of, local_tz): 
+   pos = position(as_of, local_tz)
    phasename = phase(pos)
 
    roundedpos = round(float(pos), 3)

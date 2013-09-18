@@ -11,8 +11,8 @@ import requests # Alt to urllib
 import weather_forecast
 import re # Regex
 from datetime import datetime, timedelta
-import dateutil.parser
 import time
+from pytz import timezone
 
 
 def google_places_coord(txt_query):
@@ -42,32 +42,28 @@ def google_places_coord(txt_query):
     else:
         return None
 
-def search_coord_time(g_lat, g_lng):
+def search_coord_timezone(g_lat, g_lng, utctimestamp):
     str_lat_lng = str(g_lat) + ',' + str(g_lng)
-    today_timestamp = time.time()
     url = "https://maps.googleapis.com/maps/api/timezone/json?"
     
     api_params = {
         'location':str_lat_lng,
-        'timestamp':today_timestamp,
+        'timestamp':utctimestamp,
         'sensor':'true'
     }
 
     result = requests.get(url,params=api_params)
     result_json = result.json()
-    return (today_timestamp, today_timestamp + result_json['dstOffset'] + result_json['rawOffset'])
+    return result_json['timeZoneId']
 
 # Generate valid as_of date to create weather object
-def extract_as_of(user_picked_time_str, utc_timestamp, today_timestamp):
-    # auto_date = dateutil.parser.parse(auto_date_str, ignoretz=True)
-
-    print 'timestamp', today_timestamp, utc_timestamp
-    today_datetime = datetime.fromtimestamp(today_timestamp)
-
-    print 'dt timestamp', today_datetime
+def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
+    local_tz = timezone(timezone_id)
+    print 'timestamp', utc_timestamp
+    current_local_time = datetime.fromtimestamp(utc_timestamp, local_tz)
 
     if not(user_picked_time_str):
-        as_of = today_datetime
+        as_of = current_local_time
     else:
         # Adds automatically generated time to entered date
         # FIX - allow to change if allowing time choice
@@ -78,11 +74,12 @@ def extract_as_of(user_picked_time_str, utc_timestamp, today_timestamp):
 
     print 'as of', as_of
 
-    return (as_of, today_datetime)
+    return (as_of, current_local_time, local_tz)
 
 # Get weather data
 def search_results(txt_query, user_picked_time):
     loc_name = None
+    utctimestamp = time.time()
 
     # Grabs neighborhood from database 
     neighborhood = Location.query.filter(Location.n_hood.contains(txt_query)).first()
@@ -96,18 +93,18 @@ def search_results(txt_query, user_picked_time):
     else:
         g_lat, g_lng = google_places_coord(txt_query)
 
-    utc_timestamp, today_timestamp = search_coord_time(g_lat, g_lng)
+    timezone_id = search_coord_timezone(g_lat, g_lng, utctimestamp)
     
     # Format date to datetime
-    as_of, today_time = extract_as_of(user_picked_time, utc_timestamp, today_timestamp)
+    as_of, current_local_time, local_tz = extract_as_of(user_picked_time, utctimestamp, timezone_id)
 
     if not g_lat:
         flash("%s not found. Please try your search again." % txt_query, category="error")
  
-    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, today_time)
+    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, current_local_time)
 
     # Confirm time of day to figure out picture to apply
-    forecast_result.apply_pic()
+    forecast_result.apply_pic(local_tz)
     
     # Applies neighborhood name if from local db
     if loc_name:

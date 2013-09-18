@@ -14,7 +14,7 @@ from BeautifulSoup import BeautifulSoup
 import dateutil.parser
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, as_of, today_dt):
+    def __init__(self, wui_response, lat, lng, as_of, current_local_time):
         # pprint(wui_response)
 
         self.lat = lat
@@ -33,8 +33,8 @@ class Weather(object):
         self.days = {}
 
         # Determine if date is current or future to idenfity which data points to extract
-        print 207, as_of.date(), today_dt.date()
-        if as_of.date() == today_dt.date():
+        print 207, as_of.date(), current_local_time.date()
+        if as_of.date() == current_local_time.date():
             self.apply_current(wui_response)
         else:
             wui_fragment = self.find_for(wui_response, as_of)
@@ -100,7 +100,7 @@ class Weather(object):
 
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
-    def get_forecast(lat, lng, as_of, today_dt):
+    def get_forecast(lat, lng, as_of, current_local_time):
 
         # Url to pass to WUI
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
@@ -112,14 +112,14 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(wui_response, lat, lng, as_of, today_dt)
+        return Weather(wui_response, lat, lng, as_of, current_local_time)
 
     # Get sunrise and sunset from earthtools
     def get_earthtools(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
         response_xml = requests.get(earth_final_url)
-        print response_xml
+        print 99999, response_xml.content
         return BeautifulSoup(response_xml.content)
 
     
@@ -160,7 +160,7 @@ class Weather(object):
         print self.pic
 
     # Convert icon result to an moon image if night
-    def add_night_pic(self, pic_loc):
+    def add_night_pic(self, pic_loc, local_tz):
         night_pics = {
             "First Quarter":"moon_firstquarter.png", 
             "Full Moon":"full_moon1.jpg", 
@@ -172,7 +172,10 @@ class Weather(object):
             "Waxing Gibbous":"moon_waxinggibbous.png"
             }
 
-        moon = moonphase.main(self.date_time)
+        # Pull tz to avoid error comparing tz value dt to one without
+        naive_dt = self.date_time
+        print 500, naive_dt
+        moon = moonphase.main(naive_dt, local_tz)
         print 'add_night, %s' % moon
 
         if moon in night_pics:
@@ -182,7 +185,7 @@ class Weather(object):
             print 'Error finding photo for the time of day'
 
     # Confirms time of day and pulls corresponding image
-    def apply_pic(self):
+    def apply_pic(self, local_tz):
         pic_loc = '/static/img/'        
 
         # Pull sunrise and sunset from weather results - use to pull timestamp
@@ -192,20 +195,19 @@ class Weather(object):
         # Testing
         print 'apply_pic'
         print 2, self.wui_icon
-        print 3, moonphase.main(self.date_time)
+        print 3, moonphase.main(self.date_time, local_tz)
 
         print 4, self.date_time.time()
         print 5, self.sunrise.time()
         print 6, self.sunset.time()
         print 7, self.sunrise.time()< self.date_time.time() < self.sunset.time()
-
         # Picture assigned based on time of day
         if self.sunrise.time() < self.date_time.time() < self.sunset.time():
             self.add_day_pic(pic_loc)
         else:
             print 'it\'s not daytime' #test
 
-            self.add_night_pic(pic_loc)
+            self.add_night_pic(pic_loc, local_tz)
             
 
     # FIX - define to generate neighborhood name
