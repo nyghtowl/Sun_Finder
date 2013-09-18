@@ -141,7 +141,9 @@
 		        lat = position.coords.latitude;
 		        lng = position.coords.longitude;
 
-		        console.log(lat + ' ' + lng);
+				$('#index_coord').val(lat + ',' + lng);
+				console.log($('#index_coord').val());
+
 		        buildMap($('#map_canvas_search')[0], lat, lng);
 
 		    }, function(error) {
@@ -188,7 +190,6 @@
 
 	// Load search bar
 	$(function(){
-		var today_date = new Date();
 		
 		$('.sun_submit').on('click', function() { 
 			$('#layout_body_container').hide();
@@ -197,11 +198,8 @@
 
 		if (document.getElementById('index_form_load')){
 			console.log('index load');
-			var current_date = Date();
 			
 			$('#layout_body_container').show();
-			$('#index_date').val(today_date);
-			console.log($('#index_date').val());
 
 			typeahead();
 			datepicker();
@@ -222,15 +220,11 @@
 					$('#layout_body_container').show();
 					$('#top_form_load').append(data); 
 					if (lastSearchLocation) {
-						console.log('hellooooooo');
 						buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
 						buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
 					}		
 					typeahead();
 					datepicker();
-
-					$('#top_date').val(today_date);
-					console.log($('#top_date').val());
 
 				},
 				dataType: 'html'

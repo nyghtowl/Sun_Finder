@@ -182,8 +182,8 @@ def search():
 
     # Captures user-entered date format mm-dd-yy as string
     user_picked_time = request.form['date']
-    # Captures client side, today's date as string: Thu Sep 05 2013 21:47:00 GMT-0700 (PDT)
-    # auto_date = request.form['current_date']
+    
+    user_coord = request.form['user_coord']
 
     # Get weather data
     weather = sun_functions.search_results(txt_query, user_picked_time)
