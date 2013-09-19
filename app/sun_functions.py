@@ -67,9 +67,9 @@ def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
     else:
         # Adds automatically generated time to entered date
         # FIX - allow to change if allowing time choice
-        as_of_date = datetime.strptime(user_picked_time, "%m-%d-%Y")
+        as_of_date = datetime.strptime(user_picked_time_str, "%m-%d-%Y")
         # Applies auto time to the date picked / not timepicker
-        as_of_time = today_datetime.time() 
+        as_of_time = current_local_time.time() 
         as_of = datetime.combine(as_of_date,as_of_time)
 
     print 'as of', as_of
