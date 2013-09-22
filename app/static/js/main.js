@@ -1,9 +1,7 @@
 // Main Javascript file for Sun Finder
 
-(function() {
-	// Confirm load
-	console.log("main js");
-
+// (function() {
+	console.log("main js"); // Confirm load
 
 	// Load map  - currently SF biased
 	function buildMap(container, map_lat, map_long) { 
@@ -108,7 +106,6 @@
 		// mutipleMapMarks(map);
 	}
 
-
 	// Search result single green marker
 	function singleMapMarker(position, map) {
 		var markerImg = {
@@ -170,39 +167,6 @@
 		});
 	}
 
-
-	// Build map index initializer
-	function indexLoadMap(canvas_search){
-		console.log('index load map');
-
-		lat = 37.7888;
-		lng = -122.4037;
-		if (navigator.geolocation) {
-
-		    navigator.geolocation.getCurrentPosition(function(position) {
-
-		        lat = position.coords.latitude;
-		        lng = position.coords.longitude;
-
-				$('#index_coord').val(lat + ',' + lng);
-				console.log($('#index_coord').val());
-
-		        buildMap(canvas_search, lat, lng);
-
-		    }, function(error) {
-			    console.log('geo loc not exist');
-		        buildMap(canvas_search, lat, lng);
-			});
-
-		} else {
-		    // Fallback for no geolocation
-		    console.log('geoloc not shared');
-		    buildMap(canvas_search, lat, lng);
-		}
-	}
-
-
-
 	// Typeahead - Autocomplete
 	function typeahead() {
 		console.log("typeahead"); //test
@@ -230,56 +194,80 @@
 		});
 	}
 
+	// Index map load
+	function indexMapLoad(){
+		console.log('index map load');
+
+		var canvas_search = document.getElementById('map_canvas_search');
+		$('#layout_body_container').show();
+
+		typeahead();
+		datepicker();
+
+		if (navigator.geolocation) {
+
+		    navigator.geolocation.getCurrentPosition(function(position) {
+
+		        lat = position.coords.latitude;
+		        lng = position.coords.longitude;
+
+				$('#index_coord').val(lat + ',' + lng);
+				console.log($('#index_coord').val());
+
+		        buildMap(canvas_search, lat, lng);
+
+		    }, function(error) {
+			    console.log('geo loc not exist');
+		        buildMap(canvas_search);
+			});
+
+		} else {
+		    // Fallback for no geolocation
+		    console.log('geoloc not shared');
+		    buildMap(canvas_search);
+		}
+
+	}
+
+	// Other pages map load
+	function notIndexMapLoad(resultspage, lat, lng)	{
+		console.log('not index map load');
+		$('#sun_finder_title').show();
+		console.log('in mainjs', lat)
+		
+		
+		$.ajax({
+			type: "GET",
+			url: "form_top_partial",
+			success: function(data) { 
+				$('#layout_body_container').show();
+				$('#top_form_load').append(data); 
+				var canvas_search = document.getElementById('map_canvas_search');
+				var canvas_results = document.getElementById('map_canvas_results');	
+
+				buildMap(canvas_search, lat, lng);
+				
+				if (resultspage == true) {
+					buildMap(canvas_results, lat,lng);
+				}		
+				typeahead();
+				datepicker();
+
+			},
+			dataType: 'html'
+		});
+
+	}	
 
 	// Load search bar
 	$(function(){
 		
-		var canvas_search = document.getElementById('map_canvas_search');
+		var canvas_search = $('#map_canvas_search')[0];
 
 		$('.sun_submit').on('click', function() { 
 			$('#layout_body_container').hide();
 			$("#spinner").show() 
 		});
-
-		if (document.getElementById('index_form_load')){
-			console.log('index load');
-			
-			$('#layout_body_container').show();
-
-			typeahead();
-			datepicker();
-			indexLoadMap(canvas_search);
-
-		}else{
-			console.log('not index');
-			$('#sun_finder_title').show();
-			
-			if (typeof resultsLoad !== 'undefined') {
-				resultsLoad();
-			}
-			
-			$.ajax({
-				type: "GET",
-				url: "form_top_partial",
-				success: function(data) { 
-					$('#layout_body_container').show();
-					$('#top_form_load').append(data); 
-					var canvas_search = document.getElementById('map_canvas_search');
-					var canvas_results = document.getElementById('map_canvas_results');
-
-					if (lastSearchLocation) {
-						buildMap(canvas_search, lastSearchLocation.lat, lastSearchLocation.lng);
-						buildMap(canvas_results, lastSearchLocation.lat, lastSearchLocation.lng);
-					}		
-					typeahead();
-					datepicker();
-
-				},
-				dataType: 'html'
-			});
-
-		}	
-
 	});
-
-})();
+	
+// })();

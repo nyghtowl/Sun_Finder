@@ -87,15 +87,8 @@
 
 <script type="text/javascript">
     console.log('first search results load')
-    function resultsLoad(){
-        lastSearchLocation = {
-            lat: {{ result.lat }},
-            lng: {{ result.lng }}
-        }
 
-        console.log('search results'+ lastSearchLocation.lat);
-
-    }
+    notIndexMapLoad(true, {{ result.lat }}, {{ result.lng }});
 
 </script>
 
