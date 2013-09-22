@@ -66,15 +66,18 @@
 -------------------------------------------------- */
 #map_canvas_search {
   width: 100%;
-  height: 400px;
-  background-color: #CCC;
+  height: 100%;
 }
 
 #map_canvas_results{
-  width: 80%;
-  height: 400px;
-  background-color: #CCC;
-  
+  width: 90%;
+  height: 100%;
+}
+
+#map_canvas_search img, #map_canvas_results img { max-width: none; }
+
+.canvas_div {
+  height: 450px;
 }
 
 /* Map label */

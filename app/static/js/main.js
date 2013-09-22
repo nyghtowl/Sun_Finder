@@ -30,24 +30,25 @@
 		var map = new google.maps.Map(container, map_options)
 
 		// Map style
-		map.set('styles', [
-		  {
-		    featureType: 'all',
-		    elementType: 'all',
-		    stylers: [
-		      { weight: 0.6 },
-		      { lightness: -12 }
-		    ]
-		  },
-		  {
-		    featureType: 'all',
-		    elementType: 'labels',
-		    stylers: [
-		      { visibility: 'off' }
-		    ]
-		  }
-		]);
+		// map.set('styles', [
+		//   {
+		//     featureType: 'all',
+		//     elementType: 'all',
+		//     stylers: [
+		//       { weight: 0.6 },
+		//       { lightness: -12 }
+		//     ]
+		//   },
+		//   {
+		//     featureType: 'all',
+		//     elementType: 'labels',
+		//     stylers: [
+		//       { visibility: 'off' }
+		//     ]
+		//   }
+		// ]);
 
+		// Generating the weather image
 		var weatherImg = {
 			url:'static/img/partly_cloudy_small.png',
 			origin: new google.maps.Point(0,0),
@@ -55,24 +56,18 @@
 			anchor: new google.maps.Point(20,32)
 		};
 
-        var weatherMarker = new google.maps.Marker({
-			position: myLatLng,
-			map: map,
-			// icon: weatherImg,
-			title: "Something"
-		});
+  //       var weatherMarker = new google.maps.Marker({
+		// 	position: myLatLng,
+		// 	map: map,
+		// 	// icon: weatherImg,
+		// 	title: "Something"
+		// });
         
-		// singleMapMark(map, myLatLng);
-	    mutipleMapMarks(map);
-
-	}
-
-	function singleMapMark(map, myLatLng){
-		// Search result marker - custom img and marker variable
+		// Search result single green marker
 		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
-			url: "https://maps.gstatic.com/mapfiles/icon_green.png",
+			url: "https://maps.gstatic.com/mapfiles/icon_green.png"
 		};
 
 		var marker = new google.maps.Marker({
@@ -83,6 +78,9 @@
 			icon: markerImg,
 			title: "Search Result"
 		});
+
+
+		// mutipleMapMarks(map);
 	}
 
 	// MarkerWith Label - add multiple markers on the map
@@ -129,7 +127,7 @@
 
 
 	// Build map index initializer
-	function indexLoadMap(){
+	function indexLoadMap(canvas_search){
 		console.log('index load map');
 
 		lat = 37.7888;
@@ -144,17 +142,17 @@
 				$('#index_coord').val(lat + ',' + lng);
 				console.log($('#index_coord').val());
 
-		        buildMap($('#map_canvas_search')[0], lat, lng);
+		        buildMap(canvas_search, lat, lng);
 
 		    }, function(error) {
 			    console.log('geo loc not exist');
-		        buildMap($('#map_canvas_search')[0], lat, lng);
+		        buildMap(canvas_search, lat, lng);
 			});
 
 		} else {
 		    // Fallback for no geolocation
 		    console.log('geoloc not shared');
-		    buildMap($('#map_canvas_search')[0], lat, lng);
+		    buildMap(canvas_search, lat, lng);
 		}
 	}
 
@@ -191,6 +189,8 @@
 	// Load search bar
 	$(function(){
 		
+		var canvas_search = document.getElementById('map_canvas_search');
+
 		$('.sun_submit').on('click', function() { 
 			$('#layout_body_container').hide();
 			$("#spinner").show() 
@@ -203,7 +203,7 @@
 
 			typeahead();
 			datepicker();
-			indexLoadMap();
+			indexLoadMap(canvas_search);
 
 		}else{
 			console.log('not index');
@@ -219,9 +219,12 @@
 				success: function(data) { 
 					$('#layout_body_container').show();
 					$('#top_form_load').append(data); 
+					var canvas_search = document.getElementById('map_canvas_search');
+					var canvas_results = document.getElementById('map_canvas_results');
+
 					if (lastSearchLocation) {
-						buildMap($('#map_canvas_search')[0], lastSearchLocation.lat, lastSearchLocation.lng);
-						buildMap($('#map_canvas_results')[0], lastSearchLocation.lat, lastSearchLocation.lng);
+						buildMap(canvas_search, lastSearchLocation.lat, lastSearchLocation.lng);
+						buildMap(canvas_results, lastSearchLocation.lat, lastSearchLocation.lng);
 					}		
 					typeahead();
 					datepicker();
