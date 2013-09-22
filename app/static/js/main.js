@@ -17,11 +17,11 @@
 		console.log("build_map" + map_lat); // test
 		
 		//Pulls lat, lng from search result
-		var myLatLng = new google.maps.LatLng(map_lat,map_long);
+		var mapLatLng = new google.maps.LatLng(map_lat,map_long);
 
 		var map_options = {
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
-		  center: myLatLng,
+		  center: mapLatLng,
 		  zoom: 13,
 		  mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
@@ -30,23 +30,64 @@
 		var map = new google.maps.Map(container, map_options)
 
 		// Map style
-		// map.set('styles', [
-		//   {
-		//     featureType: 'all',
-		//     elementType: 'all',
-		//     stylers: [
-		//       { weight: 0.6 },
-		//       { lightness: -12 }
-		//     ]
-		//   },
-		//   {
-		//     featureType: 'all',
-		//     elementType: 'labels',
-		//     stylers: [
-		//       { visibility: 'off' }
-		//     ]
-		//   }
-		// ]);
+		map.set('styles', 
+
+			[
+			  {
+			    "featureType": "administrative.country",
+			    "stylers": [
+			      { "visibility": "off" }
+			    ]
+			  },{
+			    "featureType": "administrative.province",
+			    "stylers": [
+			      { "visibility": "off" }
+			    ]
+			  },{
+			    "featureType": "administrative.neighborhood",
+			    "elementType": "labels.text.fill",
+			    "stylers": [
+			      { "visibility": "on" },
+			      { "saturation": -100 },
+			      { "lightness": -12 }
+			    ]
+			  },{
+			    "featureType": "landscape.man_made",
+			    "elementType": "labels.text.stroke",
+			    "stylers": [
+			      { "visibility": "off" }
+			    ]
+			  },{
+			  },{
+			    "featureType": "transit.station",
+			    "stylers": [
+			      { "visibility": "simplified" }
+			    ]
+			  },{
+			    "featureType": "road",
+			    "stylers": [
+			      { "visibility": "simplified" }
+			    ]
+			  },{
+			    "featureType": "poi",
+			    "stylers": [
+			      { "visibility": "simplified" }
+			    ]
+			  },{
+			    "featureType": "poi.park",
+			    "elementType": "labels.text.fill",
+			    "stylers": [
+			      { "visibility": "on" }
+			    ]
+			  },{
+			    "featureType": "road.arterial",
+			    "stylers": [
+			      { "visibility": "off" }
+			    ]
+			  },{
+			  }
+			]
+			);
 
 		// Generating the weather image
 		var weatherImg = {
@@ -63,7 +104,13 @@
 		// 	title: "Something"
 		// });
         
-		// Search result single green marker
+		singleMapMarker(mapLatLng, map);
+		// mutipleMapMarks(map);
+	}
+
+
+	// Search result single green marker
+	function singleMapMarker(position, map) {
 		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
@@ -71,7 +118,7 @@
 		};
 
 		var marker = new google.maps.Marker({
-		    position: myLatLng,
+		    position: position,
 		    draggable: false,
 	    	raiseOnDrag: false,
 			map: map,
@@ -79,8 +126,6 @@
 			title: "Search Result"
 		});
 
-
-		// mutipleMapMarks(map);
 	}
 
 	// MarkerWith Label - add multiple markers on the map
