@@ -15,7 +15,7 @@ import time
 from pytz import timezone
 
 
-def google_places_coord(txt_query):
+def google_places_coord(txt_query, user_coord):
     # Regex to pull space with +
     txt_plus = re.sub('[ ]', '+', txt_query)
 
@@ -23,7 +23,7 @@ def google_places_coord(txt_query):
     api_params = {
         # holding central location in SF 
         'query': txt_plus,
-        'location':'37.7655, -122.4429',
+        'location': user_coord,
         'radius':5000,
         'sensor':'false',
         'key':G_KEY
@@ -77,7 +77,7 @@ def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
     return (as_of, current_local_time, local_tz)
 
 # Get weather data
-def search_results(txt_query, user_picked_time):
+def search_results(txt_query, user_picked_time, user_coord):
     loc_name = None
     utctimestamp = time.time()
 
@@ -91,7 +91,7 @@ def search_results(txt_query, user_picked_time):
         loc_name = neighborhood.n_hood
     # Use Google Places for coordinates if no query match to local db
     else:
-        g_lat, g_lng = google_places_coord(txt_query)
+        g_lat, g_lng = google_places_coord(txt_query, user_coord)
 
     timezone_id = search_coord_timezone(g_lat, g_lng, utctimestamp)
     

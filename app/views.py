@@ -2,12 +2,9 @@
 Sun Finder View -- Flask based sun search tool
 
 TO DO: 
-    Pull client side info into server without creating a tag
-    Get timezone and current time based on location searched
     
     Seed & Migrate database?
 
-    Migrate database structure - Alembic?
     Setup SSL
     Add Oauth
 
@@ -47,6 +44,7 @@ from forms import LoginForm, CreateLogin, EditForm
 from config import DATABASE_QUERY_TIMEOUT
 
 import sun_functions
+import unicodedata
 import json 
 
 # User load callback - populates current user
@@ -183,10 +181,12 @@ def search():
     # Captures user-entered date format mm-dd-yy as string
     user_picked_time = request.form['date']
     
-    user_coord = request.form['user_coord']
-
+    user_coord_unicode = request.form['user_coord']
+    user_coord = unicodedata.normalize('NFKD', user_coord_unicode).encode('ascii','ignore')
+    print 100, user_coord
+    print 101, type(user_coord)
     # Get weather data
-    weather = sun_functions.search_results(txt_query, user_picked_time)
+    weather = sun_functions.search_results(txt_query, user_picked_time, user_coord)
 
     if not weather:
         flash("%s not found. Please try your search again." % txt_query, category="error")
