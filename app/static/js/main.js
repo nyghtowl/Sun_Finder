@@ -2,24 +2,20 @@
 
 // hiding functions from global scope
 (function() {
-
-	var MapLoader = {}; // Namespace - main static/global variable to reference
+	
+	// Namespace - main static/global variable to reference
+	var MapLoader = {}; 
 
 	console.log("main js"); // Confirm load
 
 	// Load map  - currently SF biased
-	function buildMap(container, map_lat, map_long) { 
+	function buildMap(canvas, lat, lng) { 
 
-		// Pre-set lat lng to SF if not provided
-		if (!map_lat || !map_long) {
-			map_lat = 37.7655;
-			map_long = -122.4429;
-		}
 	    //stops other event listeners from firing on search button
-		console.log("build_map" + map_lat); // test
+		console.log("build_map" + lat); // test
 		
 		//Pulls lat, lng from search result
-		var mapLatLng = new google.maps.LatLng(map_lat,map_long);
+		var mapLatLng = new google.maps.LatLng(lat, lng);
 
 		var map_options = {
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
@@ -29,7 +25,7 @@
 		}
 		
 		// Establishes Google maps
-		var map = new google.maps.Map(container, map_options)
+		var map = new google.maps.Map(canvas, map_options);
 
 		// Map style
 		map.set('styles', 
@@ -200,96 +196,40 @@
 	}
 	// Other pages map load
 	MapLoader.pageSetup = function(options)	{
+		// Pre-set lat lng to SF if not provided
+		var lat = 37.7655;
+		var lng = -122.4429;
 
 		// $('#sun_finder_title').show();
 		$('#page_results').show();
 				 
 		if (options.lat){
-			buildMap(options.mapCanvas, options.lat, options.lng);
+			buildMap(options.mapCanvas,options.lat,options.lng);
 
 		} else if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function(position) {
 
-		        var lat = position.coords.latitude;
-		        var lng = position.coords.longitude;
+		        var geo_lat = position.coords.latitude;
+		        var geo_lng = position.coords.longitude;
 				
 				$('#coord').val(lat + ',' + lng);
 		        console.log($('#index_coord').val());
-		        buildMap(options.mapCanvas, lat, lng);
+		        buildMap(options.mapCanvas, geo_lat, geo_lng);
 
 		    }, function(error) {
 			    console.log('geolocation not exist');
-		        buildMap(options.mapCanvas);
+			    lat = 
+		        buildMap(options.mapCanvas, lat, lng);
 			});
-
 		} else {
 		    // Fallback for no geolocation
 		    console.log('geolocation not shared');
-		    buildMap(options.mapCanvas);
+		    buildMap(options.mapCanvas, lat, lng);
 		}
 
 		typeahead();
 		datepicker();
-
 		}
-
-	// // Index map load
-	// MapLoader.indexMapLoad = function (){
-
-	// 	console.log('index map load');
-
-	// 	var canvas_search = document.getElementById('map_canvas_search');
-	// 	$('#page_results').show();
-
-	// 	typeahead();
-	// 	datepicker();
-
-	// 	if (navigator.geolocation) {
-
-	// 	    navigator.geolocation.getCurrentPosition(function(position) {
-
-	// 	        lat = position.coords.latitude;
-	// 	        lng = position.coords.longitude;
-
-	// 			$('#index_coord').val(lat + ',' + lng);
-	// 			console.log($('#index_coord').val());
-
-	// 	        buildMap(canvas_search, lat, lng);
-
-	// 	    }, function(error) {
-	// 		    console.log('geo loc not exist');
-	// 	        buildMap(canvas_search);
-	// 		});
-
-	// 	} else {
-	// 	    // Fallback for no geolocation
-	// 	    console.log('geoloc not shared');
-	// 	    buildMap(canvas_search);
-	// 	}
-
-	// };
-
-	// // Other pages map load
-	// MapLoader.notIndexMapLoad = function(resultspage, lat, lng)	{
-	// 	console.log('not index map load');
-
-	// 	$('#sun_finder_title').show();
-				
-	// 	$('#page_results').show();
-	// 	var canvas_search = document.getElementById('map_canvas_search');
-
-	// 	var canvas_results = document.getElementById('map_canvas_results');	
-
-	// 	buildMap(canvas_search, lat, lng);
-		
-	// 	if (resultspage == true) {
-	// 		buildMap(canvas_results, lat,lng);
-	// 	}		
-		
-	// 	typeahead();
-	// 	datepicker();
-
-	// }	
 
 	// Setup search event 
 	$(function(){
@@ -300,7 +240,8 @@
 		});
 	});
 
-	window.MapLoader = MapLoader;
+	// make global var accessible externally
+	window.MapLoader = MapLoader; 
 
 	
 })();
