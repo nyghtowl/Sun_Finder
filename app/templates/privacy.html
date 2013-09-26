@@ -3,6 +3,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% include "top_search_partial.html" %}
 
 <div class="row-fluid page_results">
 	<div class="hero-unit">
@@ -13,7 +14,7 @@
 </div>
 <script>
         console.log("privacy"); // check load
-        notIndexMapLoad();
+        MapLoader.notIndexMapLoad();
 </script>
 
 {% endblock %}

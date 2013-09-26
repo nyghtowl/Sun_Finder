@@ -3,9 +3,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
-
-<div  class="row-fluid">
-
+{% include "top_search_partial.html" %}
+<div  class="row-fluid page_results">
 <h3 class="orm-signin-heading text-center">Edit Your Profile</h3>
 <div class="row-fluid">
 	<div class="well">
@@ -33,7 +32,7 @@
 </div>
 <script>
         console.log("edit"); // check load
-        notIndexMapLoad();
+        MapLoader.notIndexMapLoad();
 
 </script>
 {% endblock %}

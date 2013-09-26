@@ -3,6 +3,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% include "top_search_partial.html" %}
+
 <div class="row-fluid">
 	<div class="well well-large">
 		<div class="pull-right">
@@ -22,7 +24,7 @@
 
 <script>
         console.log("user"); // check load
-        notIndexMapLoad();
+        MapLoader.notIndexMapLoad();
 
 </script>
 

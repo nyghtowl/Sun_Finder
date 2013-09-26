@@ -1,6 +1,10 @@
 // Main Javascript file for Sun Finder
 
-// (function() {
+// hiding functions from global scope
+(function() {
+
+	var MapLoader = {}; // Namespace - main static/global variable to reference
+
 	console.log("main js"); // Confirm load
 
 	// Load map  - currently SF biased
@@ -95,17 +99,18 @@
 			anchor: new google.maps.Point(20,32)
 		};
 
-  //       var weatherMarker = new google.maps.Marker({
-		// 	position: myLatLng,
-		// 	map: map,
-		// 	// icon: weatherImg,
-		// 	title: "Something"
-		// });
+        var weatherMarker = new google.maps.Marker({
+			position: mapLatLng,
+			map: map,
+			icon: weatherImg,
+			title: "Something"
+		});
         
 		singleMapMarker(mapLatLng, map);
 		// mutipleMapMarks(map);
 	}
 
+// pass coordinates and so forth to marker creator
 	// Search result single green marker
 	function singleMapMarker(position, map) {
 		var markerImg = {
@@ -195,11 +200,12 @@
 	}
 
 	// Index map load
-	function indexMapLoad(){
+	MapLoader.indexMapLoad = function (){
+
 		console.log('index map load');
 
 		var canvas_search = document.getElementById('map_canvas_search');
-		$('#layout_body_container').show();
+		$('#page_results').show();
 
 		typeahead();
 		datepicker();
@@ -227,47 +233,42 @@
 		    buildMap(canvas_search);
 		}
 
-	}
+	};
 
 	// Other pages map load
-	function notIndexMapLoad(resultspage, lat, lng)	{
+	MapLoader.notIndexMapLoad = function(resultspage, lat, lng)	{
 		console.log('not index map load');
+
 		$('#sun_finder_title').show();
-		console.log('in mainjs', lat)
-		
-		
-		$.ajax({
-			type: "GET",
-			url: "form_top_partial",
-			success: function(data) { 
-				$('#layout_body_container').show();
-				$('#top_form_load').append(data); 
-				var canvas_search = document.getElementById('map_canvas_search');
-				var canvas_results = document.getElementById('map_canvas_results');	
-
-				buildMap(canvas_search, lat, lng);
 				
-				if (resultspage == true) {
-					buildMap(canvas_results, lat,lng);
-				}		
-				typeahead();
-				datepicker();
+		$('#page_results').show();
+		var canvas_search = document.getElementById('map_canvas_search');
 
-			},
-			dataType: 'html'
-		});
+		var canvas_results = document.getElementById('map_canvas_results');	
+
+		buildMap(canvas_search, lat, lng);
+		
+		if (resultspage == true) {
+			buildMap(canvas_results, lat,lng);
+		}		
+		
+		typeahead();
+		datepicker();
 
 	}	
 
-	// Load search bar
+	// Setup search event 
 	$(function(){
 		
 		var canvas_search = $('#map_canvas_search')[0];
 
 		$('.sun_submit').on('click', function() { 
-			$('#layout_body_container').hide();
+			$('#page_results').hide();
 			$("#spinner").show() 
 		});
 	});
+
+	window.MapLoader = MapLoader;
+
 	
-// })();
+})();

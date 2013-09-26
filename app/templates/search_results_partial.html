@@ -4,91 +4,103 @@
 
 {% block body %}
 
-<div class="row-fluid">
-    <!-- Day results -->
-    {% if result.sun_result %}                
-        <h4 class="text-center"> 
-            {% if result.loc_name %}
-                {{ result.loc_name }}
-            {% endif %} 
-            Sun Result <br><small><i> as of 
-            {{ result.print_date }}</i></small></h4>  
-        <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
-        {% if result.sun_result == "sun" %}
-            <p class="text-center"> Sun found! </p>
-        {% else %}
-            <!-- FIX add date that was searched as part of response -->
-            <p class="text-center"> The weather is {{ result.sun_result}}.</p>
-        {% endif %}
-    
-    <!-- Night results -->
-    {% elif result.moonphase %}
-        <h4 class="text-center"> 
-            {% if result.loc_name %}
-                {{ result.loc_name }} 
+{% include "top_search_partial.html" %}
+    <div class="row-fluid">
+        <!-- Day results -->
+        {% if result.sun_result %}                
+            <h4 class="text-center"> 
+                {% if result.loc_name %}
+                    {{ result.loc_name }}
+                {% endif %} 
+                Sun Result <br><small><i> as of 
+                {{ result.print_date }}</i></small></h4>  
+            <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+            {% if result.sun_result == "sun" %}
+                <p class="text-center"> Sun found! </p>
+            {% else %}
+                <!-- FIX add date that was searched as part of response -->
+                <p class="text-center"> The weather is {{ result.sun_result}}.</p>
             {% endif %}
-            Moon Result <br><small><i> as of 
-            {{ result.print_date }}</i></small></h4>
-        <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
-        <p class="text-center">{{ result.moonphase }} Moon<br> Look for sun tomorrow.</p>
-    {% endif %}
-
-    <!-- Temperature results -->
-    <dl class="dl-horizontal tempr_block">
-        <dt>WUI Temperature:</dt>
-            <dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
-    </dl>
-
-    <!-- More Details expansion -->
-      <div class="accordion span12" id="parent">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
-            More Weather Details
-          </a>
-        </div>
-        <div id="moreDetails" class="accordion-body collapse row-fluid">
-            <div class="accordion-inner span4">
-                <h5>Temperature Details</h5>
-                {% if result %} 
-                    <dl class="dl-horizontal">
-                        <dt>Temp °F:</dt> 
-                        {% if result.feels_like_F %}
-                            <dt>Feels Like °F:</dt> 
-                        {% endif %}
-                        <dt>Temp °C:</dt> 
-                        {% if result.feels_like_C %}
-                            <dt>Feels Like °C:</dt> 
-                        {% endif %}
-                        <dt>Wind:</dt> 
-                        <dt>Humidty:</dt> 
-                        <dd>{{ result.tempr_wui_F|round(1, 'ceil') }} °F</dd>
-                        {% if result.feels_like_F %}
-                            <dd>{{ result.feels_like_F }} °F</dd>
-                        {% endif %}
-                        <dd>{{ result.tempr_wui_C|round(1, 'ceil') }} °C</dd>
-                        {% if result.feels_like_C %}
-                           <dd>{{ result.feels_like_C }} °C</dd>
-                        {% endif %}
-                        <dd>{{ result.wind_mph }}mph</dd>
-                        <dd>{{ result.humidity }}%</dd>
-                    </dl>
-                    <dl>
-               
-                    </dl>
+        
+        <!-- Night results -->
+        {% elif result.moonphase %}
+            <h4 class="text-center"> 
+                {% if result.loc_name %}
+                    {{ result.loc_name }} 
                 {% endif %}
+                Moon Result <br><small><i> as of 
+                {{ result.print_date }}</i></small></h4>
+            <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+            <p class="text-center">{{ result.moonphase }} Moon<br> Look for sun tomorrow.</p>
+        {% endif %}
+
+        <!-- Temperature results -->
+        <dl class="dl-horizontal tempr_block">
+            <dt>WUI Temperature:</dt>
+                <dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
+        </dl>
+
+        <!-- More Details expansion -->
+          <div class="accordion span12" id="parent">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#parent" href="#moreDetails">
+                More Weather Details
+              </a>
             </div>
-            <div class="accordion-inner span8 canvas_div">
-                <h5>Map View</h5>
-               <div class="span7" id="map_canvas_results"></div>
+            <div id="moreDetails" class="accordion-body collapse row-fluid">
+                <div class="accordion-inner span4">
+                    <h5>Temperature Details</h5>
+                    {% if result %} 
+                        <dl class="dl-horizontal">
+                            <dt>Temp °F:</dt> 
+                            {% if result.feels_like_F %}
+                                <dt>Feels Like °F:</dt> 
+                            {% endif %}
+                            <dt>Temp °C:</dt> 
+                            {% if result.feels_like_C %}
+                                <dt>Feels Like °C:</dt> 
+                            {% endif %}
+                            <dt>Wind:</dt> 
+                            <dt>Humidty:</dt> 
+                            <dd>{{ result.tempr_wui_F|round(1, 'ceil') }} °F</dd>
+                            {% if result.feels_like_F %}
+                                <dd>{{ result.feels_like_F }} °F</dd>
+                            {% endif %}
+                            <dd>{{ result.tempr_wui_C|round(1, 'ceil') }} °C</dd>
+                            {% if result.feels_like_C %}
+                               <dd>{{ result.feels_like_C }} °C</dd>
+                            {% endif %}
+                            <dd>{{ result.wind_mph }}mph</dd>
+                            <dd>{{ result.humidity }}%</dd>
+                        </dl>
+                        <dl>
+                   
+                        </dl>
+                    {% endif %}
+                </div>
+                <div class="accordion-inner span8 canvas_div">
+                    <h5>Map View</h5>
+                   <div class="span7" id="map_canvas_results"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 <script type="text/javascript">
     console.log('first search results load')
 
-    notIndexMapLoad(true, {{ result.lat }}, {{ result.lng }});
+    // MapLoader.pageSetup({
+    //     lat: {{ result.lat }}, 
+    //     lng: {{ result.lng }}
+    //     mapCanvas: document.getElementById('map_canvas_search');
+    // });
+
+    // MapLoader.pageSetup({
+    //     lat: {{ result.lat }}, 
+    //     lng: {{ result.lng }}
+    //     mapCanvas: document.getElementById('map_canvas_results');
+    // });
+
+    MapLoader.notIndexMapLoad(true, {{ result.lat }}, {{ result.lng }});
 
 </script>
 

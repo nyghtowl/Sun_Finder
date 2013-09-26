@@ -3,6 +3,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% include "top_search_partial.html" %}
 
 <div class="row-fluid page_results">
 
@@ -11,5 +12,11 @@
 	<p><a href="{{ url_for('index') }}">Home Page</a></p>
 
 </div>
+
+<script>
+        console.log("500"); // check load
+        MapLoader.notIndexMapLoad();
+
+</script>
 
 {% endblock %}

@@ -4,6 +4,7 @@
 
 {% block body %}
 
+{% include "top_bar_partial.html" %}
 	<div class="page_results" id="index_load">
 
 		<div class="row-fluid span5 offset7 margin60">
@@ -31,7 +32,7 @@
 						</div>
 					</div>
 					<div hidden="true">
-					<input id="index_coord" name="user_coord" ></input>
+					<input id="coord" name="user_coord" ></input>
 					</div>
 				</form>
 			</div>
@@ -40,7 +41,7 @@
 	<script>
 
 		console.log('index');
-		indexMapLoad();
+		MapLoader.indexMapLoad();
 		
 	</script>
 

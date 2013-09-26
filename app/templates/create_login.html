@@ -3,7 +3,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-
+{% include "top_search_partial.html" %}
 <div  class="row-fluid page_results" id="create_account_load">
     <h3 class="orm-signin-heading text-center">Sun Finder Create Account</h3>
     <form action="{{ url_for('create_login') }}" method="POST" name="create_login" class="form-horizontal">
@@ -40,7 +40,7 @@
 
 <script>
         console.log("create login"); // check load
-        notIndexMapLoad();
+        MapLoader.notIndexMapLoad();
 
 </script>
 
