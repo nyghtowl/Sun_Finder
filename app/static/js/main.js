@@ -198,73 +198,105 @@
 			maxDate: "+3d"
 		});
 	}
+	// Other pages map load
+	MapLoader.pageSetup = function(options)	{
 
-	// Index map load
-	MapLoader.indexMapLoad = function (){
-
-		console.log('index map load');
-
-		var canvas_search = document.getElementById('map_canvas_search');
+		// $('#sun_finder_title').show();
 		$('#page_results').show();
+				 
+		if (options.lat){
+			buildMap(options.mapCanvas, options.lat, options.lng);
 
-		typeahead();
-		datepicker();
-
-		if (navigator.geolocation) {
-
+		} else if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function(position) {
 
-		        lat = position.coords.latitude;
-		        lng = position.coords.longitude;
-
-				$('#index_coord').val(lat + ',' + lng);
-				console.log($('#index_coord').val());
-
-		        buildMap(canvas_search, lat, lng);
+		        var lat = position.coords.latitude;
+		        var lng = position.coords.longitude;
+				
+				$('#coord').val(lat + ',' + lng);
+		        console.log($('#index_coord').val());
+		        buildMap(options.mapCanvas, lat, lng);
 
 		    }, function(error) {
-			    console.log('geo loc not exist');
-		        buildMap(canvas_search);
+			    console.log('geolocation not exist');
+		        buildMap(options.mapCanvas);
 			});
 
 		} else {
 		    // Fallback for no geolocation
-		    console.log('geoloc not shared');
-		    buildMap(canvas_search);
+		    console.log('geolocation not shared');
+		    buildMap(options.mapCanvas);
 		}
 
-	};
-
-	// Other pages map load
-	MapLoader.notIndexMapLoad = function(resultspage, lat, lng)	{
-		console.log('not index map load');
-
-		$('#sun_finder_title').show();
-				
-		$('#page_results').show();
-		var canvas_search = document.getElementById('map_canvas_search');
-
-		var canvas_results = document.getElementById('map_canvas_results');	
-
-		buildMap(canvas_search, lat, lng);
-		
-		if (resultspage == true) {
-			buildMap(canvas_results, lat,lng);
-		}		
-		
 		typeahead();
 		datepicker();
 
-	}	
+		}
+
+	// // Index map load
+	// MapLoader.indexMapLoad = function (){
+
+	// 	console.log('index map load');
+
+	// 	var canvas_search = document.getElementById('map_canvas_search');
+	// 	$('#page_results').show();
+
+	// 	typeahead();
+	// 	datepicker();
+
+	// 	if (navigator.geolocation) {
+
+	// 	    navigator.geolocation.getCurrentPosition(function(position) {
+
+	// 	        lat = position.coords.latitude;
+	// 	        lng = position.coords.longitude;
+
+	// 			$('#index_coord').val(lat + ',' + lng);
+	// 			console.log($('#index_coord').val());
+
+	// 	        buildMap(canvas_search, lat, lng);
+
+	// 	    }, function(error) {
+	// 		    console.log('geo loc not exist');
+	// 	        buildMap(canvas_search);
+	// 		});
+
+	// 	} else {
+	// 	    // Fallback for no geolocation
+	// 	    console.log('geoloc not shared');
+	// 	    buildMap(canvas_search);
+	// 	}
+
+	// };
+
+	// // Other pages map load
+	// MapLoader.notIndexMapLoad = function(resultspage, lat, lng)	{
+	// 	console.log('not index map load');
+
+	// 	$('#sun_finder_title').show();
+				
+	// 	$('#page_results').show();
+	// 	var canvas_search = document.getElementById('map_canvas_search');
+
+	// 	var canvas_results = document.getElementById('map_canvas_results');	
+
+	// 	buildMap(canvas_search, lat, lng);
+		
+	// 	if (resultspage == true) {
+	// 		buildMap(canvas_results, lat,lng);
+	// 	}		
+		
+	// 	typeahead();
+	// 	datepicker();
+
+	// }	
 
 	// Setup search event 
 	$(function(){
 		
-		var canvas_search = $('#map_canvas_search')[0];
-
 		$('.sun_submit').on('click', function() { 
-			$('#page_results').hide();
-			$("#spinner").show() 
+			$('.page_results').hide();
+			$('#spinner').show();
 		});
 	});
 

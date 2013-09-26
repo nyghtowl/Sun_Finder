@@ -1,4 +1,4 @@
-<!-- Top Bar page area --> 
+<!-- Top Search Bar - Not Index --> 
 <div class="ui-widget">
     <div class="row-fluid">
         <div class="span5 offset1">  
@@ -43,11 +43,8 @@
 </div>
 
 <!-- Search spinner -->
-<div id="spinner" class="ajax_img_pad">
-	<p id="progress" class="text-center">Forecasting in Progress…<br>
-	<img id="progress_image" src="/static/img/spiffygif_56x56.gif" class="ajax_img_pad">
-	</p>
-</div>
+{% include 'spinner_partial.html' %}
+
 
 <script type="text/javascript">
     console.log('top bar')

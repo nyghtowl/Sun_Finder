@@ -2,10 +2,10 @@
 <div class="ui-widget">
     <div class="row-fluid">
         <div class="span5 offset1">  
-            <a href="{{url_for('index')}}" id="sun_finder_title"><h3> Sun Finder </h3></a>
+            <a href=""><h3></h3></a>
         </div>
         <div class="span4 offset2">
-        	<h3 id="top_buffer">Hidden</h3>
+        	<h3 id="top_buffer">H</h3>
         </div>
     </div>
 
@@ -33,11 +33,8 @@
 </div>
 
 <!-- Search spinner -->
-<div id="spinner" class="ajax_img_pad">
-	<p id="progress" class="text-center">Forecasting in Progress…<br>
-	<img id="progress_image" src="/static/img/spiffygif_56x56.gif" class="ajax_img_pad">
-	</p>
-</div>
+{% include 'spinner_partial.html' %}
+
 
 <script type="text/javascript">
     console.log('top bar')

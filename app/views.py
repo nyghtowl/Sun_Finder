@@ -182,7 +182,12 @@ def search():
     user_picked_time = request.form['date']
     
     user_coord_unicode = request.form['user_coord']
-    user_coord = unicodedata.normalize('NFKD', user_coord_unicode).encode('ascii','ignore')
+
+    if user_coord_unicode:
+        user_coord = unicodedata.normalize('NFKD', user_coord_unicode).encode('ascii','ignore')
+    else:
+        user_coord = None
+    
     print 100, user_coord
     print 101, type(user_coord)
     # Get weather data
@@ -237,13 +242,6 @@ def tos():
 @app.route('/privacy')
 def privacy():    
     return render_template('privacy.html')
-
-# Search form load
-@app.route('/form_top_partial', methods=['GET'])
-@app.route('/user/form_top_partial', methods=['GET'])
-def form_top_partial():    
-    return render_template('form_top_partial.html')
-
 
 
 # User view with favorites and ability to report on validity of sun
