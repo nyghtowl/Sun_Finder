@@ -87,71 +87,100 @@
 			]
 			);
 
-		// Generating the weather image
-		var weatherImg = {
-			url:'static/img/partly_cloudy_small.png',
+
+		// Create search marker
+		var searchMarkerImg = "https://maps.gstatic.com/mapfiles/icon_green.png";
+		
+		createMarker({
+			position: mapLatLng, 
+			map: map, 
+			imgUrl: searchMarkerImg,
+			imgTitle: "Search Result",
+			scaledSize:new google.maps.Size(27, 27)
+		});
+
+		// Generating the weather image        
+        var weatherMarkerImg = 'static/img/partly_cloudy_small.png';
+		
+		createMarker({
+			position: mapLatLng, 
+			map: map, 
+			imgUrl: weatherMarkerImg,
 			origin: new google.maps.Point(0,0),
 			// size: new google.maps.Size(20, 32),
-			anchor: new google.maps.Point(20,32)
-		};
-
-        var weatherMarker = new google.maps.Marker({
-			position: mapLatLng,
-			map: map,
-			icon: weatherImg,
-			title: "Something"
+			anchor: new google.maps.Point(0,0),
+			scaledSize:new google.maps.Size(27, 27)
 		});
-        
-		singleMapMarker(mapLatLng, map);
-		// mutipleMapMarks(map);
+
+		var locations = [
+
+		[37.7698, -122.4472, 13, 'Haight Ashbury', weatherMarkerImg, "56.7 F"],
+
+		[37.7514, -122.4316, 13, 'Noe Valley', weatherMarkerImg, "56.7 °F"],
+		[37.7516, -122.4477, 13, 'Twin Peaks', weatherMarkerImg, "56.7 °F"],
+		[37.7627, -122.4352, 13, 'Castro', weatherMarkerImg, "56.7 °F"],
+		[37.7727, -122.4283, 13, 'Hayes Valley', weatherMarkerImg, "56.7 °F"],
+		[37.7600, -122.4148, 13, 'Mission District', weatherMarkerImg, "56.7 °F"],
+		[37.7572, -122.3999, 13, 'Potrero', weatherMarkerImg, "56.7 °F"]
+
+		];
+
+		readData(map, locations);
+
 	}
 
-// pass coordinates and so forth to marker creator
 	// Search result single green marker
-	function singleMapMarker(position, map) {
+	function createMarker(data) {
 		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
-			url: "https://maps.gstatic.com/mapfiles/icon_green.png"
+			url: data.imgUrl,
+			origin: data.origin || new google.maps.Point(0,0),
+			anchor: data.anchor,
+			scaledSize: data.scaledSize,
 		};
 
-		var marker = new google.maps.Marker({
-		    position: position,
+		var makeMarker = new google.maps.Marker({
+		    position: data.position,
 		    draggable: false,
 	    	raiseOnDrag: false,
-			map: map,
+			map: data.map,
 			icon: markerImg,
-			title: "Search Result"
+			title: data.imgTitle
 		});
 
 	}
 
 	// MarkerWith Label - add multiple markers on the map
-	function createMarker(position, label, map) {
+	function createLabel(data) {
 		return new MarkerWithLabel({
-	       position: new google.maps.LatLng(position[0],position[1]),
+	       position: new google.maps.LatLng(data.lat,data.lng),
 	       draggable: false,
 	       raiseOnDrag: false,
-	       map: map,
-	       labelContent: label,
-	       labelAnchor: new google.maps.Point(22, 0),
+	       map: data.map,
+	       labelInBackground: false, //Keeps label in the front
+	       labelContent: data.labelContent,
+	       labelAnchor: new google.maps.Point(35, 10),
 	       labelClass: "labels", // Connects to CSS class label
-	       labelStyle: {opacity: 1}
 		});
 	}
 
-// function addWeatherInfo(position, icon, temp, map){
-	// return new google.maps.Marker({
-	// 		position: position[0], position[1]
-	// 		map: map,
-	// 		icon: icon
-	// 	});
-// }
 
-	function readData(positions, labels, map) { 
-		for (var i = 0; i < positions.length; i++) {
-	    	createMarker(positions[i], labels[i], map);
-	    	//addWeatherInfo(positions[i], icons[i], temps[i], map) Have function to add icon and temp
+	function readData(map, locations) { 
+		for (var i = 0; i < locations.length; i++) {
+	    	console.log(locations[i][5]);
+	    	createLabel({ 
+	    		lat: locations[i][0],
+	    		lng: locations[i][1],
+	    		labelContent: locations[i][5], 
+	    		map: map
+	    	});
+	    	createMarker({
+	    		imgUrl:locations[i][4],
+	    		position: new google.maps.LatLng(locations[i][0], locations[i][1]), 
+				map: map, 
+				scaledSize:new google.maps.Size(25, 25)
+	    	});
 	  	}     
 	 }
 
