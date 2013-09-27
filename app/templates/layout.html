@@ -13,11 +13,12 @@
 				{% block body %} {% endblock %}
 			</div>
 		</div>
-			<!-- Push moves the footer below -->
-			<div id="push"></div>
+
+		<!-- Push moves the footer below -->
+		<div id="push">
+		{% include "footer_partial.html" %}
 		</div>
 
-		{% include "footer_partial.html" %}
 	</body>
 	<script type="text/javascript">
 		console.log("layout"); // check load
