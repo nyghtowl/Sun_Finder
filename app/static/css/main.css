@@ -83,8 +83,8 @@
  .labels {
    color: solid black;
    font-family: "Lucida Grande", "Arial", sans-serif;
-   font-size: 13px;
-   font-weight: 900;
+   font-size: 14px;
+   font-weight: bolder;
    text-align: center;
    width: 80px;     
    border: 0px;

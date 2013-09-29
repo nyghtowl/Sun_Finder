@@ -184,18 +184,18 @@
 	  	}     
 	 }
 
-	function mutipleMapMarks(map) {
-		$.ajax({
-			url:'map_details',
-			type: "GET",
-			cache: false,
-			dataType: "json",
-			success: function(data){
-				readData(data.result.loc_coords, data.result.locations,map);
-				// take data of current weather icon and temp from cache for list of locations
-				}
-		});
-	}
+	// function mutipleMapMarks(map) {
+	// 	$.ajax({
+	// 		url:'map_details',
+	// 		type: "GET",
+	// 		cache: false,
+	// 		dataType: "json",
+	// 		success: function(data){
+	// 			readData(data.result.loc_coords, data.result.locations,map);
+	// 			// take data of current weather icon and temp from cache for list of locations
+	// 			}
+	// 	});
+	// }
 
 	// Typeahead - Autocomplete
 	function typeahead() {

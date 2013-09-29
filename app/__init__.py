@@ -2,15 +2,19 @@ import os
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+from redis import Redis
 from momentjs import momentjs 
 
 # Initialize Flask app
 app = Flask(__name__)
 
-app.config.from_object('config') 
+app.config.from_object('config')
 
 # Variable represents sqlalchemy
 db = SQLAlchemy(app)
+
+# Initial redis instance and link to app
+redis_db = Redis()
 
 # Login information
 login_manager = LoginManager()

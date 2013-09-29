@@ -33,6 +33,9 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'sunfinder_db_repository')
 # Threashold for slow loading (in seconds)
 DATABASE_QUERY_TIMEOUT = 0.5
 
+#Redis
+# REDIS_QUEUE_KEY = 'my_queue'
+
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 

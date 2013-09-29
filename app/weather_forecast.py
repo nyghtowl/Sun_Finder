@@ -119,7 +119,6 @@ class Weather(object):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
         response_xml = requests.get(earth_final_url)
-        print 99999, response_xml.content
         return BeautifulSoup(response_xml.content)
 
     
@@ -157,7 +156,7 @@ class Weather(object):
             self.pic = pic_loc + weather_pics[self.wui_icon][1]
         else:
             flash('No photo found to match conditions.', category="info")
-        print self.pic
+        print 'date ' + self.pic
 
     # Convert icon result to an moon image if night
     def add_night_pic(self, pic_loc, local_tz):
@@ -174,7 +173,6 @@ class Weather(object):
 
         # Pull tz to avoid error comparing tz value dt to one without
         naive_dt = self.date_time
-        print 500, naive_dt
         moon = moonphase.main(naive_dt, local_tz)
         print 'add_night, %s' % moon
 
@@ -195,12 +193,7 @@ class Weather(object):
         # Testing
         print 'apply_pic'
         print 2, self.wui_icon
-        print 3, moonphase.main(self.date_time, local_tz)
 
-        print 4, self.date_time.time()
-        print 5, self.sunrise.time()
-        print 6, self.sunset.time()
-        print 7, self.sunrise.time()< self.date_time.time() < self.sunset.time()
         # Picture assigned based on time of day
         if self.sunrise.time() < self.date_time.time() < self.sunset.time():
             self.add_day_pic(pic_loc)
