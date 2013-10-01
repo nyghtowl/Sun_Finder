@@ -3,7 +3,7 @@ Sun Functions
 
 """
 
-from app import db as db_session
+from app import db as db_session, redis_db
 from flask import flash
 from config import G_KEY
 from models import Location, User
@@ -11,7 +11,7 @@ import requests # Alt to urllib
 import weather_forecast
 import re # Regex
 from datetime import datetime, timedelta
-import time
+import time, json
 from pytz import timezone
 
 
@@ -75,6 +75,19 @@ def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
     print 'as of', as_of
 
     return (as_of, current_local_time, local_tz)
+
+def daily_weather_report(locations):
+
+    daily_weather = []
+
+    for location in locations:
+        if redis_db.exists((location.lat, location.lng)):
+            nh_weather_str = redis_db.get((location.lat, location.lng))
+            nh_weather_dict = json.loads(nh_weather_str)
+            daily_weather.append(nh_weather_dict)
+    print "list for map ", daily_weather
+    print daily_weather[1]['img_url']
+    return daily_weather
 
 # Get weather data
 def search_results(txt_query, user_picked_time, user_coord):

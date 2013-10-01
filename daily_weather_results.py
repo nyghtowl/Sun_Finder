@@ -1,77 +1,47 @@
 # Build Redis Model of Multiple Weather Data
 
-from app import redis_db as weather_map
+from app import redis_db
 from config import WUI_KEY
 from app.models import Location
 from datetime import datetime
 import app.sun_functions 
 import app.weather_forecast
+import json
 from pytz import timezone
 import time
 
-# r.set('test', 4)
-# print r.get('test')
 
-# def get_forecast(lat, lng, as_of, current_local_time):
+def seed_daily_weather():
 
-#     # Url to pass to WUI
-#     wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
+    lat = 37.7655
+    lng = -122.4429
+    exp_time = 3600
+    utctimestamp = time.time()
 
-#     # Pull API key from env with FIO_KEY
-#     wui_final_url=wui_url%(WUI_KEY, lat, lng)
-#     print wui_final_url
-#     return requests.get(wui_final_url).json()
+    timezone_id = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
+    local_tz = timezone(timezone_id)
+    current_local_time = datetime.fromtimestamp(utctimestamp, local_tz)
 
-# def apply_pic(local_tz):
-#     if sunrise.time() < current_local_time < sunset.time():
-#         add_day_pic(pic_loc)
-#     else:
-#         print 'it\'s not daytime' #test
+    # pull coordinates from local db
+    neighborhoods = Location.query.all()
 
-#         self.add_night_pic(pic_loc, local_tz)
+    # run api on each coordinate
+    for nh in neighborhoods:
 
+        forecast = app.weather_forecast.Weather.get_forecast(nh.lat, nh.lng, current_local_time,current_local_time)
+        forecast.apply_pic(local_tz)
 
-# def main():
-# pull coordinates from local db
-neighborhoods = Location.query.all()
-lat = 37.7655
-lng = -122.4429
+        C_temp = forecast.tempr_wui_C
+        F_temp = forecast.tempr_wui_F
+        img_url = forecast.pic
 
-utctimestamp = time.time()
+        weather_id = (nh.lat, nh.lng)
+        weather_details = { 'lat': nh.lat, 'lng': nh.lng, 'img_url': img_url ,'temp': F_temp }
 
-timezone_id = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
-local_tz = timezone(timezone_id)
-current_local_time = datetime.fromtimestamp(utctimestamp, local_tz)
+        # store coord id and hash of weather details
+        redis_db.set(weather_id, json.dumps(weather_details), exp_time)
 
+        print redis_db.get(weather_id)
 
-# for nh in neighborhoods:
-    # forecast = get_forecast(nh.lat, nh.lng, current_local_time,current_local_time)
-
-forecast = app.weather_forecast.Weather.get_forecast(lat, lng, current_local_time,current_local_time)
-forecast.apply_pic(local_tz)
-
-# C_temp = ['current_observation']['temp_c']
-# F_temp = ['current_observation']['temp_f']
-C_temp = forecast.tempr_wui_C
-F_temp = forecast.tempr_wui_F
-img_url = forecast.pic
-
-weather_id = (lat,lng)
-# weather_details = { lat: lat, lng: lng, 'img_url': img_url ,'temp': F_temp }
-# weather_details = { 'img_url': img_url ,'temp': F_temp }
-weather_map.hset(1, 'lat', lat)
-weather_map.hset(1, 'lng', lng)
-weather_map.hset(1, 'img_url', img_url)
-weather_map.hset(1, 'temp', F_temp)
-x = float(weather_map.hget(1, 'lat'))
-print weather_map.hkeys(1)
-print weather_map.hvals(1)
-print type(x)
-# run api on each coordinate
-
-# use icon to get url img
-# to create hash temp and img_url
-
-
-# add coord as a key to redis
-# add hash as the value to redis
+if __name__ == '__main__':
+    seed_daily_weather()

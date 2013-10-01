@@ -204,7 +204,10 @@ def map_details():
     # generate local neighborhood object
     neighborhoods = Location.query.all()
     
-    return json.dumps({'result': {'locations': [nh.n_hood for nh in neighborhoods], 'loc_coords': [[nh.lat,nh.lng] for nh in neighborhoods] }})
+    daily_weather = sun_functions.daily_weather_report(neighborhoods) 
+    return json.dumps({'locations':daily_weather})
+    # return daily_weather - convert to json...
+    # return json.dumps({'result': {'locations': [nh.n_hood for nh in neighborhoods], 'loc_coords': [[nh.lat,nh.lng] for nh in neighborhoods] }})
 
 
 @app.route('/autocomplete', methods=['POST'])

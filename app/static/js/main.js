@@ -112,20 +112,7 @@
 			scaledSize:new google.maps.Size(27, 27)
 		});
 
-		var locations = [
-
-		[37.7698, -122.4472, 13, 'Haight Ashbury', weatherMarkerImg, "56.7 F"],
-
-		[37.7514, -122.4316, 13, 'Noe Valley', weatherMarkerImg, "56.7 °F"],
-		[37.7516, -122.4477, 13, 'Twin Peaks', weatherMarkerImg, "56.7 °F"],
-		[37.7627, -122.4352, 13, 'Castro', weatherMarkerImg, "56.7 °F"],
-		[37.7727, -122.4283, 13, 'Hayes Valley', weatherMarkerImg, "56.7 °F"],
-		[37.7600, -122.4148, 13, 'Mission District', weatherMarkerImg, "56.7 °F"],
-		[37.7572, -122.3999, 13, 'Potrero', weatherMarkerImg, "56.7 °F"]
-
-		];
-
-		readData(map, locations);
+		applyDailyMarkers(map);
 
 	}
 
@@ -166,36 +153,36 @@
 	}
 
 
-	function readData(map, locations) { 
+	function renderData(map, locations) { 
 		for (var i = 0; i < locations.length; i++) {
-	    	console.log(locations[i][5]);
+	    	console.log(locations[i].temp);
 	    	createLabel({ 
-	    		lat: locations[i][0],
-	    		lng: locations[i][1],
-	    		labelContent: locations[i][5], 
+	    		lat: locations[i].lat,
+	    		lng: locations[i].lng,
+	    		labelContent: locations[i].temp, 
 	    		map: map
 	    	});
 	    	createMarker({
-	    		imgUrl:locations[i][4],
-	    		position: new google.maps.LatLng(locations[i][0], locations[i][1]), 
+	    		imgUrl:locations[i].img_url,
+	    		position: new google.maps.LatLng(locations[i].lat, locations[i].lng), 
 				map: map, 
 				scaledSize:new google.maps.Size(25, 25)
 	    	});
 	  	}     
 	 }
 
-	// function mutipleMapMarks(map) {
-	// 	$.ajax({
-	// 		url:'map_details',
-	// 		type: "GET",
-	// 		cache: false,
-	// 		dataType: "json",
-	// 		success: function(data){
-	// 			readData(data.result.loc_coords, data.result.locations,map);
-	// 			// take data of current weather icon and temp from cache for list of locations
-	// 			}
-	// 	});
-	// }
+	function applyDailyMarkers(map) {
+		$.ajax({
+			url:'map_details',
+			type: "GET",
+			cache: false,
+			dataType: "json",
+			success: function(data){
+				renderData(map, data.locations);
+				// take data of current weather icon and temp from cache for list of locations
+				}
+		});
+	}
 
 	// Typeahead - Autocomplete
 	function typeahead() {
