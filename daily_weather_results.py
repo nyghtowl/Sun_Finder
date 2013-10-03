@@ -1,4 +1,5 @@
 # Build Redis Model of Multiple Weather Data
+# -*- coding: utf-8 -*-
 
 from app import redis_db
 from config import WUI_KEY
@@ -31,7 +32,7 @@ def seed_daily_weather():
         forecast = app.weather_forecast.Weather.get_forecast(nh.lat, nh.lng, current_local_time,current_local_time)
         forecast.apply_pic(local_tz)
 
-        range_temp = forecast.high_F + '-' + forecast.low_F
+        range_temp = forecast.high_F + u'\xb0F' +'-' + forecast.low_F + u'\xb0F'
         img_url = forecast.pic
 
         weather_id = (nh.lat, nh.lng)

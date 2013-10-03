@@ -7,7 +7,7 @@
 {% include "top_search_partial.html" %}
     <div class="row-fluid page_results">
         <!-- Day results -->
-        {% if result.sun_result %}                
+        {% if result.weather_descrip %}                
             <h4 class="text-center"> 
                 {% if result.loc_name %}
                     {{ result.loc_name }}
@@ -15,11 +15,11 @@
                 Sun Result <br><small><i> as of 
                 {{ result.print_date }}</i></small></h4>  
             <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
-            {% if result.sun_result == "sun" %}
+            {% if result.weather_descrip == "sun" %}
                 <p class="text-center"> Sun found! </p>
             {% else %}
                 <!-- FIX add date that was searched as part of response -->
-                <p class="text-center"> The weather is {{ result.sun_result}}.</p>
+                <p class="text-center"> The weather is {{ result.weather_descrip}}.</p>
             {% endif %}
         
         <!-- Night results -->
@@ -37,7 +37,7 @@
         <!-- Temperature results -->
         <dl class="dl-horizontal tempr_block">
             <dt>WUI Temperature:</dt>
-                <dd>{{ result.tempr_wui_F|round(1,'ceil') }} °F</dd>
+                <dd>{{ result.temp_F|round(1,'ceil') }} °F</dd>
         </dl>
 
         <!-- More Details expansion -->
@@ -62,11 +62,12 @@
                             {% endif %}
                             <dt>Wind:</dt> 
                             <dt>Humidty:</dt> 
-                            <dd>{{ result.tempr_wui_F|round(1, 'ceil') }} °F</dd>
+
+                            <dd>{{ result.temp_F|round(1, 'ceil') }} °F</dd>
                             {% if result.feels_like_F %}
                                 <dd>{{ result.feels_like_F }} °F</dd>
                             {% endif %}
-                            <dd>{{ result.tempr_wui_C|round(1, 'ceil') }} °C</dd>
+                            <dd>{{ result.temp_C|round(1, 'ceil') }} °C</dd>
                             {% if result.feels_like_C %}
                                <dd>{{ result.feels_like_C }} °C</dd>
                             {% endif %}
@@ -86,11 +87,12 @@
         </div>
     </div>
 <script type="text/javascript">
-    console.log('first search results load')
+    console.log('hit results page');
 
     MapLoader.pageSetup({
         lat: {{ result.lat }}, 
         lng: {{ result.lng }},
+        pic: '{{ result.pic }}',
         mapCanvas: $('#map_canvas_results')[0]
     });
     

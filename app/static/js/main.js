@@ -9,7 +9,7 @@
 	console.log("main js"); // Confirm load
 
 	// Load map  - currently SF biased
-	function buildMap(canvas, lat, lng) { 
+	function buildMap(canvas, lat, lng, searchMarkerImg, weatherSearchImg) { 
 
 	    //stops other event listeners from firing on search button
 		console.log("build_map" + lat); // test
@@ -87,10 +87,7 @@
 			]
 			);
 
-
-		// Create search marker
-		var searchMarkerImg = "https://maps.gstatic.com/mapfiles/icon_green.png";
-		
+		// Create search results marker
 		createMarker({
 			position: mapLatLng, 
 			map: map, 
@@ -99,30 +96,31 @@
 			scaledSize:new google.maps.Size(27, 27)
 		});
 
-		// Generating the weather image        
-        var weatherMarkerImg = 'static/img/partly_cloudy_small.png';
-		
-		createMarker({
-			position: mapLatLng, 
-			map: map, 
-			imgUrl: weatherMarkerImg,
-			origin: new google.maps.Point(0,0),
-			// size: new google.maps.Size(20, 32),
-			anchor: new google.maps.Point(0,0),
-			scaledSize:new google.maps.Size(27, 27)
-		});
+		if (weatherSearchImg){
+			console.log(weatherSearchImg);
 
-		applyDailyMarkers(map);
+			createMarker({
+				position: mapLatLng, 
+				map: map, 
+				imgUrl: weatherSearchImg,
+				origin: new google.maps.Point(0,0),
+				// size: new google.maps.Size(20, 32),
+				anchor: new google.maps.Point(0,0),
+				scaledSize:new google.maps.Size(27, 27)
+			});
+		}
+		
+		callMarkerData(map);
 
 	}
-
-	// Search result single green marker
+	
+	// Add images to map
 	function createMarker(data) {
 		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
 			url: data.imgUrl,
-			origin: data.origin || new google.maps.Point(0,0),
+			origin: data.origin,
 			anchor: data.anchor,
 			scaledSize: data.scaledSize,
 		};
@@ -138,7 +136,7 @@
 
 	}
 
-	// MarkerWith Label - add multiple markers on the map
+	// MarkerWith Label - add labels on map
 	function createLabel(data) {
 		return new MarkerWithLabel({
 	       position: new google.maps.LatLng(data.lat,data.lng),
@@ -152,33 +150,35 @@
 		});
 	}
 
-
-	function renderData(map, locations) { 
+	function renderMarkers(map, locations) { 
 		for (var i = 0; i < locations.length; i++) {
+	    	createMarker({
+	    		imgUrl:locations[i].img_url,
+				map: map, 
+	    		position: new google.maps.LatLng(locations[i].lat, locations[i].lng), 
+				origin: locations.origin || new google.maps.Point(0,0),
+				anchor: locations.anchor || new google.maps.Point(0,0),
+				scaledSize: new google.maps.Size(25, 25)
+	    	});
+
 	    	createLabel({ 
 	    		lat: locations[i].lat,
 	    		lng: locations[i].lng,
 	    		labelContent: locations[i].temp_range, 
 	    		map: map
 	    	});
-	    	createMarker({
-	    		imgUrl:locations[i].img_url,
-	    		position: new google.maps.LatLng(locations[i].lat, locations[i].lng), 
-				map: map, 
-				scaledSize:new google.maps.Size(25, 25)
-	    	});
+
 	  	}     
 	 }
 
-	function applyDailyMarkers(map) {
+	function callMarkerData(map) {
 		$.ajax({
 			url:'map_details',
 			type: "GET",
 			cache: false,
 			dataType: "json",
 			success: function(data){
-				renderData(map, data.locations);
-				// take data of current weather icon and temp from cache for list of locations
+				renderMarkers(map, data.locations);
 				}
 		});
 	}
@@ -215,11 +215,14 @@
 		var lat = 37.7655;
 		var lng = -122.4429;
 
+		// Create search marker
+		var searchMarkerImg = "https://maps.gstatic.com/mapfiles/icon_green.png";
+
 		// $('#sun_finder_title').show();
 		$('#page_results').show();
 				 
 		if (options.lat){
-			buildMap(options.mapCanvas,options.lat,options.lng);
+			buildMap(options.mapCanvas,options.lat,options.lng, searchMarkerImg, options.pic);
 
 		} else if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function(position) {
@@ -229,17 +232,17 @@
 				
 				$('#coord').val(lat + ',' + lng);
 		        console.log($('#index_coord').val());
-		        buildMap(options.mapCanvas, geo_lat, geo_lng);
+		        buildMap(options.mapCanvas, geo_lat, geo_lng, searchMarkerImg);
 
 		    }, function(error) {
 			    console.log('geolocation not exist');
 			    lat = 
-		        buildMap(options.mapCanvas, lat, lng);
+		        buildMap(options.mapCanvas, lat, lng, searchMarkerImg);
 			});
 		} else {
 		    // Fallback for no geolocation
 		    console.log('geolocation not shared');
-		    buildMap(options.mapCanvas, lat, lng);
+		    buildMap(options.mapCanvas, lat, lng, searchMarkerImg);
 		}
 
 		typeahead();
