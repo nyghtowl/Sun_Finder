@@ -3,6 +3,7 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from redis import Redis
+import urlparse
 from momentjs import momentjs 
 
 # Initialize Flask app
@@ -14,7 +15,11 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 # Initial redis instance and link to app
-redis_db = Redis()
+if os.environ.get('REDISCLOUD_URL') is None:
+    redis_db = Redis()
+else:
+    url = urlparse.urlparse(os.environ.get('REDISCLOUD_URL'))
+    redis_db = Redis(host=url.hostname, port=url.port, password=url.password)
 
 # Login information
 login_manager = LoginManager()
