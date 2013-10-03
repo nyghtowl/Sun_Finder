@@ -155,11 +155,10 @@
 
 	function renderData(map, locations) { 
 		for (var i = 0; i < locations.length; i++) {
-	    	console.log(locations[i].temp);
 	    	createLabel({ 
 	    		lat: locations[i].lat,
 	    		lng: locations[i].lng,
-	    		labelContent: locations[i].temp, 
+	    		labelContent: locations[i].temp_range, 
 	    		map: map
 	    	});
 	    	createMarker({

@@ -3,29 +3,28 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     
-    Seed & Migrate database?
+    Map -
+        Put links on map 
+        Change what labels show based on the zoom level of map?
 
     Setup SSL
     Add Oauth
 
+    Move Login back to modal forma
+
     Lock down format of user mobile info to enable Twillio
 
-    Map -
-        Put text and links on map - populate autocomplete based on click
-        Change what labels show based on the zoom level of map
 
     Add TDD
-
-    Weather Data - change returned data to populate page through json 
 
     Date/Time - setup ability to choose time
 
     run linter
 
-    look into lscache - to store content on the local computer - would be good for storing weather
-    get weather results ahead and cache
+    store searched weather results to leverage if searched again
 
     utilize makefile or grunt to prepare the code and combine to push out
+
     look at github/pamalafox/everday/blob/master/application/urls.py - for additional ideas on user data to structure for users
 
 
@@ -198,7 +197,7 @@ def search():
  
     return render_template('search_results_partial.html', result=weather)
  
-# FIX - working to build and pass - mostly handled with JS
+
 @app.route('/map_details', methods = ['GET'])
 def map_details():
     # generate local neighborhood object
@@ -206,8 +205,6 @@ def map_details():
     
     daily_weather = sun_functions.daily_weather_report(neighborhoods) 
     return json.dumps({'locations':daily_weather})
-    # return daily_weather - convert to json...
-    # return json.dumps({'result': {'locations': [nh.n_hood for nh in neighborhoods], 'loc_coords': [[nh.lat,nh.lng] for nh in neighborhoods] }})
 
 
 @app.route('/autocomplete', methods=['POST'])

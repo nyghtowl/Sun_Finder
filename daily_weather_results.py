@@ -15,7 +15,7 @@ def seed_daily_weather():
 
     lat = 37.7655
     lng = -122.4429
-    exp_time = 3600
+    exp_time = 7200
     utctimestamp = time.time()
 
     timezone_id = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
@@ -23,7 +23,7 @@ def seed_daily_weather():
     current_local_time = datetime.fromtimestamp(utctimestamp, local_tz)
 
     # pull coordinates from local db
-    neighborhoods = Location.query.all()
+    neighborhoods = Location.query.limit(10)
 
     # run api on each coordinate
     for nh in neighborhoods:
@@ -31,12 +31,11 @@ def seed_daily_weather():
         forecast = app.weather_forecast.Weather.get_forecast(nh.lat, nh.lng, current_local_time,current_local_time)
         forecast.apply_pic(local_tz)
 
-        C_temp = forecast.tempr_wui_C
-        F_temp = forecast.tempr_wui_F
+        range_temp = forecast.high_F + '-' + forecast.low_F
         img_url = forecast.pic
 
         weather_id = (nh.lat, nh.lng)
-        weather_details = { 'lat': nh.lat, 'lng': nh.lng, 'img_url': img_url ,'temp': F_temp }
+        weather_details = { 'lat': nh.lat, 'lng': nh.lng, 'img_url': img_url ,'temp_range':range_temp }
 
         # store coord id and hash of weather details
         redis_db.set(weather_id, json.dumps(weather_details), exp_time)

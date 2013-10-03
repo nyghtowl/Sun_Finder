@@ -32,6 +32,12 @@ class Weather(object):
         self.pic = None
         self.days = {}
 
+        self.daily_icon = wui_response['forecast']['simpleforecast']['forecastday'][0]['icon']
+        self.high_F = wui_response['forecast']['simpleforecast']['forecastday'][0]['high']['fahrenheit']
+        self.low_F = wui_response['forecast']['simpleforecast']['forecastday'][0]['low']['fahrenheit']
+        self.high_C = wui_response['forecast']['simpleforecast']['forecastday'][0]['high']['celsius']
+        self.low_C = wui_response['forecast']['simpleforecast']['forecastday'][0]['low']['celsius']
+
         # Determine if date is current or future to idenfity which data points to extract
         print 207, as_of.date(), current_local_time.date()
         if as_of.date() == current_local_time.date():
@@ -102,9 +108,8 @@ class Weather(object):
     @staticmethod
     def get_forecast(lat, lng, as_of, current_local_time):
 
-        # Url to pass to WUI
+        # Url to pass to WUI 
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
-
 
         # Pull API key from env with FIO_KEY
         wui_final_url=wui_url%(WUI_KEY, lat, lng)
@@ -146,8 +151,6 @@ class Weather(object):
             "mostlycloudy":("partly cloudy", "cloudy.png"),
             "partlycloudy":("partly cloudy", "partly_cloudy.png")
             }
-
-        # FIX - confirm the terms for wui_icon
 
         # Apply image for conditions at time of request        
         if self.wui_icon in weather_pics:
