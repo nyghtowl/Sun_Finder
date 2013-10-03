@@ -106,6 +106,8 @@ def search_results(txt_query, user_picked_time, user_coord):
     else:
         g_lat, g_lng = google_places_coord(txt_query, user_coord)
 
+    print "in sun func search result", g_lat
+
     timezone_id = search_coord_timezone(g_lat, g_lng, utctimestamp)
     
     # Format date to datetime

@@ -14,7 +14,7 @@ app.config.from_object('config')
 # Variable represents sqlalchemy
 db = SQLAlchemy(app)
 
-# Initial redis instance and link to app
+# Initial redis instance - local vs heroku
 if os.environ.get('REDISCLOUD_URL') is None:
     redis_db = Redis()
 else:

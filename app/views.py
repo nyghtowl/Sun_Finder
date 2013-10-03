@@ -187,10 +187,11 @@ def search():
     else:
         user_coord = None
     
-    print 100, user_coord
-    print 101, type(user_coord)
+    print 'user coord in search', user_coord
     # Get weather data
     weather = sun_functions.search_results(txt_query, user_picked_time, user_coord)
+
+    print 'weather result in search', weather
 
     if not weather:
         flash("%s not found. Please try your search again." % txt_query, category="error")
