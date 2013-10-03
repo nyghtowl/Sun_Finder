@@ -205,7 +205,11 @@ def map_details():
     neighborhoods = Location.query.all()
     
     daily_weather = sun_functions.daily_weather_report(neighborhoods) 
-    return json.dumps({'locations':daily_weather})
+
+    if daily_weather == []:
+        return ""
+    else:
+        return json.dumps({'locations':daily_weather})
 
 
 @app.route('/autocomplete', methods=['POST'])

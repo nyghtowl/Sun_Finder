@@ -34,10 +34,10 @@ class Weather(object):
 
 
         # Determine current or future date to figure what data to use
-        print 207, as_of.date(), current_local_time.date()
-
         forecast_frag = self.set_fragment(wui_response, as_of)
         current_frag = wui_response['current_observation']
+
+        print "compare dates in Weather object", as_of.date(), current_local_time.date()
 
         if as_of.date() == current_local_time.date():
             self.apply_current(current_frag, forecast_frag)
@@ -54,7 +54,8 @@ class Weather(object):
 
         # Pull API key from env with FIO_KEY
         wui_final_url=wui_url%(WUI_KEY, lat, lng)
-        print wui_final_url
+        print "weather underground url", wui_final_url
+
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
@@ -68,11 +69,14 @@ class Weather(object):
             wui_date = datetime.fromtimestamp(float(fragment['date']['epoch'])).date() 
             date_str = wui_date.strftime('%Y-%b-%d')
             wui_datetime = dateutil.parser.parse(date_str)
-            print 103, wui_datetime.date()
+
+            print "set_fragment", wui_datetime.date(), as_of.date()
+
             if wui_datetime.date() == as_of.date():
                 wui_fragment = fragment
                 print 104, wui_fragment
                 break
+
         return (wui_fragment)
 
     # Sets up the data points for current date
@@ -154,7 +158,7 @@ class Weather(object):
             self.pic = pic_loc + weather_pics[self.icon][1]
         else:
             flash('No photo found to match conditions.', category="info")
-        print 'date ' + self.pic
+        print 'image url' + self.pic
 
     # Convert icon result to an moon image if night
     def add_night_pic(self, pic_loc, local_tz):
@@ -186,8 +190,7 @@ class Weather(object):
 
 
         # Testing
-        print 'apply_pic'
-        print 2, self.icon
+        print "icon for pic", self.icon
 
         # Picture assigned based on time of day
         if self.sunrise.time() < self.date_time.time() < self.sunset.time():

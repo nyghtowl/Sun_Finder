@@ -178,7 +178,9 @@
 			cache: false,
 			dataType: "json",
 			success: function(data){
-				renderMarkers(map, data.locations);
+				if (data){
+					renderMarkers(map, data.locations);
+				}
 				}
 		});
 	}

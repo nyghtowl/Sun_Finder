@@ -59,7 +59,7 @@ def search_coord_timezone(g_lat, g_lng, utctimestamp):
 # Generate valid as_of date to create weather object
 def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
     local_tz = timezone(timezone_id)
-    print 'timestamp', utc_timestamp
+    print 'in extract_as_of'
     current_local_time = datetime.fromtimestamp(utc_timestamp, local_tz)
 
     if not(user_picked_time_str):
@@ -85,8 +85,7 @@ def daily_weather_report(locations):
             nh_weather_str = redis_db.get((location.lat, location.lng))
             nh_weather_dict = json.loads(nh_weather_str)
             daily_weather.append(nh_weather_dict)
-    print "list for map ", daily_weather
-    print daily_weather[1]['img_url']
+    print "daily_weather in sun functions"
     return daily_weather
 
 # Get weather data
@@ -105,8 +104,6 @@ def search_results(txt_query, user_picked_time, user_coord):
     # Use Google Places for coordinates if no query match to local db
     else:
         g_lat, g_lng = google_places_coord(txt_query, user_coord)
-
-    print "in sun func search result", g_lat
 
     timezone_id = search_coord_timezone(g_lat, g_lng, utctimestamp)
     
