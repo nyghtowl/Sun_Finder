@@ -6,34 +6,23 @@
 
 {% include "top_search_partial.html" %}
     <div class="row-fluid page_results">
-        <!-- Day results -->
-        {% if result.weather_descrip %}                
-            <h4 class="text-center"> 
-                {% if result.loc_name %}
-                    {{ result.loc_name }}
-                {% endif %} 
-                Sun Result <br><small><i> as of 
-                {{ result.print_date }}</i></small></h4>  
-            <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
-            {% if result.weather_descrip == "sun" %}
-                <p class="text-center"> Sun found! </p>
-            {% else %}
-                <!-- FIX add date that was searched as part of response -->
-                <p class="text-center"> The weather is {{ result.weather_descrip}}.</p>
-            {% endif %}
-        
-        <!-- Night results -->
-        {% elif result.moonphase %}
-            <h4 class="text-center"> 
-                {% if result.loc_name %}
-                    {{ result.loc_name }} 
-                {% endif %}
-                Moon Result <br><small><i> as of 
-                {{ result.print_date }}</i></small></h4>
-            <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+       
+        <h4 class="text-center"> 
+            {% if result.loc_name %}
+                {{ result.loc_name }}
+            {% endif %} 
+            Result <br><small><i> as of 
+            {{ result.print_date }}</i></small></h4>  
+        <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
+        {% if result.weather_descrip == "sun" %}
+            <p class="text-center"> Sun found! </p>
+        {% elif self.moon %}
+            <!-- FIX add date that was searched as part of response -->
             <p class="text-center">{{ result.moonphase }}<br> Look for sun tomorrow.</p>
+        {% else %}
+            <p class="text-center"> The weather is {{ result.weather_descrip}}.</p>
         {% endif %}
-
+        
         <!-- Temperature results -->
         <dl class="dl-horizontal tempr_block">
             <dt>WUI Temperature:</dt>
@@ -60,7 +49,7 @@
                             {% if result.feels_like_C %}
                                 <dt>Feels Like °C:</dt> 
                             {% endif %}
-                            <dt>Wind:</dt> 
+                            <dt>Wind (mph):</dt> 
                             <dt>Humidty:</dt> 
 
                             <dd>{{ result.temp_F|round(1, 'ceil') }} °F</dd>

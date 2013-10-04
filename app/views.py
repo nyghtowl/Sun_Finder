@@ -3,14 +3,19 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     
+    rework sun functions
+
+    Rework results page format and add more weather details
+
     Map -
         Put links on map 
-        Change what labels show based on the zoom level of map?
+        Provide weather details within a radius of the search item
+        Store weather searches in Redis for the day
 
     Setup SSL
     Add Oauth
 
-    Move Login back to modal forma
+    Move Login back to modal format
 
     Lock down format of user mobile info to enable Twillio
 

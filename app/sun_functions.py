@@ -10,10 +10,8 @@ from models import Location, User
 import requests # Alt to urllib
 import weather_forecast
 import re # Regex
-from datetime import datetime, timedelta
-import time, json
-from pytz import timezone
-
+from datetime import datetime
+import json
 
 def google_places_coord(txt_query, user_coord):
     # Regex to pull space with +
@@ -42,40 +40,6 @@ def google_places_coord(txt_query, user_coord):
     else:
         return None
 
-def search_coord_timezone(g_lat, g_lng, utctimestamp):
-    str_lat_lng = str(g_lat) + ',' + str(g_lng)
-    url = "https://maps.googleapis.com/maps/api/timezone/json?"
-    
-    api_params = {
-        'location':str_lat_lng,
-        'timestamp':utctimestamp,
-        'sensor':'true'
-    }
-
-    result = requests.get(url,params=api_params)
-    result_json = result.json()
-    return (result_json['timeZoneId'], result_json['dstOffset'], result_json['rawOffset'])
-
-# Generate valid as_of date to create weather object
-def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
-    local_tz = timezone(timezone_id)
-    print 'in extract_as_of'
-    current_local_time = datetime.fromtimestamp(utc_timestamp, local_tz)
-
-    if not(user_picked_time_str):
-        as_of = current_local_time
-    else:
-        # Adds automatically generated time to entered date
-        # FIX - allow to change if allowing time choice
-        as_of_date = datetime.strptime(user_picked_time_str, "%m-%d-%Y")
-        # Applies auto time to the date picked / not timepicker
-        as_of_time = current_local_time.time() 
-        as_of = datetime.combine(as_of_date,as_of_time)
-
-    print 'as of', as_of
-
-    return (as_of, current_local_time, local_tz)
-
 def daily_weather_report(locations):
 
     daily_weather = []
@@ -91,7 +55,6 @@ def daily_weather_report(locations):
 # Get weather data
 def search_results(txt_query, user_picked_time, user_coord):
     loc_name = None
-    utctimestamp = time.time()
 
     # Grabs neighborhood from database 
     neighborhood = Location.query.filter(Location.n_hood.contains(txt_query)).first()
@@ -105,18 +68,10 @@ def search_results(txt_query, user_picked_time, user_coord):
     else:
         g_lat, g_lng = google_places_coord(txt_query, user_coord)
 
-    timezone_id, dstOffset, rawOffset = search_coord_timezone(g_lat, g_lng, utctimestamp)
-    
-    # Format date to datetime
-    as_of, current_local_time, local_tz = extract_as_of(user_picked_time, utctimestamp, timezone_id)
-
     if not g_lat:
         flash("%s not found. Please try your search again." % txt_query, category="error")
  
-    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, current_local_time, dstOffset, rawOffset)
-
-    # Confirm time of day to figure out picture to apply
-    forecast_result.apply_pic(local_tz)
+    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time)
     
     # Applies neighborhood name if from local db
     if loc_name:

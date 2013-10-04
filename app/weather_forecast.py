@@ -5,49 +5,54 @@ generated object to pull weather results
 
 """
 from config import WUI_KEY
-from datetime import datetime
+from datetime import datetime, timedelta
+import time, json
 from time import strftime
 from pprint import pprint
 import requests
 import moonphase
 from BeautifulSoup import BeautifulSoup
 import dateutil.parser
+from pytz import timezone
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, as_of, current_local_time, dstOffset, rawOffset):
+    def __init__(self, wui_response, lat, lng, user_picked_time):
         # pprint(wui_response)
 
         self.lat = lat
         self.lng = lng
         self.loc_name = None
-        # Datetime format including day and time
-        self.date_time = as_of
-        self.print_date = as_of.strftime('%h %d, %Y') # Date for html
-        # FIX change revise time based on what is submitted
-        self.time = None  
-        self.weather_descrip = None
-        self.sunrise = self.get_sunrise()
-        self.sunset = self.get_sunset()
-        self.moonphase = None
-        self.pic = None
-        self.days = {}
+        self.utcstamp = time.time()
 
+        # FIX change revise time based on what is submitted
+        self.weather_descrip = None
+        self.moon = None
+
+        self.search_coord_timezone()
+        self.extract_as_of(user_picked_time)
+        self.get_sunrise()
+        self.get_sunset()
+
+        self.print_date = self.as_of.strftime('%h %d, %Y') # Date for html
 
         # Determine current or future date to figure what data to use
-        forecast_frag = self.set_fragment(wui_response, as_of, dstOffset, rawOffset)
+        forecast_frag = self.set_fragment(wui_response)
         current_frag = wui_response['current_observation']
 
-        print "compare dates in Weather object", as_of.date(), current_local_time.date()
+        print "compare dates in Weather object", self.as_of.date(), self.current_local_time.date()
 
-        if as_of.date() == current_local_time.date():
+        if self.as_of.date() == self.current_local_time.date():
             self.apply_current(current_frag, forecast_frag)
         else:
             self.apply_forecast(forecast_frag)
 
+        self.pic = self.apply_pic()
+
+## Weather API Call ##
 
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
-    def get_forecast(lat, lng, as_of, current_local_time, dstOffset, rawOffset):
+    def get_forecast(lat, lng, user_picked_time):
 
         # Url to pass to WUI 
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
@@ -59,21 +64,24 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(wui_response, lat, lng, as_of, current_local_time, dstOffset, rawOffset)
-        
+        return Weather(wui_response, lat, lng, user_picked_time)
+
+
+## Set Weather Attributes ##
+
     # Identify api results dict/arry path based on date and set main segment to var
-    def set_fragment(self, wui_response, as_of, dstOffset, rawOffset):
+    def set_fragment(self, wui_response):
         wui_fragment = None
 
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
-            local_timestamp = float(fragment['date']['epoch']) + dstOffset +rawOffset
+            local_timestamp = float(fragment['date']['epoch']) + self.dstOffset + self.rawOffset
 
             # Needed timestamp offset to keep conversion of timestamp focused on search location vs location of the server
             wui_date = datetime.fromtimestamp(local_timestamp).date() 
 
-            print "set_fragment", wui_date, as_of.date()
+            print "set_fragment", wui_date, self.as_of.date()
 
-            if wui_date == as_of.date():
+            if wui_date == self.as_of.date():
                 wui_fragment = fragment
                 break
 
@@ -98,7 +106,6 @@ class Weather(object):
     # Apply data attributes for future dates
     def apply_forecast(self, wui_fragment):
         self.icon = wui_fragment['icon'] 
-# looping through list to find day and then icon in dictionary
 
         self.temp_F = float(wui_fragment['high']['fahrenheit'])
         self.temp_C = float(wui_fragment['high']['celsius'])
@@ -115,26 +122,62 @@ class Weather(object):
                 self.days[i] = find_for(self, wui_response, as_of)
 
 
-    #FIX Pull out by hour
+## Time Setup ##
 
+    def search_coord_timezone(self):
+        str_lat_lng = str(self.lat) + ',' + str(self.lng)
+        url = "https://maps.googleapis.com/maps/api/timezone/json?"
+        
+        api_params = {
+            'location':str_lat_lng,
+            'timestamp': self.utcstamp,
+            'sensor':'true'
+        }
+
+        tz_result = requests.get(url,params=api_params)
+        tz_result_json = tz_result.json()
+
+        self.local_tz = timezone(tz_result_json['timeZoneId'])
+        self.dstOffset = tz_result_json['dstOffset']
+        self.rawOffset = tz_result_json['rawOffset']
+
+
+    # Generate valid as_of date to create weather object
+    def extract_as_of(self, user_picked_time):
+
+        print 'in extract_as_of'
+        self.current_local_time = datetime.fromtimestamp(self.utcstamp, self.local_tz)
+
+        if not(user_picked_time):
+            self.as_of = self.current_local_time
+        else:
+            # Adds automatically generated time to entered date
+            # FIX - allow to change if allowing time choice
+            as_of_date = datetime.strptime(user_picked_time, "%m-%d-%Y")
+            # Applies auto time to the date picked 
+            as_of_time = self.current_local_time.time() 
+            self.as_of = datetime.combine(as_of_date, as_of_time)
+
+        print 'as of', self.as_of
 
     # Get sunrise and sunset from earthtools
     def get_earthtools(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
-        earth_final_url=earth_url%(self.lat,self.lng,self.date_time.day,self.date_time.month)
+        earth_final_url=earth_url%(self.lat,self.lng,self.as_of.day,self.as_of.month)
         response_xml = requests.get(earth_final_url)
         return BeautifulSoup(response_xml.content)
 
-    
     def get_sunrise(self):
         nextrise=self.get_earthtools()
         sunrise=nextrise.sunrise.string
-        return datetime.strptime(sunrise, '%H:%M:%S') 
+        self.sunrise = datetime.strptime(sunrise, '%H:%M:%S') 
      
     def get_sunset(self):
         nextset=self.get_earthtools()
         sunset=nextset.sunset.string
-        return datetime.strptime(sunset, '%H:%M:%S')
+        self.sunset = datetime.strptime(sunset, '%H:%M:%S')
+
+## Picture Setup ##
 
     # Convert icon result to an image if day
     def add_day_pic(self, pic_loc):        
@@ -161,7 +204,7 @@ class Weather(object):
         print 'image url' + self.pic
 
     # Convert icon result to an moon image if night
-    def add_night_pic(self, pic_loc, local_tz):
+    def add_night_pic(self, pic_loc):
         night_pics = {
             "First Quarter":"moon_firstquarter.png", 
             "Full Moon":"full_moon1.jpg", 
@@ -175,32 +218,32 @@ class Weather(object):
 
         # Pull tz to avoid error comparing tz value dt to one without
         naive_dt = self.date_time
-        moon = moonphase.main(naive_dt, local_tz)
+        moon = moonphase.main(naive_dt, self.local_tz)
         print 'add_night, %s' % moon
 
         if moon in night_pics:
             self.pic = pic_loc + night_pics[moon]
             if moon.endswith("Moon"):
-                self.moonphase = moon
+                self.weather_descrip = moon
             else:
-                self.moonphase = moon + ' Moon'
+                self.weather_descrip = moon + ' Moon'
         else:
             print 'Error finding photo for the time of day'
 
     # Confirms time of day and pulls corresponding image
-    def apply_pic(self, local_tz):
+    def apply_pic(self):
         pic_loc = '/static/img/'        
 
         # Testing
         print "icon for pic", self.icon
 
         # Picture assigned based on time of day
-        if self.sunrise.time() < self.date_time.time() < self.sunset.time():
+        if self.sunrise.time() < self.as_of.time() < self.sunset.time():
             self.add_day_pic(pic_loc)
         else:
             print 'it\'s not daytime' #test
-
-            self.add_night_pic(pic_loc, local_tz)
+            self.moon = True
+            self.add_night_pic(pic_loc)
             
 
     # FIX - define to generate neighborhood name
