@@ -16,7 +16,7 @@ def seed_daily_weather():
 
     lat = 37.7655
     lng = -122.4429
-    exp_time = 7200
+    exp_time = 36000
     utctimestamp = time.time()
 
     timezone_id, dstOffset, rawOffset = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
@@ -37,6 +37,8 @@ def seed_daily_weather():
 
         weather_id = (nh.lat, nh.lng)
         weather_details = { 'lat': nh.lat, 'lng': nh.lng, 'img_url': img_url ,'temp_range':range_temp }
+
+        print nh.lat, nh.lng
 
         # store coord id and hash of weather details
         redis_db.set(weather_id, json.dumps(weather_details), exp_time)
