@@ -46,7 +46,7 @@ class Weather(object):
         else:
             self.apply_forecast(forecast_frag)
 
-        self.pic = self.apply_pic()
+        self.apply_pic()
 
 ## Weather API Call ##
 

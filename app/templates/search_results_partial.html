@@ -18,7 +18,7 @@
             <p class="text-center"> Sun found! </p>
         {% elif self.moon %}
             <!-- FIX add date that was searched as part of response -->
-            <p class="text-center">{{ result.moonphase }}<br> Look for sun tomorrow.</p>
+            <p class="text-center">{{ result.weather_descrip }}<br> Look for sun tomorrow.</p>
         {% else %}
             <p class="text-center"> The weather is {{ result.weather_descrip}}.</p>
         {% endif %}
