@@ -109,6 +109,15 @@
 			});
 		}
 		
+		if (mapInfo.weatherSearchImg){
+	    	createLabel({ 
+	    		lat: mapInfo.lat,
+	    		lng: mapInfo.lng,
+	    		labelContent: mapInfo.weatherSearchLabel, 
+	    		map: map
+	    	});
+		}
+		
 		callMarkerData(map);
 
 	}
@@ -228,7 +237,8 @@
 				lat: options.lat,
 				lng: options.lng, 
 				searchMarkerImg: searchMarkerImg, 
-				weatherSearchImg: options.pic
+				weatherSearchImg: options.pic,
+				weatherSearchLabel: options.searchLabel
 			});
 
 		} else if (navigator.geolocation) {
