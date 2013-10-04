@@ -31,12 +31,13 @@ def google_places_coord(txt_query, user_coord):
     result = requests.get(url,params=api_params)
     # Extract lat & lng
     place_result = result.json()
-    result_path = place_result['results'][0]['geometry']['location'] 
-    g_lat = result_path['lat']
-    g_lng = result_path['lng']
+    result_path = place_result['results'][0] 
+    g_lat = result_path['geometry']['location']['lat']
+    g_lng = result_path['geometry']['location']['lng']
+    loc_name = result_path['name']
    
     if g_lat:
-        return (g_lat, g_lng)
+        return (g_lat, g_lng, loc_name)
     else:
         return None
 
@@ -54,7 +55,6 @@ def daily_weather_report(locations):
 
 # Get weather data
 def search_results(txt_query, user_picked_time, user_coord):
-    loc_name = None
 
     # Grabs neighborhood from database 
     neighborhood = Location.query.filter(Location.n_hood.contains(txt_query)).first()
@@ -66,17 +66,13 @@ def search_results(txt_query, user_picked_time, user_coord):
         loc_name = neighborhood.n_hood
     # Use Google Places for coordinates if no query match to local db
     else:
-        g_lat, g_lng = google_places_coord(txt_query, user_coord)
+        g_lat, g_lng, loc_name = google_places_coord(txt_query, user_coord)
 
     if not g_lat:
         flash("%s not found. Please try your search again." % txt_query, category="error")
  
-    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time)
+    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time, loc_name)
     
-    # Applies neighborhood name if from local db
-    if loc_name:
-        forecast_result.add_name(loc_name) 
-
     # Return weather data
     return forecast_result
 

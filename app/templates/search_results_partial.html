@@ -11,12 +11,12 @@
             {% if result.loc_name %}
                 {{ result.loc_name }}
             {% endif %} 
-            Result <br><small><i> as of 
+            Search Result <br><small><i> as of 
             {{ result.print_date }}</i></small></h4>  
         <p class="text-center"><img src="{{ result.pic }}" class="img-rounded"></p>
         {% if result.weather_descrip == "sun" %}
             <p class="text-center"> Sun found! </p>
-        {% elif self.moon %}
+        {% elif result.moon %}
             <!-- FIX add date that was searched as part of response -->
             <p class="text-center">{{ result.weather_descrip }}<br> Look for sun tomorrow.</p>
         {% else %}
@@ -25,7 +25,7 @@
         
         <!-- Temperature results -->
         <dl class="dl-horizontal tempr_block">
-            <dt>WUI Temperature:</dt>
+            <dt>Temperature:</dt>
                 <dd>{{ result.temp_F|round(1,'ceil') }} °F</dd>
         </dl>
 

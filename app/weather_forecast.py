@@ -16,17 +16,16 @@ import dateutil.parser
 from pytz import timezone
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, user_picked_time):
+    def __init__(self, wui_response, lat, lng, user_picked_time, loc_name=None):
         # pprint(wui_response)
 
         self.lat = lat
         self.lng = lng
-        self.loc_name = None
+        self.loc_name = loc_name
         self.utcstamp = time.time()
 
         # FIX change revise time based on what is submitted
         self.weather_descrip = None
-        self.moon = None
 
         self.search_coord_timezone()
         self.extract_as_of(user_picked_time)
@@ -52,7 +51,7 @@ class Weather(object):
 
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
-    def get_forecast(lat, lng, user_picked_time):
+    def get_forecast(lat, lng, user_picked_time, loc_name):
 
         # Url to pass to WUI 
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
@@ -64,7 +63,7 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(wui_response, lat, lng, user_picked_time)
+        return Weather(wui_response, lat, lng, user_picked_time, loc_name)
 
 
 ## Set Weather Attributes ##
@@ -217,7 +216,7 @@ class Weather(object):
             }
 
         # Pull tz to avoid error comparing tz value dt to one without
-        naive_dt = self.date_time
+        naive_dt = self.as_of
         moon = moonphase.main(naive_dt, self.local_tz)
         print 'add_night, %s' % moon
 
@@ -239,16 +238,12 @@ class Weather(object):
 
         # Picture assigned based on time of day
         if self.sunrise.time() < self.as_of.time() < self.sunset.time():
+            self.moon = False
             self.add_day_pic(pic_loc)
         else:
             print 'it\'s not daytime' #test
             self.moon = True
             self.add_night_pic(pic_loc)
             
-
-    # FIX - define to generate neighborhood name
-    def add_name(self, loc_name):
-        self.loc_name = loc_name
-        print self.loc_name
 
         
