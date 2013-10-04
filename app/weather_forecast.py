@@ -165,9 +165,9 @@ class Weather(object):
     def add_night_pic(self, pic_loc, local_tz):
         night_pics = {
             "First Quarter":"moon_firstquarter.png", 
-            "Full Moon":"full_moon1.jpg", 
+            "Full":"full_moon1.jpg", 
             "Last Quarter":"moon_lastquarter.png", 
-            "New Moon":"newmoon.png", 
+            "New":"newmoon.png", 
             "Waning Crescent":"moon_waningcrescent.png",
             "Waning Gibbous":"moon_waninggibbous.png", 
             "Waxing Crescent":"moon_waxingcrescent.png", 
