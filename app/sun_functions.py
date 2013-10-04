@@ -4,7 +4,6 @@ Sun Functions
 """
 
 from app import db as db_session, redis_db
-from flask import flash
 from config import G_KEY
 from models import Location, User
 import requests # Alt to urllib

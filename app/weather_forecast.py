@@ -199,7 +199,8 @@ class Weather(object):
             self.weather_descrip = weather_pics[self.icon][0]
             self.pic = pic_loc + weather_pics[self.icon][1]
         else:
-            flash('No photo found to match conditions.', category="info")
+            print 'No photo found to match conditions.'
+            
         print 'image url' + self.pic
 
     # Convert icon result to an moon image if night

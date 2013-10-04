@@ -3,8 +3,6 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     
-    rework sun functions
-
     Rework results page format and add more weather details
 
     Map -
