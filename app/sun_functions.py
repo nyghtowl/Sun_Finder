@@ -68,11 +68,13 @@ def search_results(txt_query, user_picked_time, user_coord):
     else:
         g_lat, g_lng, loc_name = google_places_coord(txt_query, user_coord)
 
-    if not g_lat:
-        flash("%s not found. Please try your search again." % txt_query, category="error")
- 
-    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time, loc_name)
-    
-    # Return weather data
-    return forecast_result
+    try:
+        forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time, loc_name)
+        
+        # Return weather data
+        return forecast_result
 
+    except:
+        print "No forecast result in weather object"
+
+        return ""

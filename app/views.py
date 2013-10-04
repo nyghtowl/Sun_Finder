@@ -200,6 +200,7 @@ def search():
 
     if not weather:
         flash("%s not found. Please try your search again." % txt_query, category="error")
+        return redirect(url_for('index'))
  
     return render_template('search_results_partial.html', result=weather)
  
