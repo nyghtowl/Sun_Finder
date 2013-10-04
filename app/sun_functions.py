@@ -54,7 +54,7 @@ def search_coord_timezone(g_lat, g_lng, utctimestamp):
 
     result = requests.get(url,params=api_params)
     result_json = result.json()
-    return result_json['timeZoneId']
+    return (result_json['timeZoneId'], result_json['dstOffset'], result_json['rawOffset'])
 
 # Generate valid as_of date to create weather object
 def extract_as_of(user_picked_time_str, utc_timestamp, timezone_id):
@@ -105,7 +105,7 @@ def search_results(txt_query, user_picked_time, user_coord):
     else:
         g_lat, g_lng = google_places_coord(txt_query, user_coord)
 
-    timezone_id = search_coord_timezone(g_lat, g_lng, utctimestamp)
+    timezone_id, dstOffset, rawOffset = search_coord_timezone(g_lat, g_lng, utctimestamp)
     
     # Format date to datetime
     as_of, current_local_time, local_tz = extract_as_of(user_picked_time, utctimestamp, timezone_id)
@@ -113,7 +113,7 @@ def search_results(txt_query, user_picked_time, user_coord):
     if not g_lat:
         flash("%s not found. Please try your search again." % txt_query, category="error")
  
-    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, current_local_time)
+    forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, as_of, current_local_time, dstOffset, rawOffset)
 
     # Confirm time of day to figure out picture to apply
     forecast_result.apply_pic(local_tz)

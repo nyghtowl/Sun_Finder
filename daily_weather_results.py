@@ -19,7 +19,7 @@ def seed_daily_weather():
     exp_time = 7200
     utctimestamp = time.time()
 
-    timezone_id = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
+    timezone_id, dstOffset, rawOffset = app.sun_functions.search_coord_timezone(lat, lng, utctimestamp)
     local_tz = timezone(timezone_id)
     current_local_time = datetime.fromtimestamp(utctimestamp, local_tz)
 

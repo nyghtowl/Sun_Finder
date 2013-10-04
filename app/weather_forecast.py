@@ -14,7 +14,7 @@ from BeautifulSoup import BeautifulSoup
 import dateutil.parser
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, as_of, current_local_time):
+    def __init__(self, wui_response, lat, lng, as_of, current_local_time, dstOffset, rawOffset):
         # pprint(wui_response)
 
         self.lat = lat
@@ -34,7 +34,7 @@ class Weather(object):
 
 
         # Determine current or future date to figure what data to use
-        forecast_frag = self.set_fragment(wui_response, as_of)
+        forecast_frag = self.set_fragment(wui_response, as_of, dstOffset, rawOffset)
         current_frag = wui_response['current_observation']
 
         print "compare dates in Weather object", as_of.date(), current_local_time.date()
@@ -47,7 +47,7 @@ class Weather(object):
 
     # Method called before or w/o initializing class to get the weather results
     @staticmethod
-    def get_forecast(lat, lng, as_of, current_local_time):
+    def get_forecast(lat, lng, as_of, current_local_time, dstOffset, rawOffset):
 
         # Url to pass to WUI 
         wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
@@ -59,14 +59,15 @@ class Weather(object):
         wui_response = requests.get(wui_final_url).json()
 
         # Generated a dictionary of forecast data points pulling from both weather sources
-        return Weather(wui_response, lat, lng, as_of, current_local_time)
+        return Weather(wui_response, lat, lng, as_of, current_local_time, dstOffset, rawOffset)
         
     # Identify api results dict/arry path based on date and set main segment to var
-    def set_fragment(self, wui_response, as_of):
+    def set_fragment(self, wui_response, as_of, dstOffset, rawOffset):
         wui_fragment = None
 
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
-            wui_date = datetime.fromtimestamp(float(fragment['date']['epoch'])).date() 
+            local_timestamp = float(fragment['date']['epoch']) + dstOffset +rawOffset
+            wui_date = datetime.fromtimestamp(local_timestamp).date() 
             # date_str = wui_date.strftime('%Y-%b-%d')
             # wui_datetime = dateutil.parser.parse(date_str)
 
