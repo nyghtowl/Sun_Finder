@@ -8,7 +8,7 @@ from config import WUI_KEY
 from datetime import datetime, timedelta
 import time, json
 from time import strftime
-from pprint import pprint
+# from pprint import pprint
 import requests
 import moonphase
 from BeautifulSoup import BeautifulSoup
@@ -16,15 +16,13 @@ import dateutil.parser
 from pytz import timezone
 
 class Weather(object):
-    def __init__(self, wui_response, lat, lng, user_picked_time, loc_name=None):
+    def __init__(self, wui_response, lat, lng, user_picked_time=None, loc_name=None):
         # pprint(wui_response)
 
         self.lat = lat
         self.lng = lng
         self.loc_name = loc_name
         self.utcstamp = time.time()
-
-        # FIX change revise time based on what is submitted
         self.weather_descrip = None
 
         self.search_coord_timezone()
@@ -68,7 +66,7 @@ class Weather(object):
 
 ## Set Weather Attributes ##
 
-    # Identify api results dict/arry path based on date and set main segment to var
+    # Identify api results dict path based on date and set main segment to var
     def set_fragment(self, wui_response):
         wui_fragment = None
 
@@ -142,9 +140,8 @@ class Weather(object):
 
 
     # Generate valid as_of date to create weather object
-    def extract_as_of(self, user_picked_time):
+    def extract_as_of(self, user_picked_time=None):
 
-        print 'in extract_as_of'
         self.current_local_time = datetime.fromtimestamp(self.utcstamp, self.local_tz)
 
         if not(user_picked_time):
@@ -200,7 +197,7 @@ class Weather(object):
             self.pic = pic_loc + weather_pics[self.icon][1]
         else:
             print 'No photo found to match conditions.'
-            
+
         print 'image url' + self.pic
 
     # Convert icon result to an moon image if night

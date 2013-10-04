@@ -17,7 +17,6 @@ TO DO:
 
     Lock down format of user mobile info to enable Twillio
 
-
     Add TDD
 
     Date/Time - setup ability to choose time
@@ -32,6 +31,10 @@ TO DO:
 
 
     Places API responses may include Listings provider attributions in HTML format that must be displayed to the user as provided. Put below search results 
+
+    Simple
+        change out presidio coord
+        remove the print date in weather object and use javascript to print
 
 """
 

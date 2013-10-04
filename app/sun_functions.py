@@ -31,14 +31,12 @@ def google_places_coord(txt_query, user_coord):
     # Extract lat & lng
     place_result = result.json()
     result_path = place_result['results'][0] 
+
     g_lat = result_path['geometry']['location']['lat']
     g_lng = result_path['geometry']['location']['lng']
     loc_name = result_path['name']
    
-    if g_lat:
-        return (g_lat, g_lng, loc_name)
-    else:
-        return None
+    return (g_lat, g_lng, loc_name)
 
 def daily_weather_report(locations):
 

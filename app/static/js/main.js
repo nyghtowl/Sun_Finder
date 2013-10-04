@@ -9,13 +9,13 @@
 	console.log("main js"); // Confirm load
 
 	// Load map  - currently SF biased
-	function buildMap(canvas, lat, lng, searchMarkerImg, weatherSearchImg) { 
+	function buildMap(mapInfo) { 
 
 	    //stops other event listeners from firing on search button
-		console.log("build_map" + lat); // test
+		console.log("build_map" + mapInfo.lat); // test
 		
 		//Pulls lat, lng from search result
-		var mapLatLng = new google.maps.LatLng(lat, lng);
+		var mapLatLng = new google.maps.LatLng(mapInfo.lat, mapInfo.lng);
 
 		var map_options = {
 		  // center: new google.maps.LatLng(37.7655,-122.4429),
@@ -25,7 +25,7 @@
 		}
 		
 		// Establishes Google maps
-		var map = new google.maps.Map(canvas, map_options);
+		var map = new google.maps.Map(mapInfo.canvas, map_options);
 
 		// Map style
 		map.set('styles', 
@@ -91,18 +91,17 @@
 		createMarker({
 			position: mapLatLng, 
 			map: map, 
-			imgUrl: searchMarkerImg,
+			imgUrl: mapInfo.searchMarkerImg,
 			imgTitle: "Search Result",
 			scaledSize:new google.maps.Size(27, 27)
 		});
 
-		if (weatherSearchImg){
-			console.log(weatherSearchImg);
+		if (mapInfo.weatherSearchImg){
 
 			createMarker({
 				position: mapLatLng, 
 				map: map, 
-				imgUrl: weatherSearchImg,
+				imgUrl: mapInfo.weatherSearchImg,
 				origin: new google.maps.Point(0,0),
 				// size: new google.maps.Size(20, 32),
 				anchor: new google.maps.Point(0,0),
@@ -224,7 +223,13 @@
 		$('#page_results').show();
 				 
 		if (options.lat){
-			buildMap(options.mapCanvas,options.lat,options.lng, searchMarkerImg, options.pic);
+			buildMap({
+				canvas: options.mapCanvas,
+				lat: options.lat,
+				lng: options.lng, 
+				searchMarkerImg: searchMarkerImg, 
+				weatherSearchImg: options.pic
+			});
 
 		} else if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function(position) {
@@ -234,17 +239,31 @@
 				
 				$('#coord').val(lat + ',' + lng);
 		        console.log($('#index_coord').val());
-		        buildMap(options.mapCanvas, geo_lat, geo_lng, searchMarkerImg);
+		        buildMap({
+		        	canvas: options.mapCanvas,
+		        	lat: geo_lat, 
+		        	lng: geo_lng, 
+		        	searchMarkerImg: searchMarkerImg
+		        });
 
 		    }, function(error) {
 			    console.log('geolocation not exist');
 			    lat = 
-		        buildMap(options.mapCanvas, lat, lng, searchMarkerImg);
+		        buildMap({ 
+		        	canvas: options.mapCanvas, 
+		        	lat: lat, 
+		        	lng: lng, 
+		        	searchMarkerImg: searchMarkerImg });
 			});
 		} else {
 		    // Fallback for no geolocation
 		    console.log('geolocation not shared');
-		    buildMap(options.mapCanvas, lat, lng, searchMarkerImg);
+		    buildMap({
+		    	canvas: options.mapCanvas, 
+		    	lat: lat, 
+		    	lng: lng, 
+		    	searchMarkerImg: searchMarkerImg
+		    });
 		}
 
 		typeahead();
