@@ -67,9 +67,9 @@ class Weather(object):
 
         for fragment in wui_response['forecast']['simpleforecast']['forecastday']:
             local_timestamp = float(fragment['date']['epoch']) + dstOffset +rawOffset
+
+            # Needed timestamp offset to keep conversion of timestamp focused on search location vs location of the server
             wui_date = datetime.fromtimestamp(local_timestamp).date() 
-            # date_str = wui_date.strftime('%Y-%b-%d')
-            # wui_datetime = dateutil.parser.parse(date_str)
 
             print "set_fragment", wui_date, as_of.date()
 
@@ -141,8 +141,8 @@ class Weather(object):
     def add_day_pic(self, pic_loc):        
         # Holds weather images for reference
         weather_pics = {
-            "clear-day":("sun", "sun_samp2.jpeg"),
-            "clear":("sun", "sun_samp2.jpeg"),
+            "clear-day":("sun", "sun_samp2.png"),
+            "clear":("sun", "sun_samp2.png"),
             "rain":("rain", "rain.png"), 
             "snow":("snow", "snow.png"), 
             "sleet":("sleet", "sleet2.png"), 
