@@ -29,7 +29,7 @@ def seed_daily_weather():
     # run api on each coordinate
     for nh in neighborhoods:
 
-        forecast = app.weather_forecast.Weather.get_forecast(nh.lat, nh.lng, current_local_time,current_local_time)
+        forecast = app.weather_forecast.Weather.get_forecast(nh.lat, nh.lng, current_local_time,current_local_time, dstOffset, rawOffset)
         forecast.apply_pic(local_tz)
 
         range_temp = forecast.high_F + u'\xb0F' +'-' + forecast.low_F + u'\xb0F'

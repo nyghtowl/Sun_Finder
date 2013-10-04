@@ -75,7 +75,6 @@ class Weather(object):
 
             if wui_date == as_of.date():
                 wui_fragment = fragment
-                print 104, wui_fragment
                 break
 
         return (wui_fragment)
@@ -165,9 +164,9 @@ class Weather(object):
     def add_night_pic(self, pic_loc, local_tz):
         night_pics = {
             "First Quarter":"moon_firstquarter.png", 
-            "Full":"full_moon1.jpg", 
+            "Full Moon":"full_moon1.jpg", 
             "Last Quarter":"moon_lastquarter.png", 
-            "New":"newmoon.png", 
+            "New Moon":"newmoon.png", 
             "Waning Crescent":"moon_waningcrescent.png",
             "Waning Gibbous":"moon_waninggibbous.png", 
             "Waxing Crescent":"moon_waxingcrescent.png", 
@@ -181,14 +180,16 @@ class Weather(object):
 
         if moon in night_pics:
             self.pic = pic_loc + night_pics[moon]
-            self.moonphase = moon
+            if moon.endswith("Moon"):
+                self.moonphase = moon
+            else:
+                self.moonphase = moon + ' Moon'
         else:
             print 'Error finding photo for the time of day'
 
     # Confirms time of day and pulls corresponding image
     def apply_pic(self, local_tz):
         pic_loc = '/static/img/'        
-
 
         # Testing
         print "icon for pic", self.icon
