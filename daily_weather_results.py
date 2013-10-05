@@ -16,7 +16,7 @@ def seed_daily_weather():
 
     lat = 37.7655
     lng = -122.4429
-    exp_time = 3600
+    exp_time = 36000
 
     # pull coordinates from local db
     neighborhoods = Location.query.limit(10)
