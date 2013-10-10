@@ -2,6 +2,8 @@
 
 // hiding functions from global scope
 (function() {
+
+	var SEARCH_IMG_URL = 'https://maps.gstatic.com/mapfiles/icon_green.png';
 	
 	// Namespace - main static/global variable to reference
 	var MapLoader = {}; 
@@ -107,9 +109,7 @@
 				anchor: new google.maps.Point(0,0),
 				scaledSize:new google.maps.Size(27, 27)
 			});
-		}
 		
-		if (mapInfo.weatherSearchImg){
 	    	createLabel({ 
 	    		lat: mapInfo.lat,
 	    		lng: mapInfo.lng,
@@ -118,7 +118,11 @@
 	    	});
 		}
 		
-		callMarkerData(map);
+		getMarkerData().then(function (data){
+			if (data){
+				renderMarkers(map, data.locations);
+			}
+		});
 
 	}
 	
@@ -146,7 +150,7 @@
 
 	// MarkerWith Label - add labels on map
 	function createLabel(data) {
-		return new MarkerWithLabel({
+		new MarkerWithLabel({
 	       position: new google.maps.LatLng(data.lat,data.lng),
 	       draggable: false,
 	       raiseOnDrag: false,
@@ -179,17 +183,12 @@
 	  	}     
 	 }
 
-	function callMarkerData(map) {
-		$.ajax({
+	function getMarkerData() {
+		return $.ajax({
 			url:'map_details',
 			type: "GET",
 			cache: false,
-			dataType: "json",
-			success: function(data){
-				if (data){
-					renderMarkers(map, data.locations);
-				}
-				}
+			dataType: "json"
 		});
 	}
 
@@ -211,6 +210,7 @@
 		});
 	}
 
+
 	// Datepicker
 	function datepicker() {
 		console.log("datepicker"); //test
@@ -221,64 +221,55 @@
 	}
 	// Other pages map load
 	MapLoader.pageSetup = function(options)	{
+		// default if nothing passed
+		options = options || {};
+
+		// $('#sun_finder_title').show();
+		$('#page_results').show();
+
 		// Pre-set lat lng to SF if not provided
 		var lat = 37.7655;
 		var lng = -122.4429;
 
-		// Create search marker
-		var searchMarkerImg = "https://maps.gstatic.com/mapfiles/icon_green.png";
-
-		// $('#sun_finder_title').show();
-		$('#page_results').show();
-				 
-		if (options.lat){
-			buildMap({
-				canvas: options.mapCanvas,
-				lat: options.lat,
-				lng: options.lng, 
-				searchMarkerImg: searchMarkerImg, 
-				weatherSearchImg: options.pic,
-				weatherSearchLabel: options.searchLabel
-			});
+		if (options.lat) {
+			lat = options.lat;
+			lng = options.lng;
+			console.log('search results');
 
 		} else if (navigator.geolocation) {
+
 		    navigator.geolocation.getCurrentPosition(function(position) {
-
-		        var geo_lat = position.coords.latitude;
-		        var geo_lng = position.coords.longitude;
-				
-				$('#coord').val(lat + ',' + lng);
-		        console.log($('#index_coord').val());
-		        buildMap({
-		        	canvas: options.mapCanvas,
-		        	lat: geo_lat, 
-		        	lng: geo_lng, 
-		        	searchMarkerImg: searchMarkerImg
-		        });
-
-		    }, function(error) {
-			    console.log('geolocation not exist');
-			    lat = 
-		        buildMap({ 
-		        	canvas: options.mapCanvas, 
-		        	lat: lat, 
-		        	lng: lng, 
-		        	searchMarkerImg: searchMarkerImg });
-			});
-		} else {
-		    // Fallback for no geolocation
-		    console.log('geolocation not shared');
-		    buildMap({
-		    	canvas: options.mapCanvas, 
-		    	lat: lat, 
-		    	lng: lng, 
-		    	searchMarkerImg: searchMarkerImg
-		    });
+					lat = position.coords.latitude;
+			    	lng = position.coords.longitude;
+		    	// Stores coord in form to help specify api search location
+		    	$('#coord').val(lat + ',' + lng);
+		        console.log($('#coord').val(), ' geolocation', position);
+				});
 		}
 
+		buildMap({
+			canvas:$('#map_canvas_search')[0],	
+			lat: lat,
+			lng: lng, 
+			searchMarkerImg: SEARCH_IMG_URL, 
+			weatherSearchImg: options.pic,
+			weatherSearchLabel: options.searchLabel
+		});
+
+		if ($('#map_canvas_results').length){
+
+			buildMap({
+				canvas:$('#map_canvas_results')[0],	
+				lat: lat,
+				lng: lng, 
+				searchMarkerImg: SEARCH_IMG_URL, 
+				weatherSearchImg: options.pic,
+				weatherSearchLabel: options.searchLabel
+			});			
+		}
 		typeahead();
 		datepicker();
-		}
+	}
 
 	// Setup search event 
 	$(function(){

@@ -160,6 +160,7 @@ class Weather(object):
     def get_earthtools(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         earth_final_url=earth_url%(self.lat,self.lng,self.as_of.day,self.as_of.month)
+        print earth_final_url
         response_xml = requests.get(earth_final_url)
         return BeautifulSoup(response_xml.content)
 
@@ -167,11 +168,13 @@ class Weather(object):
         nextrise=self.get_earthtools()
         sunrise=nextrise.sunrise.string
         self.sunrise = datetime.strptime(sunrise, '%H:%M:%S') 
+        print self.sunrise
      
     def get_sunset(self):
         nextset=self.get_earthtools()
         sunset=nextset.sunset.string
         self.sunset = datetime.strptime(sunset, '%H:%M:%S')
+        print self.sunset
 
 ## Picture Setup ##
 
