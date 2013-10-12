@@ -237,6 +237,8 @@ class Weather(object):
         # Testing
         print "icon for pic", self.icon
 
+        # Call sunrise and sunset function
+
         # Picture assigned based on time of day
         if self.sunrise.time() < self.as_of.time() < self.sunset.time():
             self.moon = False
