@@ -36,8 +36,6 @@ class Weather(object):
         forecast_frag = self.set_fragment(wui_response)
         current_frag = wui_response['current_observation']
 
-        print "compare dates in Weather object", self.as_of.date(), self.current_local_time.date()
-
         if self.as_of.date() == self.current_local_time.date():
             self.apply_current(current_frag, forecast_frag)
         else:
@@ -62,7 +60,6 @@ class Weather(object):
 
         # Generated a dictionary of forecast data points pulling from both weather sources
         return Weather(wui_response, lat, lng, user_picked_time, loc_name)
-
 
 ## Set Weather Attributes ##
 
@@ -103,21 +100,12 @@ class Weather(object):
     # Apply data attributes for future dates
     def apply_forecast(self, wui_fragment):
         self.icon = wui_fragment['icon'] 
-
         self.temp_F = float(wui_fragment['high']['fahrenheit'])
         self.temp_C = float(wui_fragment['high']['celsius'])
         self.feels_like_F = None
         self.feels_like_C = None
         self.wind_mph = wui_fragment['avewind']['mph'] 
         self.humidity = wui_fragment['avehumidity']
-
-    # Hold multiple days of weather data to display
-    def grab_all_weather(self, wui_response, as_of):
-        if as_of == datetime.now().date():
-            for i in range(3):
-                as_of += datetime.timedelta(days=1)
-                self.days[i] = find_for(self, wui_response, as_of)
-
 
 ## Time Setup ##
 
@@ -236,8 +224,6 @@ class Weather(object):
 
         # Testing
         print "icon for pic", self.icon
-
-        # Call sunrise and sunset function
 
         # Picture assigned based on time of day
         if self.sunrise.time() < self.as_of.time() < self.sunset.time():

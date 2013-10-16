@@ -5,7 +5,7 @@ Sun Functions
 
 from app import db as db_session, redis_db
 from config import G_KEY
-from models import Location, User
+from app.models import Location, User
 import requests # Alt to urllib
 import weather_forecast
 import re # Regex
