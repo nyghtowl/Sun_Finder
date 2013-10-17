@@ -1,28 +1,32 @@
 from sun_functions import google_places_coord
 from datetime import datetime, timedelta
 from pytz import timezone
+from BeautifulSoup import BeautifulSoup
 import time, requests, json
 
 class InputResolver(object):
-    def __init__(self, query, user_coord, user_date=None):
+    def __init__(self, query, user_coord, date):
         self.query = query
-        self.user_date = user_date
+        self.user_date = date
         self.user_coord = user_coord
 
     # FIX - only run if not in postgres
     def get_name(self):
-        # FIX - remove lat and lng?
+        # FIX - remove lat and lng? - pull in google api
         self.lat, self.lng, self.location_name = google_places_coord(self.query, self.user_coord)
 
     def set_date(self): 
         set_dt = TimezoneResolver(self.user_coord)
         set_dt.set_current_dt()
+
         if not(self.user_date):
             self.location_dt = set_dt.current_dt
+        else:
+            user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
+            auto_time = set_dt.current_dt.time()
+            self.location_dt = datetime.combine(user_date, auto_time)
+            self.location_dt_str = str(self.location_dt.date())
 
-        # else:
-        #     user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
-        #     auto_time = 
 
     # Returns string value if print object
     def __str__(self):
@@ -57,12 +61,31 @@ class TimezoneResolver(object):
         self.get_tz_offset()
         self.current_dt = datetime.fromtimestamp(self.utc_stamp, timezone(self.tz_id))
 
+# Get sunrise and sunset from earthtools
+class DayResolver(object):
+    def __init__(self, lat, lng, date):
+        self.lat = lat
+        self.lng = lng
+        self.date = date
+        self.is_day = None
 
-class DaytimeResolver(object):
-    def __init__(self, utc_time, timezone):
-        self.utc_time = utc_time
-        self.timezone = timezone
+    def get_earthtools(self):
+        earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
+        earth_final_url=earth_url%(self.lat,self.lng,self.date.day,self.date.month)
 
+        response_xml = requests.get(earth_final_url)
+        return BeautifulSoup(response_xml.content)
+
+    def get_is_day(self):
+        sun_position = self.get_earthtools()
+
+        sunrise = datetime.strptime(sun_position.sunrise.string, '%H:%M:%S').time()
+        sunset = datetime.strptime(sun_position.sunset.string, '%H:%M:%S').time()
+            
+        if sunrise < self.date.time() < sunset:
+            self.is_day = True
+        else:
+            self.is_day = False
 
 class WeatherFetcher(object):
     def __init__(self, location, desired_date):

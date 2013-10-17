@@ -186,7 +186,7 @@ def search():
     # Captures user-entered date format mm-dd-yy as string
     user_picked_time = request.form['date']
     
-    print 'user picked time', user_picked_time
+    print 'user picked time', type(user_picked_time)
 
     user_coord_unicode = request.form['user_coord']
 

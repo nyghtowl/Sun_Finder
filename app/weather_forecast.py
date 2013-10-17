@@ -132,6 +132,8 @@ class Weather(object):
 
         self.current_local_time = datetime.fromtimestamp(self.utcstamp, self.local_tz)
 
+        print self.current_local_time
+
         if not(user_picked_time):
             self.as_of = self.current_local_time
         else:
@@ -142,7 +144,7 @@ class Weather(object):
             as_of_time = self.current_local_time.time() 
             self.as_of = datetime.combine(as_of_date, as_of_time)
 
-        print 'as of', self.as_of
+        print 'as of', type(self.as_of)
 
     # Get sunrise and sunset from earthtools
     def get_earthtools(self):
