@@ -23,7 +23,7 @@
 		console.log("layout"); // check load
 	    
 	    {% if result %}
-		    MapLoader.pageSetup({
+		    PageLoader.pageSetup({
 		    	lat: {{ result.lat }}, 
 	        	lng: {{ result.lng }},
 	        	pic: '{{ result.pic }}',
@@ -31,7 +31,7 @@
 
 		    });
 		{% else %}
-		    MapLoader.pageSetup();
+		    PageLoader.pageSetup();
 
 		{% endif %}
 
