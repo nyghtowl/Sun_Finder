@@ -1,11 +1,12 @@
 from sun_functions import google_places_coord
+from datetime import datetime, timedelta
 from pytz import timezone
 import time, requests, json
 
 class InputResolver(object):
-    def __init__(self, query, date, user_coord):
+    def __init__(self, query, user_coord, user_date=None):
         self.query = query
-        self.date = date
+        self.user_date = user_date
         self.user_coord = user_coord
 
     # FIX - only run if not in postgres
@@ -13,18 +14,29 @@ class InputResolver(object):
         # FIX - remove lat and lng?
         self.lat, self.lng, self.location_name = google_places_coord(self.query, self.user_coord)
 
-        self.date = None
+    def set_date(self): 
+        set_dt = TimezoneResolver(self.user_coord)
+        set_dt.set_current_dt()
+        if not(self.user_date):
+            self.location_dt = set_dt.current_dt
 
+        # else:
+        #     user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
+        #     auto_time = 
+
+    # Returns string value if print object
     def __str__(self):
         return ("query= " + self.query + " user_coord= " + self.user_coord + "  name= " + self.location_name)
 
 class TimezoneResolver(object):
     def __init__(self, user_coord):
-        self.tz_id = None
         self.utc_stamp = time.time()
         self.user_coord = user_coord
+        self.tz_id = None
+        self.tz_offset = None
+        self.dt_tz_id = None
 
-    def get_timezone(self):
+    def get_tz_offset(self):
         url = "https://maps.googleapis.com/maps/api/timezone/json?"
 
         api_params = {
@@ -37,6 +49,13 @@ class TimezoneResolver(object):
         tz_result_json = tz_result.json()
 
         self.tz_id = tz_result_json['timeZoneId']
+
+        # Need to convert weather resutls epoch
+        self.tz_offset = tz_result_json['dstOffset'] + tz_result_json['rawOffset']
+
+    def set_current_dt(self):
+        self.get_tz_offset()
+        self.current_dt = datetime.fromtimestamp(self.utc_stamp, timezone(self.tz_id))
 
 
 class DaytimeResolver(object):

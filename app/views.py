@@ -3,6 +3,8 @@ Sun Finder View -- Flask based sun search tool
 
 TO DO: 
     
+    TDD & OOP
+
     Rework results page format and add more weather details
 
     Map -
@@ -16,8 +18,6 @@ TO DO:
     Move Login back to modal format
 
     Lock down format of user mobile info to enable Twillio
-
-    Add TDD
 
     Date/Time - setup ability to choose time
 
@@ -186,6 +186,8 @@ def search():
     # Captures user-entered date format mm-dd-yy as string
     user_picked_time = request.form['date']
     
+    print 'user picked time', user_picked_time
+
     user_coord_unicode = request.form['user_coord']
 
     if user_coord_unicode:
