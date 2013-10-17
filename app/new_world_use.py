@@ -12,7 +12,7 @@ def create_template_data(user_search_input):
 
     fetcher = new.WeatherFetcher(clean_input.location_name, clean_input.location_dt)
 
-    weather = fetcher.weather()
+    weather_data = fetcher.get_weather()
     moon_phase = fetcher.moon()
 
     picture = new.choose_picture(is_day, weather, moon_phase)
@@ -45,13 +45,16 @@ if __name__ == '__main__':
     assert clean_input.location_dt != None
 
     location_tz = new.TimezoneResolver(clean_input.user_coord)
-    location_tz.get_tz_offset()
+    location_tz.google_tz_offset()
     assert location_tz.tz_id == 'America/Los_Angeles'
     assert location_tz.tz_offset == -25200
 
     # assert type(location_tz.current_dt) == datetime.datetime
     # datetime.datetime(2013, 10, 16, 17, 46, 16, 598585, tzinfo=<DstTzInfo 'America/Los_Angeles' PDT-1 day, 17:00:00 DST>)
 
+    # How do you test for datetime content?
+
     day_resolve = new.DayResolver(clean_input.lat, clean_input.lng, clean_input.location_dt)
     day_resolve.get_is_day()
     assert day_resolve.is_day == True
+

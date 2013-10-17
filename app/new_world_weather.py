@@ -9,6 +9,10 @@ class InputResolver(object):
         self.query = query
         self.user_date = date
         self.user_coord = user_coord
+        self.lat = None
+        self.lng = None
+        self.location_name = None
+        self.location_dt = None
 
     # FIX - only run if not in postgres
     def get_name(self):
@@ -40,7 +44,7 @@ class TimezoneResolver(object):
         self.tz_offset = None
         self.dt_tz_id = None
 
-    def get_tz_offset(self):
+    def google_tz_offset(self):
         url = "https://maps.googleapis.com/maps/api/timezone/json?"
 
         api_params = {
@@ -58,7 +62,7 @@ class TimezoneResolver(object):
         self.tz_offset = tz_result_json['dstOffset'] + tz_result_json['rawOffset']
 
     def set_current_dt(self):
-        self.get_tz_offset()
+        self.google_tz_offset()
         self.current_dt = datetime.fromtimestamp(self.utc_stamp, timezone(self.tz_id))
 
 # Get sunrise and sunset from earthtools
@@ -69,7 +73,7 @@ class DayResolver(object):
         self.date = date
         self.is_day = None
 
-    def get_earthtools(self):
+    def earthtools_sun_info(self):
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         earth_final_url=earth_url%(self.lat,self.lng,self.date.day,self.date.month)
 
@@ -77,7 +81,7 @@ class DayResolver(object):
         return BeautifulSoup(response_xml.content)
 
     def get_is_day(self):
-        sun_position = self.get_earthtools()
+        sun_position = self.earthtools_sun_info()
 
         sunrise = datetime.strptime(sun_position.sunrise.string, '%H:%M:%S').time()
         sunset = datetime.strptime(sun_position.sunset.string, '%H:%M:%S').time()
