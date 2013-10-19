@@ -1,5 +1,5 @@
 from app.models import Location
-from config import G_KEY
+from config import G_KEY, WUI_KEY
 import re # Regex
 from datetime import datetime, timedelta
 from time import time, mktime
@@ -9,11 +9,16 @@ from BeautifulSoup import BeautifulSoup
 
 class InputResolver(object):
     def __init__(self, txt_query, user_coord, date):
+        self._api_called = False
         self.txt_query = txt_query
         self.user_date = date
         self.user_coord = user_coord
 
     def fetch_coords(self):
+        if self._api_called:
+            return
+        self._api_called = True
+
         # Regex to pull space with +
         txt_plus = re.sub('[ ]', '+', self.txt_query)
 
@@ -64,12 +69,11 @@ class InputResolver(object):
         return self._location_name
     
     @property
-    def as_of(self): 
+    def as_of(self):
         if not(self.user_date):
             return time()
         else:         
             return mktime(datetime.strptime(self.user_date, "%m-%d-%Y").timetuple())
-
 
         # tzr = TimezoneResolver(self.user_coord)
         # current_date = tzr.current_dt
@@ -93,6 +97,7 @@ class TimezoneResolver(object):
         self.tz_offset = None
 
     def fetch_tz_offset(self):
+        # Guard - only run once per object
         if self._api_called:
             return
         self._api_called = True
@@ -132,36 +137,41 @@ class TimezoneResolver(object):
 # Get sunrise and sunset from earthtools
 class DayResolver(object):
     def __init__(self, lat, lng, date):
+        self._api_called = False
         self.lat = lat
         self.lng = lng
         self.date = date
-        self.is_day = None
 
-    def earthtools_sun_info(self):
+    def fetch_sun(self):
+        if self._api_called:
+            return
+        self._api_called = True
+
         earth_url="http://www.earthtools.org/sun/%f/%f/%d/%d/99/0"
         earth_final_url=earth_url%(self.lat,self.lng,self.date.day,self.date.month)
 
         response_xml = requests.get(earth_final_url)
         return BeautifulSoup(response_xml.content)
 
-    def get_is_day(self):
-        sun_position = self.earthtools_sun_info()
+    @property
+    def is_day(self):
+        sun_position = self.fetch_sun()
 
         sunrise = datetime.strptime(sun_position.sunrise.string, '%H:%M:%S').time()
         sunset = datetime.strptime(sun_position.sunset.string, '%H:%M:%S').time()
             
         if sunrise < self.date.time() < sunset:
-            self.is_day = True
+            return True
         else:
-            self.is_day = False
+            return False
 
 class WeatherFetcher(object):
-    def __init__(self, lat, lng, date):
+    def __init__(self, lat, lng, as_of, offset):
         self._called = False
         self.lat = lat
         self.lng = lng
-        self.date = date
-        self.weather_data = None
+        self.as_of = as_of
+        self.offset = offset
 
     # @property
     # def weather(self):
@@ -173,27 +183,28 @@ class WeatherFetcher(object):
     #     self._call_api()
     #     self._moon
 
-    def _call_api():
-        pass
-        # if self._called:
-        #     return
-        # else:
-        #     self._called = True
-        # # Url to pass to WUI 
-        # wui_url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
+    def _call_api(self):
+        if self._called:
+            return
+        else:
+            self._called = True
 
-        # # Pull API key from env with FIO_KEY
-        # wui_final_url=wui_url%(WUI_KEY, lat, lng)
-        # print "weather underground url", wui_final_url
+        url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
 
-        # wui_response = requests.get(wui_final_url).json()
+        final_url=url%(WUI_KEY, self.lat, self.lng)
+        print "weather url", final_url
 
-        # # Generated a dictionary of forecast data points pulling from both weather sources
-        # current = wui_response['current_observation']
-        # future = self._pick_future(self.desired_date)
+        self.forecast = requests.get(final_url).json()
+
+    # Store weather data points to post
+    def _build_return_data(self):
+        self._call_api()
+        self.current = self.forecast['current_observation']
+        future = self._pick_future()
+        
         # self._weather = {
-        # "icon": current['icon'],
-        # "feels_like_F": current['feelslike_f'],...
+        #     "icon": current['icon'],
+        #     "feels_like_F": current['feelslike_f'],...
 
         # }
         # if future:
@@ -201,6 +212,20 @@ class WeatherFetcher(object):
         #         'high_F': future['high']['fahrenheit'],
         #         ...
         #     })
+
+    def _pick_future(self):
+        for fragment in self.forecast['forecast']['simpleforecast']['forecastday']:
+            local_ts = float(fragment['date']['epoch']) + self.offset
+
+            # Timestamp offset focus on search location vs location of the server
+            forecast_date = datetime.fromtimestamp(local_ts).date() 
+
+            print "set_fragment", forecast_date, self.as_of.date()
+
+            if forecast_date == self.as_of.date():
+                return fragment
+
+        return None
 
 def choose_picture(is_day, weather, moon_phase):
     pass

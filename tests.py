@@ -83,8 +83,8 @@ class TimezoneResolverTests(unittest.TestCase):
 
 class DayResolverTests(unittest.TestCase):
     def test_conditions(self):
-        noon = datetime(2013, 10, 16, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
-        midnight = datetime(2013, 10, 16, 23,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        noon = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        midnight = datetime(2013, 10, 20, 23,  tzinfo=pytz.timezone('America/Los_Angeles'))
 
         # Test conditions
         self._test_for_time(noon, True)
@@ -95,7 +95,6 @@ class DayResolverTests(unittest.TestCase):
         lng = -122.4429
 
         day_resolve = new.DayResolver(lat, lng, time)
-        day_resolve.get_is_day()
         assert day_resolve.is_day == expected
 
 class WeatherFetcherTests(unittest.TestCase):
@@ -103,10 +102,15 @@ class WeatherFetcherTests(unittest.TestCase):
     def test_everything(self):
         lat = 37.7655
         lng = -122.4429        
-        as_of = datetime(2013, 10, 16, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
-        fetcher = new.WeatherFetcher(lat, lng, as_of)
-        # fetcher.get_weather()
-        assert fetcher.weather_data == None
+        as_of = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        offset = -25200
+        fetcher = new.WeatherFetcher(lat, lng, as_of, offset)
+        fetcher._build_return_data()
+        # assert fetcher.weather_data != None
+        # assert fetcher.current != None
+        assert fetcher.weather.temp_F != None
+
+# Test restuls for future and current dates
 
 if __name__ == '__main__':
     cov.start()    
