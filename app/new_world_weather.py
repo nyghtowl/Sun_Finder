@@ -1,8 +1,9 @@
 from sun_functions import google_places_coord
 from datetime import datetime, timedelta
-from pytz import timezone
+import pytz
 from BeautifulSoup import BeautifulSoup
-import time, requests, json
+from time import time
+import requests, json
 
 class InputResolver(object):
     def __init__(self, query, user_coord, date):
@@ -15,19 +16,19 @@ class InputResolver(object):
         self.location_dt = None
 
     # FIX - only run if not in postgres
-    def get_name(self):
+    def resolve_location(self):
         # FIX - remove lat and lng? - pull in google api
         self.lat, self.lng, self.location_name = google_places_coord(self.query, self.user_coord)
 
     def set_date(self): 
-        set_dt = TimezoneResolver(self.user_coord)
-        set_dt.set_current_dt()
+        tzr = TimezoneResolver(self.user_coord)
+        current_date = tzr.current_dt
 
         if not(self.user_date):
-            self.location_dt = set_dt.current_dt
+            self.location_dt = current_date
         else:
             user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
-            auto_time = set_dt.current_dt.time()
+            auto_time = current_date.time()
             self.location_dt = datetime.combine(user_date, auto_time)
             self.location_dt_str = str(self.location_dt.date())
 
@@ -38,18 +39,22 @@ class InputResolver(object):
 
 class TimezoneResolver(object):
     def __init__(self, user_coord):
-        self.utc_stamp = time.time()
         self.user_coord = user_coord
+        self._api_called = False
         self.tz_id = None
         self.tz_offset = None
-        self.dt_tz_id = None
 
-    def google_tz_offset(self):
+    def fetch_tz_offset(self):
+        if self._api_called:
+            return
+        self._api_called = True
+
         url = "https://maps.googleapis.com/maps/api/timezone/json?"
 
+# import pdb;pdb.set_trace()
         api_params = {
             'location': self.user_coord,
-            'timestamp': self.utc_stamp,
+            'timestamp': time(),
             'sensor':'true'
         }
 
@@ -61,9 +66,19 @@ class TimezoneResolver(object):
         # Need to convert weather resutls epoch
         self.tz_offset = tz_result_json['dstOffset'] + tz_result_json['rawOffset']
 
-    def set_current_dt(self):
-        self.google_tz_offset()
-        self.current_dt = datetime.fromtimestamp(self.utc_stamp, timezone(self.tz_id))
+    @property
+    def timezone(self):
+        self.fetch_tz_offset()
+        return pytz.timezone(self.tz_id)
+
+    @property
+    def offset(self):
+        self.fetch_tz_offset()
+        return self.tz_offset
+
+    @property
+    def current_dt(self):
+        return datetime.fromtimestamp(time(), self.timezone)
 
 # Get sunrise and sunset from earthtools
 class DayResolver(object):
@@ -92,19 +107,21 @@ class DayResolver(object):
             self.is_day = False
 
 class WeatherFetcher(object):
-    def __init__(self, location, desired_date):
+    def __init__(self, lat, lng, date):
         self._called = False
-        self.location = location
-        self.desired_date = desired_date
+        self.lat = lat
+        self.lng = lng
+        self.date = date
 
-    @property
-    def weather(self):
-        self._call_api()
-        self._weather
-    @property
-    def moon(self):
-        self._call_api()
-        self._moon
+    # @property
+    # def weather(self):
+    #     self._call_api()
+    #     self._weather
+
+    # @property
+    # def moon(self):
+    #     self._call_api()
+    #     self._moon
 
     def _call_api():
         pass

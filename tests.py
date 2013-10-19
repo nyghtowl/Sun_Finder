@@ -2,17 +2,25 @@
 # -*- coding: utf8 -*-
 from coverage import coverage
 cov = coverage(branch = True, omit = ['env/*', 'tests.py'])
-cov.start()
 
-import os
+import os, pytz
 import unittest
 from datetime import datetime, timedelta
+from mock import patch
 
 from config import basedir
 from app import app, db
 from app.models import User, Location
+from app import new_world_weather as new
 
-class TestCase(unittest.TestCase):
+def _helper(**kwargs):
+    return {
+        'query': kwargs.get('query'),
+        'user_coord': kwargs.get('user_coord'),
+        'date': kwargs.get('date')
+    }
+
+class ExampleTestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
@@ -29,8 +37,68 @@ class TestCase(unittest.TestCase):
         expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
         assert avatar[0:len(expected)] == expected
 
+class InputResolverTests(unittest.TestCase):
+   
+    def test_conditions(self):
+        no_date = ''
+        user_date = '10-17-2013'
+
+        # self._test_for_date(no_date, '?') - need pach to force the date
+        self._test_for_date(user_date, '2013-10-17')
+
+    def _test_for_date(self, as_of, expected):
+        clean_input = new.InputResolver(**_helper(query='mission', user_coord='37.7655,-122.4429', date=as_of))
+        clean_input.set_date()
+
+        assert clean_input.location_dt_str == expected
+
+    def _test_for_name(self):
+        clean_input = new.InputResolver(**_helper(query='mission', user_coord='37.7655,-122.4429'))
+        clean_input.resolve_location()
+
+        assert clean_input.location_name == 'Mission Dolores Gift Shop'
+
+class TimezoneResolverTests(unittest.TestCase):
+
+    # time.time as of 10/17/2013 2:58 a utc
+    # @patch('app.new_world_weather.time')
+    def test_timezone(self):
+    # def test_timezone(self, mock_time):
+    #     mock_time = lambda:1382065165.548
+        location_tz = new.TimezoneResolver('37.7655,-122.4429')
+        assert location_tz.timezone.zone == 'America/Los_Angeles'
+        assert location_tz.offset == -25200
+        # How to test datetime content?
+
+class DayResolverTests(unittest.TestCase):
+    def test_conditions(self):
+        noon = datetime(2013, 10, 16, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        midnight = datetime(2013, 10, 16, 23,  tzinfo=pytz.timezone('America/Los_Angeles'))
+
+        # Test conditions
+        self._test_for_time(noon, True)
+        self._test_for_time(midnight, False)
+
+    def _test_for_time(self, time, expected):
+        lat = 37.7655
+        lng = -122.4429
+
+        day_resolve = new.DayResolver(lat, lng, time)
+        day_resolve.get_is_day()
+        assert day_resolve.is_day == expected
+
+class WeatherFetcherTests(unittest.TestCase):
+
+    def test_everything(self):
+        lat = 37.7655
+        lng = -122.4429        
+        as_of = datetime(2013, 10, 16, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        fetcher = new.WeatherFetcher(lat, lng, as_of)
+        # fetcher.get_weather()
+        assert fetcher.weather_data != None
 
 if __name__ == '__main__':
+    cov.start()    
     try:
         unittest.main()
     except:
