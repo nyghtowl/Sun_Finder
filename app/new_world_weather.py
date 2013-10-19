@@ -173,10 +173,11 @@ class WeatherFetcher(object):
         self.as_of = as_of
         self.offset = offset
 
-    # @property
-    # def weather(self):
-    #     self._call_api()
-    #     self._weather
+    @property
+    def weather(self):
+        # self._call_api()
+        self._build_return_data()
+        return self._weather
 
     # @property
     # def moon(self):
@@ -199,30 +200,34 @@ class WeatherFetcher(object):
     # Store weather data points to post
     def _build_return_data(self):
         self._call_api()
-        self.current = self.forecast['current_observation']
+        current = self.forecast['current_observation']
         future = self._pick_future()
         
-        # self._weather = {
-        #     "icon": current['icon'],
-        #     "feels_like_F": current['feelslike_f'],...
-
-        # }
-        # if future:
-        #     self._weather.update({
-        #         'high_F': future['high']['fahrenheit'],
-        #         ...
-        #     })
+        if self.current_day:
+            self._weather = {
+                "icon": current['icon'],
+                "temp_F": current['temp_f'],
+                "feels_like_F": current['feelslike_f']
+            }
+        else:
+            self._weather = {
+                "temp_F": float(future['high']['fahrenheit'])
+            }
 
     def _pick_future(self):
-        for fragment in self.forecast['forecast']['simpleforecast']['forecastday']:
+        self.current_day = None
+        
+        for num, fragment in enumerate(self.forecast['forecast']['simpleforecast']['forecastday']):
             local_ts = float(fragment['date']['epoch']) + self.offset
 
             # Timestamp offset focus on search location vs location of the server
             forecast_date = datetime.fromtimestamp(local_ts).date() 
 
-            print "set_fragment", forecast_date, self.as_of.date()
-
             if forecast_date == self.as_of.date():
+                print "frament date and num", forecast_date, num
+                if num == 0:
+                    self.current_day = True
+
                 return fragment
 
         return None

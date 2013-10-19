@@ -99,16 +99,22 @@ class DayResolverTests(unittest.TestCase):
 
 class WeatherFetcherTests(unittest.TestCase):
 
-    def test_everything(self):
+    def test_conditions(self):
+        current_date = datetime(2013, 10, 19, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        future_date = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+
+        self._test_for_details(current_date, None)
+        self._test_for_details(future_date, None)
+
+    def _test_for_details(self, as_of, expected):
         lat = 37.7655
         lng = -122.4429        
-        as_of = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
         offset = -25200
+
         fetcher = new.WeatherFetcher(lat, lng, as_of, offset)
-        fetcher._build_return_data()
         # assert fetcher.weather_data != None
         # assert fetcher.current != None
-        assert fetcher.weather.temp_F != None
+        assert fetcher.weather["temp_F"] != expected
 
 # Test restuls for future and current dates
 
