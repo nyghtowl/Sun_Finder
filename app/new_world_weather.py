@@ -1,41 +1,89 @@
-from sun_functions import google_places_coord
+from app.models import Location
+from config import G_KEY
+import re # Regex
 from datetime import datetime, timedelta
+from time import time, mktime
 import pytz
-from BeautifulSoup import BeautifulSoup
-from time import time
 import requests, json
+from BeautifulSoup import BeautifulSoup
 
 class InputResolver(object):
-    def __init__(self, query, user_coord, date):
-        self.query = query
+    def __init__(self, txt_query, user_coord, date):
+        self.txt_query = txt_query
         self.user_date = date
         self.user_coord = user_coord
-        self.lat = None
-        self.lng = None
-        self.location_name = None
-        self.location_dt = None
 
-    # FIX - only run if not in postgres
+    def fetch_coords(self):
+        # Regex to pull space with +
+        txt_plus = re.sub('[ ]', '+', self.txt_query)
+
+        #FIX - Get the client side coord for centralized location
+        api_params = {
+            # holding central location in SF 
+            'query': txt_plus,
+            'location': self.user_coord,
+            'radius':5000,
+            'sensor':'false',
+            'key':G_KEY
+        }
+
+        url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+        result = requests.get(url,params=api_params)
+        # Extract lat & lng
+        place_result = result.json()
+        result_path = place_result['results'][0] 
+
+        self._lat = result_path['geometry']['location']['lat']
+        self._lng = result_path['geometry']['location']['lng']
+        self._location_name = result_path['name']
+
+
     def resolve_location(self):
-        # FIX - remove lat and lng? - pull in google api
-        self.lat, self.lng, self.location_name = google_places_coord(self.query, self.user_coord)
+        # Grabs neighborhood from database 
+        # neighborhood = Location.query.filter(Location.n_hood.contains(self.txt_query)).first()
 
-    def set_date(self): 
-        tzr = TimezoneResolver(self.user_coord)
-        current_date = tzr.current_dt
+        # # Use local db for coordinates if query matches local db
+        # if neighborhood:
+        #     self._lat = neighborhood.lat
+        #     self._lng = neighborhood.lng
+        #     self._location_name = neighborhood.n_hood
+        # # Use Google Places for coordinates if no query match to local db
+        # else:
+        self.fetch_coords()
 
+    @property
+    def lat(self):
+        return self._lat 
+
+    @property
+    def lng(self):
+        return self._lng
+
+    @property    
+    def location_name(self):
+        return self._location_name
+    
+    @property
+    def as_of(self): 
         if not(self.user_date):
-            self.location_dt = current_date
-        else:
-            user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
-            auto_time = current_date.time()
-            self.location_dt = datetime.combine(user_date, auto_time)
-            self.location_dt_str = str(self.location_dt.date())
+            return time()
+        else:         
+            return mktime(datetime.strptime(self.user_date, "%m-%d-%Y").timetuple())
+
+
+        # tzr = TimezoneResolver(self.user_coord)
+        # current_date = tzr.current_dt
+
+        # else:
+        #     user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
+        #     auto_time = current_date.time()
+        #     self.location_dt = datetime.combine(user_date, auto_time)
+        #     self.location_dt_str = str(self.location_dt.date())
 
 
     # Returns string value if print object
     def __str__(self):
-        return ("query= " + self.query + " user_coord= " + self.user_coord + "  name= " + self.location_name)
+        return ("as_of= " + self.as_of + " lat= " + self.lat + "  lng= " + self.lng + "name " + self.location_name)
 
 class TimezoneResolver(object):
     def __init__(self, user_coord):
@@ -80,6 +128,7 @@ class TimezoneResolver(object):
     def current_dt(self):
         return datetime.fromtimestamp(time(), self.timezone)
 
+
 # Get sunrise and sunset from earthtools
 class DayResolver(object):
     def __init__(self, lat, lng, date):
@@ -112,6 +161,7 @@ class WeatherFetcher(object):
         self.lat = lat
         self.lng = lng
         self.date = date
+        self.weather_data = None
 
     # @property
     # def weather(self):

@@ -1,4 +1,4 @@
-t
+
 def create_template_data(user_search_input):
     clean_input = new.InputResolver(user_search_input)
     clean_input.get_name()

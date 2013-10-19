@@ -61,10 +61,11 @@ def search_results(txt_query, user_picked_time, user_coord):
         g_lat = neighborhood.lat
         g_lng = neighborhood.lng
         loc_name = neighborhood.n_hood
+        print 'postgres', g_lat, g_lng, loc_name
     # Use Google Places for coordinates if no query match to local db
     else:
         g_lat, g_lng, loc_name = google_places_coord(txt_query, user_coord)
-
+        print 'search coord', g_lat, g_lng,loc_name
     # try:
     forecast_result = weather_forecast.Weather.get_forecast(g_lat, g_lng, user_picked_time, loc_name)
     
