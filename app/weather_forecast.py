@@ -208,7 +208,7 @@ class Weather(object):
 
         # Pull tz to avoid error comparing tz value dt to one without
         naive_dt = self.as_of
-        moon = moonphase.main(naive_dt, self.local_tz)
+        moon = moonphase.main(naive_dt)
         print 'add_night, %s' % moon
 
         if moon in night_pics:

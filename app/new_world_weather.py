@@ -1,7 +1,7 @@
 from app.models import Location
 from config import G_KEY, WUI_KEY
 import re # Regex
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from time import time, mktime
 import pytz
 import moonphase
@@ -72,21 +72,11 @@ class InputResolver(object):
         return self._location_name
     
     @property
-    def as_of(self):
+    def as_of_ts(self):
         if not(self.user_date):
             return time()
         else:         
             return mktime(datetime.strptime(self.user_date, "%m-%d-%Y").timetuple())
-
-        # tzr = TimezoneResolver(self.user_coord)
-        # current_date = tzr.current_dt
-
-        # else:
-        #     user_date = datetime.strptime(self.user_date, "%m-%d-%Y")
-        #     auto_time = current_date.time()
-        #     self.location_dt = datetime.combine(user_date, auto_time)
-        #     self.location_dt_str = str(self.location_dt.date())
-
 
     # Returns string value if print object
     def __str__(self):
@@ -182,10 +172,9 @@ class WeatherFetcher(object):
         self._weather_data()
         return self._weather
 
-    # @property
-    # def moon(self):
-    #     self._call_api()
-    #     self._moon
+    @property
+    def moon(self):
+        return moonphase.main(self.as_of)
 
     def _call_api(self):
         if self._called:
@@ -243,13 +232,22 @@ class WeatherFetcher(object):
             forecast_date = datetime.fromtimestamp(local_ts).date() 
 
             if forecast_date == self.as_of.date():
-                print "frament date and num", forecast_date, num
                 if num == 0:
                     self.current_day = True
 
                 return fragment
 
         return None
+
+# FIX - set time
+def local_datetime(as_of_ts, local_tz):
+    as_of = datetime.fromtimestamp(as_of_ts, pytz.timezone(local_tz))
+
+    return as_of.date()
+
+
+    #     auto_time = current_date.time()
+    #     self.location_dt = datetime.combine(user_date, auto_time)
 
 def choose_picture(icon, moon_phase, is_day):    
     
@@ -266,14 +264,14 @@ def choose_picture(icon, moon_phase, is_day):
     }
 
     night_pics = {
-        "First Quarter":"moon_firstquarter.png", 
-        "Full Moon":"full_moon1.jpg", 
-        "Last Quarter":"moon_lastquarter.png", 
-        "New Moon":"newmoon.png", 
-        "Waning Crescent":"moon_waningcrescent.png",
-        "Waning Gibbous":"moon_waninggibbous.png", 
-        "Waxing Crescent":"moon_waxingcrescent.png", 
-        "Waxing Gibbous":"moon_waxinggibbous.png"
+        "First Quarter":("First Quarter","moon_firstquarter.png"), 
+        "Full Moon":("Full Moon","full_moon1.jpg"), 
+        "Last Quarter":("Last Quarter","moon_lastquarter.png"), 
+        "New Moon":("New Moon","newmoon.png"), 
+        "Waning Crescent":("Waning Crescent","moon_waningcrescent.png"),
+        "Waning Gibbous":("Waning Gibbous","moon_waninggibbous.png"), 
+        "Waxing Crescent":("Waxing Crescent","moon_waxingcrescent.png"), 
+        "Waxing Gibbous":("Waxing Gibbous","moon_waxinggibbous.png")
         }
 
     if is_day:
@@ -283,10 +281,17 @@ def choose_picture(icon, moon_phase, is_day):
 
 
 class TemplateContext(object):
-    picture_path = '/static/img/' 
-    
-    # Add path to pic
-    # Add both pick and weather descrip to dict
-    # Update the date?
 
-    pass
+    def __init__(self, picture_details):
+        self.picture_details = picture_details
+
+    @property
+    def weather_description(self):
+        return self.picture_details[0]
+    
+    @property
+    def picture_path(self):
+        return "/static/img/" + self.picture_details[1]
+
+
+

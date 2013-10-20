@@ -9,7 +9,7 @@ Cf. http://en.wikipedia.org/wiki/Lunar_phase#Lunar_phase_calculation
 import math, decimal, datetime, pytz
 dec = decimal.Decimal
 
-def position(as_of, local_tz): 
+def position(as_of): 
 
    standard_date = datetime.datetime(2001, 1, 1)
    as_of_notz = as_of.replace(tzinfo=None)
@@ -34,8 +34,8 @@ def phase(pos):
       7: "Waning Crescent"
    }[int(index) & 7]
 
-def main(as_of, local_tz): 
-   pos = position(as_of, local_tz)
+def main(as_of): 
+   pos = position(as_of)
    phasename = phase(pos)
 
    roundedpos = round(float(pos), 3)

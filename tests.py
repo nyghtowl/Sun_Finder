@@ -9,7 +9,7 @@ from app import new_world_weather as new
 from app import app, db
 from app.models import User, Location
 from config import basedir
-from datetime import datetime
+from datetime import datetime, date
 from mock import patch
 
 def _helper(**kwargs):
@@ -46,6 +46,15 @@ class MainTestCase(unittest.TestCase):
         assert picture_details[0] == "sun"
         assert picture_details[1] == "sun_samp2.png"
 
+    def test_datetime(self):
+        local_tz = 'America/Los_Angeles'
+        as_of_ts = 1382166000.0
+
+        as_of_test = new.local_datetime(as_of_ts, local_tz)
+
+        assert as_of_test == datetime(2013, 10, 19).date()
+        # "2013-10-19"
+
 class InputResolverTests(unittest.TestCase):
 
     def test_location(self):
@@ -76,7 +85,7 @@ class InputResolverTests(unittest.TestCase):
     def _test_for_date(self, user_date, expected):
         clean_input = new.InputResolver(**_helper(query='mission', user_coord='37.7655,-122.4429', date=user_date))
 
-        assert clean_input.as_of == expected
+        assert clean_input.as_of_ts == expected
 
 class TimezoneResolverTests(unittest.TestCase):
 
@@ -109,13 +118,22 @@ class DayResolverTests(unittest.TestCase):
 class WeatherFetcherTests(unittest.TestCase):
 
     def test_conditions(self):
-        current_date = datetime(2013, 10, 19, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
-        future_date = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone('America/Los_Angeles'))
+        local_tz = 'America/Los_Angeles'
 
-        self._test_for_details(current_date, None)
-        self._test_for_details(future_date, None)
+        current_date_day = datetime(2013, 10, 19, 12,  tzinfo=pytz.timezone(local_tz))
+        future_date_day = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone(local_tz))
 
-    def _test_for_details(self, as_of, expected):
+        current_date_night = datetime(2013, 10, 19, 23,  tzinfo=pytz.timezone(local_tz))
+        future_date_night = datetime(2013, 10, 20, 23,  tzinfo=pytz.timezone(local_tz))
+
+        self._test_for_weather(current_date_day, None)
+        self._test_for_weather(future_date_day, None)
+
+#FIX - use patch to set the value
+        self._test_for_moon(current_date_night, "Full Moon")
+        self._test_for_moon(future_date_night, "Full Moon")
+
+    def _test_for_weather(self, as_of, expected):
         lat = 37.7655
         lng = -122.4429        
         offset = -25200
@@ -135,8 +153,27 @@ class WeatherFetcherTests(unittest.TestCase):
         # assert fetcher.weather["feelslike_f"] != expected
         # assert fetcher.weather["feelslike_c"] != expected
 
+    def _test_for_moon(self, as_of, expected):
+        lat = 37.7655
+        lng = -122.4429        
+        offset = -25200
 
-# Test results for future and current dates
+        fetcher = new.WeatherFetcher(lat, lng, as_of, offset)
+
+        assert fetcher.moon == expected
+
+class TemplateContextTests(unittest.TestCase):
+    def test_conditions(self):
+        sun_details = ("sun", "sun_samp2.png")
+
+        self._test_for_template(sun_details, "sun", "/static/img/sun_samp2.png")
+
+    def _test_for_template(self, picture_details, expected_descrip, expected_picture):
+
+        template = new.TemplateContext(picture_details)
+
+        assert template.weather_description == expected_descrip
+        assert template.picture_path == expected_picture
 
 if __name__ == '__main__':
     cov.start()    
