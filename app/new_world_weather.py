@@ -4,6 +4,7 @@ import re # Regex
 from datetime import datetime, timedelta
 from time import time, mktime
 import pytz
+import moonphase
 import requests, json
 from BeautifulSoup import BeautifulSoup
 
@@ -44,6 +45,8 @@ class InputResolver(object):
 
 
     def resolve_location(self):
+        #FIX - error thrown
+
         # Grabs neighborhood from database 
         # neighborhood = Location.query.filter(Location.n_hood.contains(self.txt_query)).first()
 
@@ -176,7 +179,7 @@ class WeatherFetcher(object):
     @property
     def weather(self):
         # self._call_api()
-        self._build_return_data()
+        self._weather_data()
         return self._weather
 
     # @property
@@ -198,25 +201,41 @@ class WeatherFetcher(object):
         self.forecast = requests.get(final_url).json()
 
     # Store weather data points to post
-    def _build_return_data(self):
+    def _weather_data(self):
         self._call_api()
         current = self.forecast['current_observation']
         future = self._pick_future()
         
+        common_weather = {
+            "humidty": future['avehumidity'],
+            "high_F": future['high']['fahrenheit'],
+            "high_C": future['high']['celsius'],
+            "low_F": future['low']['fahrenheit'],
+            "low_C": future['low']['celsius'],
+        }
+        
         if self.current_day:
-            self._weather = {
+            self._weather = dict({
                 "icon": current['icon'],
                 "temp_F": current['temp_f'],
-                "feels_like_F": current['feelslike_f']
-            }
+                "temp_C": current['temp_c'],
+                "feels_like_F": current['feelslike_f'],
+                "feels_like_C": current['feelslike_f'],
+                "wind_gust_mph": current['wind_gust_mph'],
+            }.items() + common_weather.items())
         else:
-            self._weather = {
-                "temp_F": float(future['high']['fahrenheit'])
-            }
+            self._weather = dict({
+                "icon": future['icon'],
+                "temp_F": float(future['high']['fahrenheit']),
+                "temp_C": float(future['high']['celsius']),
+                "feels_like_F": None,
+                "feels_like_C": None,
+                "wind_gust_mph": future['avewind']['mph'],
+            }.items() + common_weather.items())
 
     def _pick_future(self):
         self.current_day = None
-        
+
         for num, fragment in enumerate(self.forecast['forecast']['simpleforecast']['forecastday']):
             local_ts = float(fragment['date']['epoch']) + self.offset
 
@@ -232,8 +251,42 @@ class WeatherFetcher(object):
 
         return None
 
-def choose_picture(is_day, weather, moon_phase):
-    pass
+def choose_picture(icon, moon_phase, is_day):    
+    
+    day_pics = {
+        "clear-day":("sun", "sun_samp2.png"),
+        "clear":("sun", "sun_samp2.png"),
+        "rain":("rain", "rain.png"), 
+        "snow":("snow", "snow.png"), 
+        "sleet":("sleet", "sleet2.png"), 
+        "fog":("fog", "foggy2.png"), 
+        "cloudy":("cloudy", "cloudy.png"), 
+        "mostlycloudy":("partly cloudy", "cloudy.png"),
+        "partlycloudy":("partly cloudy", "partly_cloudy.png")
+    }
+
+    night_pics = {
+        "First Quarter":"moon_firstquarter.png", 
+        "Full Moon":"full_moon1.jpg", 
+        "Last Quarter":"moon_lastquarter.png", 
+        "New Moon":"newmoon.png", 
+        "Waning Crescent":"moon_waningcrescent.png",
+        "Waning Gibbous":"moon_waninggibbous.png", 
+        "Waxing Crescent":"moon_waxingcrescent.png", 
+        "Waxing Gibbous":"moon_waxinggibbous.png"
+        }
+
+    if is_day:
+        return day_pics[icon]
+    else:
+        return night_pics[moonphase]
+
 
 class TemplateContext(object):
+    picture_path = '/static/img/' 
+    
+    # Add path to pic
+    # Add both pick and weather descrip to dict
+    # Update the date?
+
     pass

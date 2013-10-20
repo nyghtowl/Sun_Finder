@@ -5,13 +5,12 @@ cov = coverage(branch = True, omit = ['env/*', 'tests.py'])
 
 import os, pytz
 import unittest
-from datetime import datetime, timedelta
-from mock import patch
-
-from config import basedir
+from app import new_world_weather as new
 from app import app, db
 from app.models import User, Location
-from app import new_world_weather as new
+from config import basedir
+from datetime import datetime
+from mock import patch
 
 def _helper(**kwargs):
     return {
@@ -20,7 +19,7 @@ def _helper(**kwargs):
         'date': kwargs.get('date')
     }
 
-class ExampleTestCase(unittest.TestCase):
+class MainTestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['CSRF_ENABLED'] = False
@@ -36,6 +35,16 @@ class ExampleTestCase(unittest.TestCase):
         avatar = u.avatar(128)
         expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
         assert avatar[0:len(expected)] == expected
+
+    def test_picture(self):
+        is_day = True
+        icon = "clear-day"
+        moonphase = "Full Moon"
+
+        picture_details = new.choose_picture(icon, moonphase, is_day)
+
+        assert picture_details[0] == "sun"
+        assert picture_details[1] == "sun_samp2.png"
 
 class InputResolverTests(unittest.TestCase):
 
@@ -112,11 +121,22 @@ class WeatherFetcherTests(unittest.TestCase):
         offset = -25200
 
         fetcher = new.WeatherFetcher(lat, lng, as_of, offset)
-        # assert fetcher.weather_data != None
-        # assert fetcher.current != None
-        assert fetcher.weather["temp_F"] != expected
 
-# Test restuls for future and current dates
+        assert fetcher.weather["icon"] != expected
+        assert fetcher.weather["temp_F"] != expected
+        assert fetcher.weather["temp_C"] != expected
+        assert fetcher.weather["wind_gust_mph"] != expected
+        assert fetcher.weather["humidty"] != expected
+        assert fetcher.weather["high_F"] != expected
+        assert fetcher.weather["high_C"] != expected
+        assert fetcher.weather["low_F"] != expected
+        assert fetcher.weather["low_C"] != expected
+
+        # assert fetcher.weather["feelslike_f"] != expected
+        # assert fetcher.weather["feelslike_c"] != expected
+
+
+# Test results for future and current dates
 
 if __name__ == '__main__':
     cov.start()    
