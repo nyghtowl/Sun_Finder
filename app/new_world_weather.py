@@ -45,19 +45,17 @@ class InputResolver(object):
 
 
     def resolve_location(self):
-        #FIX - error thrown
-
         # Grabs neighborhood from database 
-        # neighborhood = Location.query.filter(Location.n_hood.contains(self.txt_query)).first()
+        neighborhood = Location.query.filter(Location.n_hood.contains(self.txt_query)).first()
 
-        # # Use local db for coordinates if query matches local db
-        # if neighborhood:
-        #     self._lat = neighborhood.lat
-        #     self._lng = neighborhood.lng
-        #     self._location_name = neighborhood.n_hood
-        # # Use Google Places for coordinates if no query match to local db
-        # else:
-        self.fetch_coords()
+        # Use local db for coordinates if query matches local db
+        if neighborhood:
+            self._lat = neighborhood.lat
+            self._lng = neighborhood.lng
+            self._location_name = neighborhood.n_hood
+        # Use Google Places for coordinates if no query match to local db
+        else:
+            self.fetch_coords()
 
     @property
     def lat(self):
@@ -76,6 +74,7 @@ class InputResolver(object):
         if not(self.user_date):
             return time()
         else:         
+            #FIX - apply current time to this and make space for user choosing time
             return mktime(datetime.strptime(self.user_date, "%m-%d-%Y").timetuple())
 
     # Returns string value if print object
@@ -165,6 +164,7 @@ class WeatherFetcher(object):
         self.lng = lng
         self.as_of = as_of
         self.offset = offset
+        self.current_day = None
 
     @property
     def weather(self):
@@ -223,7 +223,6 @@ class WeatherFetcher(object):
             }.items() + common_weather.items())
 
     def _pick_future(self):
-        self.current_day = None
 
         for num, fragment in enumerate(self.forecast['forecast']['simpleforecast']['forecastday']):
             local_ts = float(fragment['date']['epoch']) + self.offset
@@ -245,7 +244,6 @@ def local_datetime(as_of_ts, local_tz):
 
     return as_of.date()
 
-
     #     auto_time = current_date.time()
     #     self.location_dt = datetime.combine(user_date, auto_time)
 
@@ -264,14 +262,14 @@ def choose_picture(icon, moon_phase, is_day):
     }
 
     night_pics = {
-        "First Quarter":("First Quarter","moon_firstquarter.png"), 
+        "First Quarter":("First Quarter Moon","moon_firstquarter.png"), 
         "Full Moon":("Full Moon","full_moon1.jpg"), 
-        "Last Quarter":("Last Quarter","moon_lastquarter.png"), 
+        "Last Quarter":("Last Quarter Moon","moon_lastquarter.png"), 
         "New Moon":("New Moon","newmoon.png"), 
-        "Waning Crescent":("Waning Crescent","moon_waningcrescent.png"),
-        "Waning Gibbous":("Waning Gibbous","moon_waninggibbous.png"), 
-        "Waxing Crescent":("Waxing Crescent","moon_waxingcrescent.png"), 
-        "Waxing Gibbous":("Waxing Gibbous","moon_waxinggibbous.png")
+        "Waning Crescent":("Waning Crescent Moon","moon_waningcrescent.png"),
+        "Waning Gibbous":("Waning Gibbous Moon","moon_waninggibbous.png"), 
+        "Waxing Crescent":("Waxing Crescent Moon","moon_waxingcrescent.png"), 
+        "Waxing Gibbous":("Waxing Gibbous Moon","moon_waxinggibbous.png")
         }
 
     if is_day:

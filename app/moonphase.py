@@ -12,8 +12,8 @@ dec = decimal.Decimal
 def position(as_of): 
 
    standard_date = datetime.datetime(2001, 1, 1)
+   # Need to compare when both naive
    as_of_notz = as_of.replace(tzinfo=None)
-   # diff = as_of.date() - standard_date.date())
    diff = as_of_notz.date() - standard_date.date()
    days = dec(diff.days) + (dec(diff.seconds) / dec(86400))
    lunations = dec("0.20439731") + (days * dec("0.03386319269"))

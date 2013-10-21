@@ -9,8 +9,9 @@ from app import new_world_weather as new
 from app import app, db
 from app.models import User, Location
 from config import basedir
-from datetime import datetime, date
+from datetime import datetime, timedelta, date, time
 from mock import patch
+# import moonphase
 
 def _helper(**kwargs):
     return {
@@ -43,7 +44,7 @@ class MainTestCase(unittest.TestCase):
 
         picture_details = new.choose_picture(icon, moonphase, is_day)
 
-        assert picture_details[0] == "sun"
+        self.assertEqual(picture_details[0], "sun")
         assert picture_details[1] == "sun_samp2.png"
 
     def test_datetime(self):
@@ -56,19 +57,24 @@ class MainTestCase(unittest.TestCase):
         # "2013-10-19"
 
 class InputResolverTests(unittest.TestCase):
+    def setUp(self):
+        self.user_coord = '37.7655,-122.4429'
+
+    def tearDown(self):
+        pass
 
     def test_location(self):
-        stored_location = 'Mission Dolores'
+        stored_location = 'Mission District'
         fetched_location = 'mission'
 
 # Error - model location does not exist
 
-        # self._test_for_location(stored_location, 37.76, -122.4148, stored_location)
+        self._test_for_location(stored_location, 37.76, -122.4148, u'Mission District')
         self._test_for_location(fetched_location, 37.764488, -122.42685, 'Mission Dolores Gift Shop')
 
     def _test_for_location(self, txt_query, expected_lat, expected_lng, expected_name):
 
-        clean_input = new.InputResolver(**_helper(txt_query=txt_query, user_coord='37.7655,-122.4429'))
+        clean_input = new.InputResolver(**_helper(txt_query=txt_query, user_coord=self.user_coord))
         clean_input.resolve_location()
 
         assert clean_input.lat == expected_lat
@@ -116,22 +122,26 @@ class DayResolverTests(unittest.TestCase):
         assert day_resolve.is_day == expected
 
 class WeatherFetcherTests(unittest.TestCase):
+    def setUp(self):
+        local_tz = 'America/Los_Angeles'
+        current_date = datetime.utcnow().replace(tzinfo = pytz.timezone(local_tz)).date()
+        future_date = current_date + timedelta(days=2)
+        day = time(12, 0)
+        night = time(23, 0)
+
+        self.current_day = datetime.combine(current_date, day)
+        self.current_night = datetime.combine(current_date, night)
+        self.future_day = datetime.combine(current_date, day)
+        self.future_night = datetime.combine(future_date, night)
+
 
     def test_conditions(self):
-        local_tz = 'America/Los_Angeles'
 
-        current_date_day = datetime(2013, 10, 19, 12,  tzinfo=pytz.timezone(local_tz))
-        future_date_day = datetime(2013, 10, 20, 12,  tzinfo=pytz.timezone(local_tz))
+        self._test_for_weather(self.current_day, None)
+        self._test_for_weather(self.future_day, None)
 
-        current_date_night = datetime(2013, 10, 19, 23,  tzinfo=pytz.timezone(local_tz))
-        future_date_night = datetime(2013, 10, 20, 23,  tzinfo=pytz.timezone(local_tz))
-
-        self._test_for_weather(current_date_day, None)
-        self._test_for_weather(future_date_day, None)
-
-#FIX - use patch to set the value
-        self._test_for_moon(current_date_night, "Full Moon")
-        self._test_for_moon(future_date_night, "Full Moon")
+        self._test_for_moon(self.current_night, "Full Moon")
+        self._test_for_moon(self.future_night, "Waning Gibbous")
 
     def _test_for_weather(self, as_of, expected):
         lat = 37.7655
@@ -178,7 +188,7 @@ class TemplateContextTests(unittest.TestCase):
 if __name__ == '__main__':
     cov.start()    
     try:
-        unittest.main()
+        unittest.main(verbosity=2)
     except:
         pass
     cov.stop()
