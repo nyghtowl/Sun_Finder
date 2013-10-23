@@ -1,17 +1,15 @@
 
-def create_template_data(user_search_input):
-    clean_input = new.InputResolver(user_search_input)
-    clean_input.get_name()
-    clean_input.set_date()
+def create_template_data(txt_query, user_coord, date_submitted):
+    input_confirm = new.InputResolver(txt_query, user_coord, date_submitted)
+    input_cofirm.resolve_location()
 
-    is_day = new.DayResolver(clean_input.lat, clean_input.lng, clean_input.location_dt)
+    location_tz = new.TimezoneResolver(user_coord)
 
-    fetcher = new.WeatherFetcher(clean_input.lat, clean_input.lng, clean_input.location_dt)
+    is_day = new.DayResolver(input_confirm.lat, input_confirm.lng, input_confirm.as_of_ts)
 
-    weather_data = fetcher.get_weather()
-    moon_phase = fetcher.moon()
+    fetcher = new.WeatherFetcher(input_confirm.lat, input_confirm.lng, is_day.as_of_dt, location_tz.offset).weather
 
-    picture = new.choose_picture(is_day, weather, moon_phase)
+    picture = new.choose_picture(fetcher['icon'], fetcher.moon, is_day.is_day)
 
     return new.TemplateContext({
      'location_name': f.location_name,
