@@ -64,7 +64,6 @@ class InputResolverTests(unittest.TestCase):
     def _test_for_location(self, txt_query, expected_lat, expected_lng, expected_name):
 
         clean_input = new.InputResolver(**_helper(txt_query=txt_query, user_coord=self.user_coord))
-        clean_input.resolve_location()
 
         assert clean_input.lat == expected_lat
         assert clean_input.lng == expected_lng
@@ -167,18 +166,18 @@ class WeatherFetcherTests(unittest.TestCase):
 
         assert fetcher.moon == expected
 
-class TemplateContextTests(unittest.TestCase):
-    def test_conditions(self):
-        sun_details = ("sun", "sun_samp2.png")
+# class TemplateContextTests(unittest.TestCase):
+#     def test_conditions(self):
+#         sun_details = ("sun", "sun_samp2.png")
 
-        self._test_for_template(sun_details, "sun", "/static/img/sun_samp2.png")
+#         self._test_for_template(sun_details, "sun", "/static/img/sun_samp2.png")
 
-    def _test_for_template(self, picture_details, expected_descrip, expected_picture):
+#     def _test_for_template(self, picture_details, expected_descrip, expected_picture):
 
-        template = new.TemplateContext(picture_details)
+#         template = new.TemplateContext(picture_details)
 
-        assert template.weather_description == expected_descrip
-        assert template.picture_path == expected_picture
+#         assert template.weather_description == expected_descrip
+#         assert template.picture_path == expected_picture
 
 if __name__ == '__main__':
     cov.start()    

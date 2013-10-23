@@ -11,6 +11,7 @@ from BeautifulSoup import BeautifulSoup
 class InputResolver(object):
     def __init__(self, txt_query, user_coord, date):
         self._api_called = False
+        self._loc_resolve = False
         self.txt_query = txt_query
         self.user_date = date
         self.user_coord = user_coord
@@ -43,7 +44,11 @@ class InputResolver(object):
         self._lng = result_path['geometry']['location']['lng']
         self._location_name = result_path['name']
 
-    def resolve_location(self):
+    def _resolve_location(self):
+        if self._loc_resolve:
+            return
+        self._loc_resolve = True
+
         # Grabs neighborhood from database 
         neighborhood = Location.query.filter(Location.n_hood.contains(self.txt_query)).first()
 
@@ -58,14 +63,17 @@ class InputResolver(object):
 
     @property
     def lat(self):
+        self._resolve_location()
         return self._lat 
 
     @property
     def lng(self):
+        self._resolve_location()
         return self._lng
 
     @property    
     def location_name(self):
+        self._resolve_location()
         return self._location_name
     
     @property
@@ -77,9 +85,7 @@ class InputResolver(object):
             add_time = str(datetime.utcnow().hour) + ":" + str(datetime.utcnow().minute)
             self.user_date += " " + add_time
 
-            ret = mktime(datetime.strptime(self.user_date, "%m-%d-%Y %H:%M").timetuple())
-            print "as_of_ts", ret
-            return ret
+            return mktime(datetime.strptime(self.user_date, "%m-%d-%Y %H:%M").timetuple())
 
     # Returns string value if print object
     def __str__(self):
@@ -143,7 +149,6 @@ class DayResolver(object):
     
     @property
     def as_of_dt(self):
-        print "as_of_dt", datetime.utcfromtimestamp(self.as_of_ts + self.offset)
         return datetime.utcfromtimestamp(self.as_of_ts + self.offset)
 
     @property
@@ -153,7 +158,6 @@ class DayResolver(object):
         sunrise = datetime.strptime(sun_position.sunrise.string, '%H:%M:%S').time()
         sunset = datetime.strptime(sun_position.sunset.string, '%H:%M:%S').time()
             
-        print "sunrise & sunset", sunrise, sunset
         if sunrise < self.as_of_dt.time() < sunset:
             return True
         else:
@@ -187,7 +191,6 @@ class WeatherFetcher(object):
         url="http://api.wunderground.com/api/%s/conditions/forecast/q/%f,%f.json"
 
         final_url=url%(WUI_KEY, self.lat, self.lng)
-        print "weather url", final_url
 
         self.forecast = requests.get(final_url).json()
 
@@ -275,24 +278,3 @@ def choose_picture(icon, moon_phase, is_day):
         return night_pics[moonphase]
 
 
-class TemplateContext(object):
-
-    def __init__(self, picture_details):
-        self.picture_details = picture_details
-
-    @property
-    def weather_description(self):
-        return self.picture_details[0]
-    
-    @property
-    def picture_path(self):
-        return "/static/img/" + self.picture_details[1]
-
-
-
-# {
-#     'weather': fetcher.weather,
-#     'pic': pic_details[1],
-#     'pic_description': pic_details[0]
-
-# }

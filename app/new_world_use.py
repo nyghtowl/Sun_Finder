@@ -11,8 +11,12 @@ def create_template_data(txt_query, user_coord, date_submitted):
 
     picture = new.choose_picture(fetcher['icon'], fetcher.moon, is_day.is_day)
 
-    return new.TemplateContext({
-     'location_name': f.location_name,
-     'weather_descrip': weather.description,
+    return ({
+        'weather': fetcher.weather,
+        'location_name': input_confirm.location_name,
+        'lat':input_confirm.lat,
+        'lng':input_confirm.lng,
+        'description': picture[0],
+        'img': "/static/img/" + picture[1]
      })
 
