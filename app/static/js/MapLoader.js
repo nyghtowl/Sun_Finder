@@ -6,9 +6,7 @@
 	// Namespace - main static/global variable to reference
 	var MapLoader = {}; 
 
-	console.log("map loader js"); // Confirm load
-
-	MapLoader.buildMap = function(mapInfo) {
+	MapLoader.Map = function(mapInfo) {
 
 	    //stops other event listeners from firing on search button
 		console.log("build_map" + mapInfo.lat); // test
@@ -24,10 +22,10 @@
 		}
 		
 		// Establishes Google maps
-		var map = new google.maps.Map(mapInfo.canvas, map_options);
+		this.map = new google.maps.Map(mapInfo.canvas, map_options);
 
 		// Map style
-		map.set('styles', 
+		this.map.set('styles', 
 
 			[
 			  {
@@ -87,9 +85,8 @@
 			);
 
 		// Create search results marker
-		createMarker({
+		this.createMarker({
 			position: mapLatLng, 
-			map: map, 
 			imgUrl: mapInfo.searchMarkerImg,
 			imgTitle: "Search Result",
 			scaledSize:new google.maps.Size(27, 27)
@@ -98,9 +95,8 @@
 		// Add weather icon and label based on search
 		if (mapInfo.weatherSearchImg){
 
-			createMarker({
+			this.createMarker({
 				position: mapLatLng, 
-				map: map, 
 				imgUrl: mapInfo.weatherSearchImg,
 				origin: new google.maps.Point(0,0),
 				// size: new google.maps.Size(20, 32),
@@ -108,22 +104,43 @@
 				scaledSize:new google.maps.Size(27, 27)
 			});
 		
-	    	createLabel({ 
+	    	this.createLabel({ 
 	    		lat: mapInfo.lat,
 	    		lng: mapInfo.lng,
-	    		labelContent: mapInfo.weatherSearchLabel, 
-	    		map: map
+	    		labelContent: mapInfo.weatherSearchLabel
 	    	});
 		}
 		
-		if (mapInfo.multipleWeatherData){
-			renderMarkers(map, mapInfo.multipleWeatherData.locations);
-		}
-
 	};
 	
+	// Applying to Map prototype for function reference on the instance of map
+	MapLoader.Map.prototype.renderMarkers = function(data){
+		
+		if (data){
+			var locations = data.locations;
+
+			for (var i = 0; i < locations.length; i++) {
+		    	this.createMarker({
+		    		imgUrl:locations[i].img_url,
+		    		position: new google.maps.LatLng(locations[i].lat, locations[i].lng), 
+					origin: locations.origin || new google.maps.Point(0,0),
+					anchor: locations.anchor || new google.maps.Point(0,0),
+					scaledSize: new google.maps.Size(25, 25)
+		    	});
+
+		    	this.createLabel({ 
+		    		lat: locations[i].lat,
+		    		lng: locations[i].lng,
+		    		labelContent: locations[i].temp_range, 
+		    	});
+
+		  	}     
+		};
+
+	};
+
 	// Add images to map
-	function createMarker(data) {
+	MapLoader.Map.prototype.createMarker = function(data) {
 		var markerImg = {
 			scaledSize: new google.maps.Size(20, 25),
 			size: new google.maps.Size(25, 32),
@@ -134,10 +151,10 @@
 		};
 
 		var makeMarker = new google.maps.Marker({
+			map: this.map,
 		    position: data.position,
 		    draggable: false,
 	    	raiseOnDrag: false,
-			map: data.map,
 			icon: markerImg,
 			title: data.imgTitle
 		});
@@ -145,39 +162,18 @@
 	}
 
 	// MarkerWith Label - add labels on map
-	function createLabel(data) {
+	MapLoader.Map.prototype.createLabel = function(data) {
 		new MarkerWithLabel({
 	       position: new google.maps.LatLng(data.lat,data.lng),
 	       draggable: false,
 	       raiseOnDrag: false,
-	       map: data.map,
+	       map: this.map,
 	       labelInBackground: false, //Keeps label in the front
 	       labelContent: data.labelContent,
 	       labelAnchor: new google.maps.Point(35, 10),
 	       labelClass: "labels", // Connects to CSS class label
 		});
 	}
-
-	function renderMarkers(map, locations) { 
-		for (var i = 0; i < locations.length; i++) {
-	    	createMarker({
-	    		imgUrl:locations[i].img_url,
-				map: map, 
-	    		position: new google.maps.LatLng(locations[i].lat, locations[i].lng), 
-				origin: locations.origin || new google.maps.Point(0,0),
-				anchor: locations.anchor || new google.maps.Point(0,0),
-				scaledSize: new google.maps.Size(25, 25)
-	    	});
-
-	    	createLabel({ 
-	    		lat: locations[i].lat,
-	    		lng: locations[i].lng,
-	    		labelContent: locations[i].temp_range, 
-	    		map: map
-	    	});
-
-	  	}     
-	 }
 
 	// make global var accessible externally
 	window.MapLoader = MapLoader; 

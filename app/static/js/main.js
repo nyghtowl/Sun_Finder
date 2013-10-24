@@ -8,21 +8,8 @@
 
 	var SEARCH_IMG_URL = 'https://maps.gstatic.com/mapfiles/icon_green.png';
 
-	console.log("main js"); // Confirm load
+	// console.log("main js"); // Confirm load
 
-	function getMarkerData() {
-		return new RSVP.Promise(function (resolve, reject) {
-			$.ajax({
-				url:'map_details',
-				type: "GET",
-				cache: false,
-				dataType: "json"
-			}).then(resolve, function () {
-				resolve();
-			});
-		});
-
-	}
 
 	// Typeahead - Autocomplete
 	function typeahead() {
@@ -100,39 +87,43 @@
 				$('#coord').val(coords.lat + ',' + coords.lng);
 			}
 
-			var buildMaps = function (multipleWeatherData) {
 
-				console.log('multipleWeatherData is ' + multipleWeatherData);
+			// Ajax request handled separately and this can be built immediately, thus pulled out buildMaps
+			var searchMap = new MapLoader.Map({
+				canvas:$('#map_canvas_search')[0],	
+				lat: coords.lat,
+				lng: coords.lng, 
+				searchMarkerImg: SEARCH_IMG_URL, 
+				weatherSearchImg: options.pic,
+				weatherSearchLabel: options.searchLabel,
+			});
 
-				MapLoader.buildMap({
-					canvas:$('#map_canvas_search')[0],	
+			if ($('#map_canvas_results').length){
+
+				var resultsMap = new MapLoader.Map({
+					canvas:$('#map_canvas_results')[0],	
 					lat: coords.lat,
 					lng: coords.lng, 
 					searchMarkerImg: SEARCH_IMG_URL, 
 					weatherSearchImg: options.pic,
-					weatherSearchLabel: options.searchLabel,
-					multipleWeatherData: multipleWeatherData
-				});
+					weatherSearchLabel: options.searchLabel
+				});			
+			}
 
-				if ($('#map_canvas_results').length){
-
-					MapLoader.buildMap({
-						canvas:$('#map_canvas_results')[0],	
-						lat: coords.lat,
-						lng: coords.lng, 
-						searchMarkerImg: SEARCH_IMG_URL, 
-						weatherSearchImg: options.pic,
-						weatherSearchLabel: options.searchLabel,
-						multipleWeatherData: multipleWeatherData
-					});			
+			// Ajax pulls Redis stored daily weather data - applies to map after developed
+			$.ajax({
+				url:'map_details',
+				type: "GET",
+				cache: false,
+				dataType: "json"
+			}).then(function (multipleWeatherData) {
+				searchMap.renderMarkers(multipleWeatherData);
+				if (resultsMap){
+					resultsMap.renderMarkers(multipleWeatherData);
 				}
-			};
-
-			// Ajax pulls Redis stored daily weather data
-			getMarkerData().then(buildMaps);
+			});
 
 		});
-
 
 		typeahead();
 		datepicker();
