@@ -13,6 +13,8 @@ from datetime import datetime, timedelta, date, time
 from mock import patch
 # import moonphase
 
+# mock api results
+
 def _helper(**kwargs):
     return {
         'txt_query': kwargs.get('txt_query'),
