@@ -8,13 +8,32 @@ import moonphase
 import requests, json
 from BeautifulSoup import BeautifulSoup
 
+def google_place_search(api_params):
+    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+    result = requests.get(url,params=api_params)
+    place_result = result.json()
+    result_path = place_result['results'][0] 
+
+    _lat = result_path['geometry']['location']['lat']
+    _lng = result_path['geometry']['location']['lng']
+    _location_name = result_path['name']
+
+    return {
+        'lat': _lat,
+        'lng': _lng,
+        'location_name': _location_name
+    }
+
+
+# Change so can pass in a api value to smoke test
 class InputResolver(object):
-    def __init__(self, txt_query, user_coord, date):
+    def __init__(self, txt_query, user_coord, date, place_search_api=google_place_search):
         self._api_called = False
         self._loc_resolve = False
         self.txt_query = txt_query
         self.user_date = date
         self.user_coord = user_coord
+        self.place_search_api = place_search_api
 
     def _fetch_coords(self):
         if self._api_called:
@@ -34,15 +53,12 @@ class InputResolver(object):
             'key':G_KEY
         }
 
-        url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
-        result = requests.get(url,params=api_params)
-        # Extract lat & lng
-        place_result = result.json()
-        result_path = place_result['results'][0] 
+        result = self.place_search_api(api_params)
+        self._lat = result['lat']
+        self._lng = result['lng']
+        self._location_name = result['location_name']
 
-        self._lat = result_path['geometry']['location']['lat']
-        self._lng = result_path['geometry']['location']['lng']
-        self._location_name = result_path['name']
+        # Extract lat & lng
 
     def _resolve_location(self):
         if self._loc_resolve:
