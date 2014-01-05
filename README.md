@@ -48,3 +48,7 @@ Additional Notes & Plans:
 Regarding Google Maps, I plan in future enhancements to add the ability to cache weather results and show them on the map next to the neighborhood names. I will also need to make adjustments on how neighborhood names are stored and pulled onto the map if I want to scale the results beyond SF. Additionally, I want to add functionality so the overlay results adjust when you zoom in and out on the map and I want the map to come up on the first page and adjust its results based on your IP location.
 
 I started building out login functionality to enable user accounts. Two reasons were that I wanted to practice with Flask Login and WTForms while I had access to the Hackbright school resources and because I do want to create the ability for users to customize views (e.g. save favorites like 'I live in Sunset and work in SOMA'). More work is needed here to build this out.
+
+## Copyright
+
+Copyright (c) 2013 Wiley & Warrick.
