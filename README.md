@@ -1,6 +1,9 @@
 #Sun Finder
 
-- Update: Plans to revampt the site and launch on Heroku for July.
+UPDATE: Site is live at [sunfinder.io](http://sunfinder.io). Discontinued hacking on this due to other priorities and data science.
+
+********************
+### What it is
 
 A Bay Area inspired web application to simplify search for micro climate weather results by just entering a San Francisco neighborhood. 
 
@@ -43,9 +46,7 @@ The methods and Flask views are really about clarifying what is presented out. F
 The initial resulting view that is returned is just an image and temperature without all the details you find on some weather sites because I wanted a simple answer. I do have a link that expands the page with more weather details if the user wants them. I also added Google Maps in the details to see the location of the search results. There is a overlay on Maps that pulls the names of the neighborhoods from my database.
 
 ---
-Additional Notes & Plans:
-
-Regarding Google Maps, I plan in future enhancements to add the ability to cache weather results and show them on the map next to the neighborhood names. I will also need to make adjustments on how neighborhood names are stored and pulled onto the map if I want to scale the results beyond SF. Additionally, I want to add functionality so the overlay results adjust when you zoom in and out on the map and I want the map to come up on the first page and adjust its results based on your IP location.
+## Additional Notes:
 
 I started building out login functionality to enable user accounts. Two reasons were that I wanted to practice with Flask Login and WTForms while I had access to the Hackbright school resources and because I do want to create the ability for users to customize views (e.g. save favorites like 'I live in Sunset and work in SOMA'). More work is needed here to build this out.
 
